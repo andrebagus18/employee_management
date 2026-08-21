@@ -1,0 +1,150 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Role {
+  id Int @id @default(autoincrement())
+  name String
+  createAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  users User[]
+  rolepermission RolePermission[]
+}
+
+model JobLevel {
+  id Int @id @default(autoincrement())
+  name String
+  createAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  employess Employee[]
+}
+
+model Department {
+  id Int @id @default(autoincrement())
+  name String
+  createAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  positions Position[]
+  employees Employee[]
+}
+
+model Permission {
+  id Int @id @default(autoincrement())
+  name String
+  description String @db.Text
+  createAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  rolepermission RolePermission[]
+}
+
+model Position {
+  id Int @id @default(autoincrement())
+  departmentId Int
+  department Department @relation(fields: [departmentId], references: [id])
+  name String
+  createAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  employees Employee[]
+}
+
+model Employee {
+  id Int @id @default(autoincrement())
+  positionId Int
+  position Position @relation(fields: [positionId], references: [id])
+  departmentId Int
+  department Department @relation(fields: [departmentId], references: [id])
+  jobLevelId Int
+  jobLevel JobLevel @relation(fields: [jobLevelId], references: [id])
+  managerId Int?
+  manager Employee? @relation("EmployeeManager", fields: [managerId], references: [id])
+  subordinates Employee[] @relation("EmployeeManager")
+  name String
+  gender String
+  nik String @unique
+  phone String
+  address String @db.Text
+  hire_date DateTime @db.Date
+  termination_date DateTime @db.Date
+  status String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  users User[]
+  leaverequestEmployee LeaveRequest[] @relation("LeaveRequester")
+  leaverequestApprover LeaveRequest[] @relation("LeaveApprover")
+  leaverequestReviewer LeaveRequest[] @relation("LeaveReviewer")
+  dailyReport DailyReport[]
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  roleId Int
+  role Role @relation(fields: [roleId], references: [id])
+  employeeId Int @unique
+  employee Employee @relation(fields: [employeeId], references: [id])
+  email String @unique
+  password String
+  last_login DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  activityLog ActivityLog[]
+}
+
+model RolePermission {
+  id Int @id @default(autoincrement())
+  roleId Int
+  role Role @relation(fields: [roleId], references: [id])
+  permissionId Int
+  permission Permission @relation(fields: [permissionId], references: [id]) 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model LeaveRequest {
+  id Int @id @default(autoincrement())
+  employeeId Int
+  employee Employee @relation("LeaveRequester", fields: [employeeId], references: [id]) 
+  approverId Int?
+  approver Employee? @relation("LeaveApprover", fields: [approverId], references: [id])
+  reviewedBy Int?
+  reviewed Employee? @relation("LeaveReviewer", fields: [reviewedBy], references: [id])
+  type String
+  start_date DateTime @db.Date
+  end_date DateTime @db.Date
+  status String
+  reviewedAt DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model DailyReport {
+  id Int @id @default(autoincrement())
+  employeeId Int
+  employee Employee @relation(fields: [employeeId], references: [id])
+  date DateTime @db.Date
+  time DateTime @db.Time
+  report String @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model ActivityLog {
+  id Int @id @default(autoincrement())
+  userId Int?
+  user User? @relation(fields: [userId], references: [id])
+  action String
+  entity String
+  entityId Int?
+  description String? @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
