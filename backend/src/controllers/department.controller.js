@@ -1,3 +1,5 @@
+import { prisma } from "../lib/prisma.js";
+
 export const create = async (req, res) => {
   const { name } = req.body;
 
@@ -6,8 +8,11 @@ export const create = async (req, res) => {
       msg: "Bad Request",
     });
   }
-
-  return res.status(201).json({
-    name: name,
+  const department = await prisma.department.create({
+    data: {
+      name: name,
+    },
   });
+
+  return res.status(201).json(department);
 };
