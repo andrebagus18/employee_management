@@ -1,22 +1,21 @@
 import { prisma } from "../lib/prisma.js";
 
-export const createDepartment = async (req, res) => {
+export const createJobLevel = async (req, res) => {
   try {
     const { name } = req.body;
     if (name === undefined || name === null) {
       return res.status(400).json({
-        msg: "Bad Request",
+        msg: "Bad request",
       });
     }
-    const department = await prisma.department.create({
+    const jobLevel = await prisma.jobLevel.create({
       data: {
         name: name,
       },
     });
-
     return res.status(201).json({
-      msg: "Department successfully created",
-      data: department,
+      msg: "Job Level successfully created",
+      data: jobLevel,
     });
   } catch (error) {
     console.error(error);
@@ -26,42 +25,43 @@ export const createDepartment = async (req, res) => {
   }
 };
 
-export const getDepartments = async (req, res) => {
+export const getJobLevel = async (req, res) => {
   try {
-    const department = await prisma.department.findMany();
-    if (department.length === 0) {
+    const jobLevel = await prisma.jobLevel.findMany();
+    if (jobLevel.length === 0) {
       return res.status(200).json([]);
     }
     return res.status(200).json({
-      department,
+      data: jobLevel,
     });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({
       msg: "Internal server error",
     });
   }
 };
 
-export const updateDepartment = async (req, res) => {
+export const updateJobLevel = async (req, res) => {
   try {
     const { id } = req.params;
     const { name } = req.body;
-    const findDepartment = await prisma.department.findUnique({
+    const findJobLevel = await prisma.jobLevel.findUnique({
       where: {
         id: Number(id),
       },
     });
-    if (!findDepartment) {
+    if (!findJobLevel) {
       return res.status(404).json({
-        msg: "Department not found",
+        msg: "Job Level not found",
       });
     }
     if (name === undefined || name === null) {
       return res.status(400).json({
-        msg: "Field is required",
+        msg: "field is required",
       });
     }
-    const result = await prisma.department.update({
+    await prisma.jobLevel.update({
       where: {
         id: Number(id),
       },
@@ -70,54 +70,52 @@ export const updateDepartment = async (req, res) => {
       },
     });
     return res.status(200).json({
-      msg: "Department updated successfully",
-      data: result,
+      msg: "Job Level updated successfully",
     });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      msg: "Internal server error",
+      msg: "Internal sever error",
     });
   }
 };
 
-export const deleteDepartment = async (req, res) => {
+export const deleteJobLevel = async (req, res) => {
   try {
-    console.log("masuk");
     const { id } = req.params;
-    const findDepartmentId = await prisma.department.findUnique({
+    const findjobLevelId = await prisma.jobLevel.findUnique({
       where: {
         id: Number(id),
       },
     });
-    if (!findDepartmentId) {
+    if (!findjobLevelId) {
       return res.status(404).json({
-        msg: "Department not found",
+        msg: "Job Level not found",
       });
     }
-    const findEmployeeId = await prisma.employee.findUnique({
+    const employeeId = await prisma.employee.findFirst({
       where: {
-        departmentId: Number(id),
+        jobLevelId: Number(id),
       },
     });
-    if (findEmployeeId) {
+    if (employeeId) {
       return res.status(409).json({
-        msg: "Department is still used by employees",
+        msg: "Job Level is still used by employees",
       });
     }
-    await prisma.department.delete({
+    await prisma.jobLevel.delete({
       where: {
-        id: findDepartmentId.id,
+        id: findjobLevelId.id,
       },
     });
     return res.status(200).json({
-      msg: "Delete department successfully",
+      msg: "Delete job level successfully",
     });
   } catch (error) {
     console.error(error);
-
     return res.status(500).json({
       msg: "Internal server error",
+      error: error.message,
     });
   }
 };

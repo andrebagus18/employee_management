@@ -79,6 +79,7 @@ export const createEmployee = async (req, res) => {
     });
 
     return res.status(201).json({
+      msg: "Employee successfully created",
       employees,
       users,
     });
@@ -206,7 +207,7 @@ export const updateEmployeeUser = async (req, res) => {
       return { updateEmployee, updateUser };
     });
     return res.status(200).json({
-      msg: "Employee uodated successfully",
+      msg: "Employee updated successfully",
       data: result,
     });
   } catch (error) {
@@ -242,12 +243,12 @@ export const deleteEmployeeUser = async (req, res) => {
     }
     // delete
     await prisma.$transaction(async (tx) => {
-      const deleteUser = await tx.user.delete({
+      await tx.user.delete({
         where: {
           id: findUserId.id,
         },
       });
-      const deleteEmployee = await tx.employee.delete({
+      await tx.employee.delete({
         where: {
           id: Number(id),
         },
