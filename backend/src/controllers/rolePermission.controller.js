@@ -79,3 +79,33 @@ export const assignPermission = async (req, res) => {
     });
   }
 };
+
+export const revokePermission = async (req, res) => {
+  try {
+    const { roleId, permissionId } = req.params;
+    const rolePermission = await prisma.rolePermission.findFirst({
+      where: {
+        roleId: Number(roleId),
+        permissionId: Number(permissionId),
+      },
+    });
+    if (!rolePermission) {
+      return res.status(404).json({
+        msg: "Permission is not assigned to this role",
+      });
+    }
+    await prisma.rolePermission.delete({
+      where: {
+        id: rolePermission.roleId,
+      },
+    });
+    return res.status(200).json({
+      msg: "Permission revoked successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      msg: "Internal server error",
+    });
+  }
+};

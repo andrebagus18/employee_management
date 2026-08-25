@@ -11,6 +11,12 @@ datasource db {
   provider = "mysql"
 }
 
+enum leaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model Role {
   id Int @id @default(autoincrement())
   name String
@@ -79,8 +85,6 @@ model Employee {
   updatedAt DateTime @default(now())
   users User[]
   leaverequestEmployee LeaveRequest[] @relation("LeaveRequester")
-  leaverequestApprover LeaveRequest[] @relation("LeaveApprover")
-  leaverequestReviewer LeaveRequest[] @relation("LeaveReviewer")
   dailyReport DailyReport[]
 }
 
@@ -96,6 +100,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
   activityLog ActivityLog[]
+  leaveApprovals LeaveRequest[] @relation("LeaveApprover")
+leaveReviews   LeaveRequest[] @relation("LeaveReviewer")
 }
 
 model RolePermission {
@@ -113,14 +119,14 @@ model LeaveRequest {
   employeeId Int
   employee Employee @relation("LeaveRequester", fields: [employeeId], references: [id]) 
   approverId Int?
-  approver Employee? @relation("LeaveApprover", fields: [approverId], references: [id])
-  reviewedBy Int?
-  reviewed Employee? @relation("LeaveReviewer", fields: [reviewedBy], references: [id])
+approver User? @relation("LeaveApprover", fields: [approverId], references: [id])
+reviewedBy Int?
+reviewed User? @relation("LeaveReviewer", fields: [reviewedBy], references: [id])
   type String
   start_date DateTime @db.Date
   end_date DateTime @db.Date
-  status String
-  reviewedAt DateTime @default(now())
+  status leaveStatus @default(PENDING)
+  reviewedAt DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 }

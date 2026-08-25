@@ -6,6 +6,7 @@ import { permissionMiddleware } from "../middleware/permission.middleware.js";
 import {
   getRolePermissions,
   assignPermission,
+  revokePermission,
 } from "../controllers/rolePermission.controller.js";
 import { userLogin } from "../controllers/auth.controller.js";
 import {
@@ -158,6 +159,12 @@ router.post(
   authMiddleware,
   permissionMiddleware("role.update"),
   assignPermission,
+);
+router.delete(
+  "/roles/:roleId/permissions/:permissionId",
+  authMiddleware,
+  permissionMiddleware("role.update"),
+  revokePermission,
 );
 
 // route permission
