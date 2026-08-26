@@ -15,15 +15,15 @@ export const userLogin = async (req, res) => {
         employeeId: true,
       },
     });
-    console.log("USER", users);
+    // console.log("USER", users);
 
     if (!users) {
       return res.status(401).json({
         msg: "Wrong Email or password",
       });
     }
-    console.log("psw:", password);
-    console.log("pswdb", users.password);
+    // console.log("psw:", password);
+    // console.log("pswdb", users.password);
     const isMatch = await bcrypt.compare(password, users.password);
     if (!isMatch) {
       return res.status(401).json({

@@ -29,6 +29,7 @@ model Role {
 model JobLevel {
   id Int @id @default(autoincrement())
   name String
+  rank Int?
   createAt DateTime @default(now())
   updatedAt DateTime @default(now())
   employess Employee[]
@@ -123,6 +124,7 @@ approver User? @relation("LeaveApprover", fields: [approverId], references: [id]
 reviewedBy Int?
 reviewed User? @relation("LeaveReviewer", fields: [reviewedBy], references: [id])
   type String
+  description String @db.Text
   start_date DateTime @db.Date
   end_date DateTime @db.Date
   status leaveStatus @default(PENDING)

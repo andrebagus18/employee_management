@@ -1,6 +1,5 @@
 import bcrypt from "bcryptjs";
 import { prisma } from "../lib/prisma.js";
-import { use } from "react";
 
 export const createEmployee = async (req, res) => {
   try {
@@ -41,47 +40,123 @@ export const createEmployee = async (req, res) => {
         msg: "Required fields are missing",
       });
     }
+    let manager = null;
 
+    if (managerId) {
+      manager = await prisma.employee.findUnique({
+        where: {
+          id: Number(managerId),
+        },
+        include: {
+          jobLevel: true,
+        },
+      });
+
+      if (!manager) {
+        return res.status(404).json({
+          msg: "Manager not found",
+        });
+      }
+      // manager tidak boleh sama
+      if (manager.departmentId !== Number(departmentId)) {
+        return res.status(400).json({
+          msg: "Manager must be in the same department",
+        });
+      }
+      // ambil joblevel employee
+      const jobLevelEmployee = await prisma.jobLevel.findUnique({
+        where: {
+          id: Number(jobLevelId),
+        },
+      });
+      if (manager.departmentId !== Number(departmentId)) {
+        return res.status(404).json({
+          msg: "Job level not found",
+        });
+      }
+      // manager harus lebih tinggi
+      const hierarchy = {
+        1: 5, // Operator → Supervisor
+        2: 5, // Staff → Supervisor
+        3: 5, // Senior Staff → Supervisor
+        4: 5, // Foreman → Supervisor
+        5: 7, // Supervisor → Manager
+        6: 7, // Assistant Manager → Manager
+        7: 9, // Manager → Head
+        8: 9, // Senior Manager → Head
+        9: 10, // Head → Director
+        // Director (10) → null
+      };
+      const expectedRank = hierarchy[jobLevelEmployee.rank];
+      if (
+        expectedRank !== undefined &&
+        manager.jobLevel.rank !== expectedRank
+      ) {
+        return res.status(400).json({
+          msg: "Manager must be the direct higher-level manager",
+        });
+      }
+    }
+    const existingEmail = await prisma.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+    if (existingEmail) {
+      return res.status(400).json({
+        msg: "Email already exists",
+      });
+    }
+    const existingNik = await prisma.employee.findUnique({
+      where: {
+        nik: nik,
+      },
+    });
+    if (existingNik) {
+      return res.status(400).json({
+        msg: "Nik already exists",
+      });
+    }
     const hashPassword = await bcrypt.hash(password, 10);
 
-    const employees = await prisma.employee.create({
-      data: {
-        name: name,
-        gender,
-        gender,
-        nik: nik,
-        phone: phone,
-        address: address,
-        hire_date: new Date(hire_date),
-        termination_date: termination_date,
-        status: status,
-        departmentId: departmentId,
-        positionId: positionId,
-        jobLevelId: jobLevelId,
-        managerId: managerId,
-      },
-    });
-    const users = await prisma.user.create({
-      data: {
-        email: email,
-        password: hashPassword,
-        employee: {
-          connect: {
-            id: employees.id,
+    const result = await prisma.$transaction(async (tx) => {
+      const employees = await tx.employee.create({
+        data: {
+          name: name,
+          gender: gender,
+          nik: nik,
+          phone: phone,
+          address: address,
+          hire_date: new Date(hire_date),
+          termination_date: termination_date,
+          status: status,
+          departmentId: Number(departmentId),
+          positionId: Number(positionId),
+          jobLevelId: Number(jobLevelId),
+          managerId: manager ? manager.id : null,
+        },
+      });
+      const users = await tx.user.create({
+        data: {
+          email: email,
+          password: hashPassword,
+          employee: {
+            connect: {
+              id: employees.id,
+            },
+          },
+          role: {
+            connect: {
+              id: roleId,
+            },
           },
         },
-        role: {
-          connect: {
-            id: roleId,
-          },
-        },
-      },
+      });
+      return { employees, users };
     });
-
     return res.status(201).json({
       msg: "Employee successfully created",
-      employees,
-      users,
+      data: result,
     });
   } catch (error) {
     console.error(error);
@@ -120,6 +195,66 @@ export const updateEmployeeUser = async (req, res) => {
       return res.status(404).json({
         msg: "Employee not found",
       });
+    }
+    const managerId = employee.managerId;
+
+    if (managerId) {
+      if (!managerId && Number(managerId) === Number(id)) {
+        return res.status(400).json({
+          msg: "Employee cannot be their own manager",
+        });
+      }
+      const manager = await prisma.employee.findUnique({
+        where: {
+          id: Number(managerId),
+        },
+        include: {
+          jobLevel: true,
+        },
+      });
+      if (!manager) {
+        return res.status(404).json({
+          msg: "Manager not found",
+        });
+      }
+      if (manager.departmentId !== findEmployee.departmentId) {
+        return res.status(400).json({
+          msg: "Manager must be in the same department",
+        });
+      }
+      // cari job level employee yang sedang di update
+      const employeeJobLevel = await prisma.jobLevel.findUnique({
+        where: {
+          id: Number(employee.jobLevelId),
+        },
+      });
+      if (!employeeJobLevel) {
+        return res.status(404).json({
+          msg: "Employee job level not found",
+        });
+      }
+      // manager harus lebih tinggi
+      const hierarchy = {
+        1: 5, // Operator → Supervisor
+        2: 5, // Staff → Supervisor
+        3: 5, // Senior Staff → Supervisor
+        4: 5, // Foreman → Supervisor
+        5: 7, // Supervisor → Manager
+        6: 7, // Assistant Manager → Manager
+        7: 9, // Manager → Head
+        8: 9, // Senior Manager → Head
+        9: 10, // Head → Director
+        // Director (10) → null
+      };
+      const expectedRank = hierarchy[employeeJobLevel.rank];
+      if (
+        expectedRank !== undefined &&
+        manager.jobLevel.rank !== expectedRank
+      ) {
+        return res.status(400).json({
+          msg: "Manager must be the direct higher-level manager",
+        });
+      }
     }
     const findUser = await prisma.user.findUnique({
       where: {
