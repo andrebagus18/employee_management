@@ -39,7 +39,10 @@ import {
   updatePermission,
   deletePermission,
 } from "../controllers/permission.controller.js";
-import { createLeaveRequest } from "../controllers/leaveRequest.controller.js";
+import {
+  createLeaveRequest,
+  getLeaveRequest,
+} from "../controllers/leaveRequest.controller.js";
 
 // route login
 router.post("/auth/login", userLogin);
@@ -200,6 +203,12 @@ router.post(
   authMiddleware,
   permissionMiddleware("leave.create"),
   createLeaveRequest,
+);
+router.get(
+  "/leave-requests",
+  authMiddleware,
+  permissionMiddleware("leave.view"),
+  getLeaveRequest,
 );
 
 export default router;
