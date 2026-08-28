@@ -1,4 +1,5 @@
 import { prisma } from "../lib/prisma.js";
+import { getEmployeeScope } from "../helper/employeeScope.js";
 
 const EMPLOYEE_ID = 5;
 const SPV_ID = 4;
@@ -128,49 +129,12 @@ export const getLeaveRequest = async (req, res) => {
         approverId: userId,
       };
     }
-    // ambil managerId atau role manager
-    const managers = await prisma.employee.findMany({
-      where: {
-        managerId: employeeId,
-      },
-      include: {
-        subordinates: {
-          include: {
-            subordinates: true,
-          },
-        },
-      },
-    });
-
-    // console.log("managers:", managers);
-    // ambil pisahkan manager dengan spv
-    const AllSubManagers = [];
-    managers.forEach((mng) => {
-      AllSubManagers.push(...mng.subordinates);
-    });
-    // console.log("manager:", AllSubManagers);
-    // ambil spv dan pisahkan dengan bawahannya
-    const allSubEmployee = [];
-    AllSubManagers.forEach((spv) => {
-      allSubEmployee.push(...spv.subordinates);
-    });
-    // console.log("spv", allSubEmployee);
-
-    //mencari ID
-    const employeeIds = allSubEmployee.map((emp) => emp.id);
-    // console.log("employeeIds:", employeeIds);
-    const spvIds = AllSubManagers.map((spv) => spv.id);
-    // console.log("spvIds:", spvIds);
-    const mngIds = managers.map((mng) => mng.id);
-    // console.log("mngIds:", mngIds);
-    const allIds = [];
-    allIds.push(...employeeIds, ...spvIds, ...mngIds);
-    // console.log("allIds:", allIds);
-
+    // ambil hasil helper
+    const scopeIds = await getEmployeeScope(employeeId);
     if (roleId === HR_ID) {
       leaveFilter = {
         employeeId: {
-          in: allIds,
+          in: scopeIds,
         },
       };
     }
@@ -181,6 +145,56 @@ export const getLeaveRequest = async (req, res) => {
 
     return res.status(200).json({
       data: leaveRequest,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      msg: "Internal server error",
+    });
+  }
+};
+
+export const getLeaveRequestById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { employeeId, userId, roleId } = req.user;
+    const getById = await prisma.leaveRequest.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+    if (!getById) {
+      return res.status(404).json({
+        msg: "Leave Request not found",
+      });
+    }
+    if (roleId === HR_ID) {
+      const scopeIds = await getEmployeeScope(employeeId);
+      if (!scopeIds.includes(getById.employeeId)) {
+        return res.status(403).json({
+          msg: "You can only view leave request within your employee scope",
+        });
+      }
+    }
+    if (roleId === EMPLOYEE_ID && getById.employeeId !== employeeId) {
+      return res.status(403).json({
+        msg: "You can only view your own leave request",
+      });
+    }
+
+    if (
+      (roleId === SPV_ID || roleId === MNG_ID) &&
+      getById.approverId !== userId
+    ) {
+      return res.status(403).json({
+        msg: "You can only view leave request assigned to you",
+      });
+    }
+    // console.log("roleid:", roleId);
+    // console.log("userId:", userId);
+    // console.log("approverId:", getById.approverId);
+    return res.status(200).json({
+      data: getById,
     });
   } catch (error) {
     console.error(error);

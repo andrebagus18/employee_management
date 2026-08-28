@@ -42,6 +42,7 @@ import {
 import {
   createLeaveRequest,
   getLeaveRequest,
+  getLeaveRequestById,
 } from "../controllers/leaveRequest.controller.js";
 
 // route login
@@ -209,6 +210,12 @@ router.get(
   authMiddleware,
   permissionMiddleware("leave.view"),
   getLeaveRequest,
+);
+router.get(
+  "/leave-requests/:id",
+  authMiddleware,
+  permissionMiddleware("leave.view"),
+  getLeaveRequestById,
 );
 
 export default router;
