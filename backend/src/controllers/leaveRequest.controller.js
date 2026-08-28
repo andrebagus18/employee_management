@@ -1,5 +1,6 @@
 import { prisma } from "../lib/prisma.js";
 import { getEmployeeScope } from "../helper/employeeScope.js";
+import { leaveStatus } from "@prisma/client";
 
 const EMPLOYEE_ID = 5;
 const SPV_ID = 4;
@@ -195,6 +196,74 @@ export const getLeaveRequestById = async (req, res) => {
     // console.log("approverId:", getById.approverId);
     return res.status(200).json({
       data: getById,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      msg: "Internal server error",
+    });
+  }
+};
+
+export const leaveRerquestStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const { userId, employeeId, roleId } = req.user;
+    const leaveRequest = await prisma.leaveRequest.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+    if (!leaveRequest) {
+      return res.status(404).json({
+        msg: "Leave Request not found",
+      });
+    }
+    if (leaveRequest.status !== "PENDING") {
+      return res.status(400).json({
+        msg: "Leave request has already been processed",
+      });
+    }
+    if (status !== "APPROVED" && status !== "REJECTED") {
+      return res.status(400).json({
+        msg: "Invalid leave request status. Must be APPROVED or REJECTED",
+      });
+    }
+    if (roleId === EMPLOYEE_ID) {
+      return res.status(403).json({
+        msg: "You are not the approver",
+      });
+    }
+    if (
+      (roleId === SPV_ID || roleId === MNG_ID) &&
+      leaveRequest.approverId !== userId
+    ) {
+      return res.status(403).json({
+        msg: "You are not the approver of this leave request",
+      });
+    }
+    if (roleId === HR_ID) {
+      const { mngIds } = await getEmployeeScope(employeeId);
+      if (!mngIds.includes(leaveRequest.employeeId)) {
+        return res.status(403).json({
+          msg: "You do not have permission to update this leave request",
+        });
+      }
+    }
+    const updateLeaveRequest = await prisma.leaveRequest.update({
+      where: {
+        id: leaveRequest.id,
+      },
+      data: {
+        status: status,
+        reviewedBy: userId,
+        reviewedAt: new Date(),
+      },
+    });
+    return res.status(200).json({
+      msg: "LEave reqest status updated successfully",
+      data: updateLeaveRequest,
     });
   } catch (error) {
     console.error(error);

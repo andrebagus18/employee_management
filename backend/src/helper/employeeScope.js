@@ -39,5 +39,5 @@ export const getEmployeeScope = async (employeeId) => {
   const allIds = [];
   allIds.push(...employeeIds, ...spvIds, ...mngIds);
   // console.log("allIds:", allIds);
-  return allIds;
+  return { allIds, mngIds };
 };

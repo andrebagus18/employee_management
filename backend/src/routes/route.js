@@ -43,6 +43,7 @@ import {
   createLeaveRequest,
   getLeaveRequest,
   getLeaveRequestById,
+  leaveRerquestStatus,
 } from "../controllers/leaveRequest.controller.js";
 
 // route login
@@ -216,6 +217,12 @@ router.get(
   authMiddleware,
   permissionMiddleware("leave.view"),
   getLeaveRequestById,
+);
+router.patch(
+  "/leave-requests/:id/status",
+  authMiddleware,
+  permissionMiddleware("leave.update"),
+  leaveRerquestStatus,
 );
 
 export default router;
