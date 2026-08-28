@@ -45,6 +45,7 @@ import {
   getLeaveRequestById,
   leaveRerquestStatus,
 } from "../controllers/leaveRequest.controller.js";
+import { activityLog } from "../controllers/activityLog.controller.js";
 
 // route login
 router.post("/auth/login", userLogin);
@@ -223,6 +224,14 @@ router.patch(
   authMiddleware,
   permissionMiddleware("leave.update"),
   leaveRerquestStatus,
+);
+
+//route log
+router.get(
+  "/activity-logs",
+  authMiddleware,
+  permissionMiddleware("log.view"),
+  activityLog,
 );
 
 export default router;

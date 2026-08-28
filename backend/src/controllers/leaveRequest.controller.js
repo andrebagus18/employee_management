@@ -11,13 +11,12 @@ export const createLeaveRequest = async (req, res) => {
   try {
     const { type, description, start_date, end_date } = req.body;
     const { userId } = req.user;
-    console.log("req.user", req.user);
     const user = await prisma.user.findUnique({
       where: {
         id: userId,
       },
     });
-    console.log("user:", user);
+    // console.log("user:", user);
     if (!user || !user.employeeId) {
       return res.status(400).json({
         msg: "User is not associated with an employee",
@@ -40,10 +39,10 @@ export const createLeaveRequest = async (req, res) => {
         msg: "Start Date cannot be later than and date",
       });
     }
-    console.log("type:", type);
-    console.log("description:", description);
-    console.log("startDate:", startDate);
-    console.log("endDate:", endDate);
+    // console.log("type:", type);
+    // console.log("description:", description);
+    // console.log("startDate:", startDate);
+    // console.log("endDate:", endDate);
     // ambil employee dari user
     const employeeId = user.employeeId;
     const employee = await prisma.employee.findUnique({
@@ -51,7 +50,7 @@ export const createLeaveRequest = async (req, res) => {
         id: employeeId,
       },
     });
-    console.log("employeeId:", employee);
+    // console.log("employeeId:", employee);
     if (!employee) {
       return res.status(404).json({
         msg: "Employee not found",
@@ -70,7 +69,7 @@ export const createLeaveRequest = async (req, res) => {
         id: approverId,
       },
     });
-    console.log("approver:", approver);
+    // console.log("approver:", approver);
     if (!approver) {
       return res.status(404).json({
         msg: "Approver not found",
@@ -103,6 +102,15 @@ export const createLeaveRequest = async (req, res) => {
         start_date: startDate,
         end_date: endDate,
         status: "PENDING",
+      },
+    });
+    await prisma.activityLog.create({
+      data: {
+        userId: req.user.userId,
+        action: "CREATE",
+        entity: "Leave Request",
+        entityId: leaveRequest.id,
+        description: `Created leave request type ${leaveRequest.type}`,
       },
     });
     return res.status(201).json({
@@ -261,8 +269,17 @@ export const leaveRerquestStatus = async (req, res) => {
         reviewedAt: new Date(),
       },
     });
+    await prisma.activityLog.create({
+      data: {
+        userId: userId,
+        action: "UPDATE",
+        entity: "Leave Request",
+        entityId: leaveRequest.id,
+        description: `Leave request status changged to ${status}`,
+      },
+    });
     return res.status(200).json({
-      msg: "LEave reqest status updated successfully",
+      msg: "Leave reqest status updated successfully",
       data: updateLeaveRequest,
     });
   } catch (error) {

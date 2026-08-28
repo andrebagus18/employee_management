@@ -120,7 +120,7 @@ export const createEmployee = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 10);
 
     const result = await prisma.$transaction(async (tx) => {
-      const employees = await tx.employee.create({
+      const employee = await tx.employee.create({
         data: {
           name: name,
           gender: gender,
@@ -142,7 +142,7 @@ export const createEmployee = async (req, res) => {
           password: hashPassword,
           employee: {
             connect: {
-              id: employees.id,
+              id: employee.id,
             },
           },
           role: {
@@ -152,7 +152,16 @@ export const createEmployee = async (req, res) => {
           },
         },
       });
-      return { employees, users };
+      await tx.activityLog.create({
+        data: {
+          userId: req.user.userId,
+          action: "CREATE",
+          entity: "Employee",
+          entityId: employee.id,
+          description: `Created employee ${employee.name}`,
+        },
+      });
+      return { employee, users };
     });
     return res.status(201).json({
       msg: "Employee successfully created",
@@ -339,6 +348,15 @@ export const updateEmployeeUser = async (req, res) => {
         },
         data: userData,
       });
+      await tx.activityLog.create({
+        data: {
+          userId: req.user.userId,
+          action: "UPDATE",
+          entity: "Employee",
+          entityId: updateEmployee.id,
+          description: `Employee ${updateEmployee.name} and User account was updated`,
+        },
+      });
       return { updateEmployee, updateUser };
     });
     return res.status(200).json({
@@ -378,6 +396,11 @@ export const deleteEmployeeUser = async (req, res) => {
     }
     // delete
     await prisma.$transaction(async (tx) => {
+      const employee = await tx.employee.findUnique({
+        where: {
+          id: Number(id),
+        },
+      });
       await tx.user.delete({
         where: {
           id: findUserId.id,
@@ -386,6 +409,15 @@ export const deleteEmployeeUser = async (req, res) => {
       await tx.employee.delete({
         where: {
           id: Number(id),
+        },
+      });
+      await tx.activityLog.create({
+        data: {
+          userId: req.user.userId,
+          action: "DELETE",
+          entity: "Employee",
+          entityId: employee.id,
+          description: `Employee ${employee.name} and User account was deleted`,
         },
       });
     });

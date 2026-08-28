@@ -61,7 +61,7 @@ export const updateJobLevel = async (req, res) => {
         msg: "field is required",
       });
     }
-    await prisma.jobLevel.update({
+    const updateJob = await prisma.jobLevel.update({
       where: {
         id: Number(id),
       },
@@ -71,6 +71,7 @@ export const updateJobLevel = async (req, res) => {
     });
     return res.status(200).json({
       msg: "Job Level updated successfully",
+      data: updateJob,
     });
   } catch (error) {
     console.error(error);
@@ -103,13 +104,14 @@ export const deleteJobLevel = async (req, res) => {
         msg: "Job Level is still used by employees",
       });
     }
-    await prisma.jobLevel.delete({
+    const deleteJob = await prisma.jobLevel.delete({
       where: {
         id: findjobLevelId.id,
       },
     });
     return res.status(200).json({
       msg: "Delete job level successfully",
+      data: deleteJob,
     });
   } catch (error) {
     console.error(error);
