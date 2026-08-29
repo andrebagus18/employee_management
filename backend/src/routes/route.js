@@ -46,6 +46,12 @@ import {
   leaveRerquestStatus,
 } from "../controllers/leaveRequest.controller.js";
 import { activityLog } from "../controllers/activityLog.controller.js";
+import {
+  createDailyReport,
+  getDailyReports,
+  getDetailReport,
+  updateReport,
+} from "../controllers/dailyReport.contoller.js";
 
 // route login
 router.post("/auth/login", userLogin);
@@ -232,6 +238,32 @@ router.get(
   authMiddleware,
   permissionMiddleware("log.view"),
   activityLog,
+);
+
+// route daily-report
+router.post(
+  "/daily-reports/create",
+  authMiddleware,
+  permissionMiddleware("report.create"),
+  createDailyReport,
+);
+router.get(
+  "/daily-reports",
+  authMiddleware,
+  permissionMiddleware("report.view"),
+  getDailyReports,
+);
+router.get(
+  "/daily-reports/:id",
+  authMiddleware,
+  permissionMiddleware("report.view"),
+  getDetailReport,
+);
+router.patch(
+  "/daily-reports/update",
+  authMiddleware,
+  permissionMiddleware("report.update"),
+  updateReport,
 );
 
 export default router;
