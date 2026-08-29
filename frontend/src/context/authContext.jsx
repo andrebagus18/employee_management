@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import api from "../services/api";
+import { logout as logoutService } from "../services/auth.service";
 
 const AuthContext = createContext(null);
 
@@ -20,11 +21,17 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     fetchUser();
   }, []);
-  const login = (user) => {
-    setUser(user);
+  const login = async () => {
+    await fetchUser();
   };
-  const logout = () => {
-    setUser(null);
+  const logout = async () => {
+    try {
+      await logoutService();
+    } catch (error) {
+      console.error("logout error", error);
+    } finally {
+      setUser(null);
+    }
   };
   const value = {
     user,
