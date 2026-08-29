@@ -8,7 +8,11 @@ import {
   assignPermission,
   revokePermission,
 } from "../controllers/rolePermission.controller.js";
-import { userLogin } from "../controllers/auth.controller.js";
+import {
+  getMe,
+  userLogin,
+  userLogout,
+} from "../controllers/auth.controller.js";
 import {
   createEmployee,
   getEmployees,
@@ -55,6 +59,8 @@ import {
 
 // route login
 router.post("/auth/login", userLogin);
+router.post("/auth/logout", userLogout);
+router.get("/auth/me", authMiddleware, getMe);
 
 // route employee
 router.post(

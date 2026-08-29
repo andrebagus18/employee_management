@@ -1,4 +1,4 @@
-import { getEmployeeScope } from "../helper/employeeScope";
+import { getEmployeeScope } from "../helper/employeeScope.js";
 import { prisma } from "../lib/prisma.js";
 
 export const createDailyReport = async (req, res) => {
