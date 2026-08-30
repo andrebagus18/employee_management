@@ -71,6 +71,18 @@ export const getMe = async (req, res) => {
         email: true,
         roleId: true,
         employeeId: true,
+        employee: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        role: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
       },
     });
     if (!user) {

@@ -15,7 +15,7 @@ function DashboardLayout() {
     <div className="flex min-h-screen bg-muted/30">
       <Sidebar onLogout={handleLogout} />
       <div className="flex flex-col flex-1">
-        <Header />
+        <Header title="Dashboard" />
         <main className="flex-1 p-6">
           <Outlet />
         </main>
