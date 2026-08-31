@@ -8,6 +8,12 @@ import CreateEmployee from "@/pages/CreateEmployee";
 import Departments from "@/pages/Departments";
 import Positions from "@/pages/Positions";
 import JobLevels from "@/pages/JobLevels";
+import LeaveRequests from "@/pages/LeaveRequests";
+import Users from "@/pages/Users";
+import Roles from "@/pages/Roles";
+import Permissions from "@/pages/Permissions";
+import DailyReports from "@/pages/DailyReports";
+import ActivityLogs from "@/pages/ActivityLogs";
 
 function AppRoutes() {
   return (
@@ -23,12 +29,12 @@ function AppRoutes() {
             <Route path="/departments" element={<Departments />} />
             <Route path="/positions" element={<Positions />} />
             <Route path="/job-levels" element={<JobLevels />} />
-            <Route path="/leave-requests" element={<div>leave-requests</div>} />
-            <Route path="/users" element={<div>users</div>} />
-            <Route path="/roles" element={<div>roles</div>} />
-            <Route path="/permissions" element={<div>permissions</div>} />
-            <Route path="/daily-reports" element={<div>daily-reports</div>} />
-            <Route path="/activity-logs" element={<div>activity-logs</div>} />
+            <Route path="/leave-requests" element={<LeaveRequests />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/roles" element={<Roles />} />
+            <Route path="/permissions" element={<Permissions />} />
+            <Route path="/daily-reports" element={<DailyReports />} />
+            <Route path="/activity-logs" element={<ActivityLogs />} />
             <Route path="/setting" element={<div>setting</div>} />
           </Route>
         </Route>

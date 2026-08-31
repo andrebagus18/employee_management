@@ -8,7 +8,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
 import JobLevelFilters from "@/molecules/JobLevelFilters";
 import JobLevelForm from "@/molecules/JobLevelForm";
 import JobLevelTable from "@/organisms/JobLevelTable";

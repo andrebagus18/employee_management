@@ -1,8 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
 import { Button } from "@/components/ui/button";
-import EmployeeForm from "../organisms/EmployeeFrom";
+import EmployeeForm from "@/molecules/EmployeeForm";
 
 function CreateEmployee() {
   const navigate = useNavigate();

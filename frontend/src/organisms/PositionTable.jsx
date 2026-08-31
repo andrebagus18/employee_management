@@ -1,49 +1,60 @@
-import { MoreHorizontal } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Eye, Pencil, Trash2 } from "lucide-react";
+import ActionMenu from "@/molecules/ActionMenu";
 
 function PositionTable({ positions }) {
   return (
     <div className="rounded-xl border bg-background">
       <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b bg-muted/30">
-              <th className="px-6 py-3 text-left font-medium">Position</th>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Position</TableHead>
+              <TableHead>Department</TableHead>
+              <TableHead>Employees</TableHead>
+              <TableHead className="w-[50px]"></TableHead>
+            </TableRow>
+          </TableHeader>
 
-              <th className="px-6 py-3 text-left font-medium">Department</th>
-
-              <th className="px-6 py-3 text-left font-medium">Job Level</th>
-
-              <th className="px-6 py-3 text-left font-medium">Employees</th>
-
-              <th className="w-12 px-4 py-3" />
-            </tr>
-          </thead>
-
-          <tbody>
+          <TableBody>
             {positions.map((position) => (
-              <tr
-                key={position.id}
-                className="border-b last:border-0 hover:bg-muted/30"
-              >
-                <td className="px-6 py-4 font-medium">{position.name}</td>
-
-                <td className="px-6 py-4">{position.department}</td>
-
-                <td className="px-6 py-4">{position.jobLevel}</td>
-
-                <td className="px-6 py-4">{position.employees}</td>
-
-                <td className="px-4 py-4 text-right">
-                  <Button variant="ghost" size="icon" className="size-8">
-                    <MoreHorizontal />
-                  </Button>
-                </td>
-              </tr>
+              <TableRow key={position.id}>
+                <TableCell>{position.name}</TableCell>
+                <TableCell>{position.department}</TableCell>
+                <TableCell>{position.employees}</TableCell>
+                <TableCell>
+                  <ActionMenu
+                    actions={[
+                      {
+                        label: "View",
+                        icon: Eye,
+                        onClick: () => console.log("VIEW", position.id),
+                      },
+                      {
+                        label: "Edit",
+                        icon: Pencil,
+                        onClick: () => console.log("EDIT", position.id),
+                      },
+                      {
+                        label: "Delete",
+                        icon: Trash2,
+                        variant: "destructive",
+                        onClick: () => console.log("DELETE", position.id),
+                      },
+                    ]}
+                  />
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
     </div>
   );

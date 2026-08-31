@@ -1,11 +1,9 @@
-import FormField from "../molecules/EmployeeFormField";
+import FormField from "./EmployeeFormField";
 
 function EmployeeForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const formData = new FormData(e.target);
-
     console.log("CREATE EMPLOYEE:", Object.fromEntries(formData));
   };
 
