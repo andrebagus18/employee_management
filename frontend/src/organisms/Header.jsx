@@ -2,8 +2,25 @@ import { Bell } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/authContext";
+import { useLocation } from "react-router-dom";
 
-function Header({ title }) {
+function Header() {
+  const location = useLocation();
+  const titles = {
+    "/dashboard": "Dashboard",
+    "/employees": "Employees",
+    "/departments": "Departments",
+    "/positions": "Positions",
+    "/job-levels": "Job Levels",
+    "/leave-requests": "Leave Requests",
+    "/daily-reports": "Daily Reports",
+    "/activity-logs": "Activity Logs",
+    "/roles": "Roles",
+    "/permissions": "Permissions",
+    "/users": "Users",
+    "/settings": "Settings",
+  };
+  const title = titles[location.pathname] ?? "Employee Management";
   const { user } = useAuth();
 
   return (

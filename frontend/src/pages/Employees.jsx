@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, CirclePlus } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
+import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 
 function Employees() {
@@ -19,6 +19,7 @@ function Employees() {
   const [department, setDepartment] = useState("all");
   const [jobLevel, setJobLevel] = useState("all");
   const [status, setStatus] = useState("all");
+  const navigate = useNavigate();
   const employees = [
     {
       id: 1,
@@ -67,9 +68,18 @@ function Employees() {
           Manage your organization's employees.
         </p>
       </div>
-
+      {/* add employee */}
+      <div className="flex items-center justify-end">
+        <Button
+          onClick={() => navigate("/employees/create")}
+          className="max-w-3xs w-full flex gap-4 py-5 text-md cursor-pointer"
+        >
+          <CirclePlus className="size-5" />
+          Add Employee
+        </Button>
+      </div>
       {/* Filters */}
-      <div className="flex flex-col gap-3 md:flex-row">
+      <div className="flex gap-3">
         {/* Search */}
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -80,59 +90,6 @@ function Employees() {
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9"
           />
-        </div>
-
-        {/* Table */}
-        <div className="rounded-lg border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Department</TableHead>
-                <TableHead>Position</TableHead>
-                <TableHead>Job Level</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="w-[50px]"></TableHead>
-              </TableRow>
-            </TableHeader>
-
-            <TableBody>
-              {employees.map((employee) => (
-                <TableRow key={employee.id}>
-                  <TableCell>
-                    <div>
-                      <p className="font-medium">{employee.name}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {employee.email}
-                      </p>
-                    </div>
-                  </TableCell>
-
-                  <TableCell>{employee.department}</TableCell>
-
-                  <TableCell>{employee.position}</TableCell>
-
-                  <TableCell>{employee.jobLevel}</TableCell>
-
-                  <TableCell>
-                    <Badge
-                      variant={
-                        employee.status === "Active" ? "default" : "secondary"
-                      }
-                    >
-                      {employee.status}
-                    </Badge>
-                  </TableCell>
-
-                  <TableCell>
-                    <Button variant="ghost" size="icon">
-                      <MoreHorizontal />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
         </div>
 
         {/* Department */}
@@ -170,8 +127,58 @@ function Employees() {
           <option value="inactive">Inactive</option>
         </select>
       </div>
+      {/* Table */}
+      <div className="rounded-lg border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Department</TableHead>
+              <TableHead>Position</TableHead>
+              <TableHead>Job Level</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="w-[50px]"></TableHead>
+            </TableRow>
+          </TableHeader>
 
-      {/* Table kita biarkan di bawah */}
+          <TableBody>
+            {employees.map((employee) => (
+              <TableRow key={employee.id}>
+                <TableCell>
+                  <div>
+                    <p className="font-medium">{employee.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {employee.email}
+                    </p>
+                  </div>
+                </TableCell>
+
+                <TableCell>{employee.department}</TableCell>
+
+                <TableCell>{employee.position}</TableCell>
+
+                <TableCell>{employee.jobLevel}</TableCell>
+
+                <TableCell>
+                  <Badge
+                    variant={
+                      employee.status === "Active" ? "default" : "secondary"
+                    }
+                  >
+                    {employee.status}
+                  </Badge>
+                </TableCell>
+
+                <TableCell>
+                  <Button variant="ghost" size="icon">
+                    <MoreHorizontal />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
