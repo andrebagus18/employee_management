@@ -2,47 +2,22 @@ import { NavLink } from "react-router-dom";
 import { CirclePlus } from "lucide-react";
 import EmployeeFilters from "@/molecules/EmployeeFilters";
 import EmployeeTable from "@/organisms/EmployeeTable";
-
-const employees = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "john@company.com",
-    department: "Engineering",
-    position: "Frontend Developer",
-    jobLevel: "Senior",
-    status: "Active",
-  },
-  {
-    id: 2,
-    name: "Sarah Smith",
-    email: "sarah@company.com",
-    department: "Human Resources",
-    position: "HR Specialist",
-    jobLevel: "Mid",
-    status: "Active",
-  },
-  {
-    id: 3,
-    name: "Michael Lee",
-    email: "michael@company.com",
-    department: "Finance",
-    position: "Accountant",
-    jobLevel: "Junior",
-    status: "Inactive",
-  },
-  {
-    id: 4,
-    name: "Emily Johnson",
-    email: "emily@company.com",
-    department: "Engineering",
-    position: "Backend Developer",
-    jobLevel: "Mid",
-    status: "Active",
-  },
-];
+import { useEmployees } from "@/hooks/useEmployees";
+import { showError } from "../lib/alert";
+import { useEffect } from "react";
 
 function Employees() {
+  const { employees, loading, error, refetch } = useEmployees();
+
+  useEffect(() => {
+    if (error) {
+      showError(error.response?.data?.msg || "Failed to load employees.");
+    }
+  }, [error]);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -58,7 +33,7 @@ function Employees() {
         <EmployeeFilters />
         <NavLink
           to={"/employees/create"}
-          className="flex items-center justify-center max-w-3xs w-full bg-black text-white gap-4 py-2 rounded-md text-md cursor-pointer"
+          className="flex items-center justify-center max-w-42 w-full bg-black text-white gap-4 py-2 rounded-md text-md cursor-pointer"
         >
           <CirclePlus className="size-5" />
           Add Employee

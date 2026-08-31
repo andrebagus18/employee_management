@@ -177,7 +177,13 @@ export const createEmployee = async (req, res) => {
 
 export const getEmployees = async (req, res) => {
   try {
-    const employees = await prisma.employee.findMany();
+    const employees = await prisma.employee.findMany({
+      include: {
+        department: true,
+        position: true,
+        jobLevel: true,
+      },
+    });
     if (employees.length === 0) {
       return res.status(200).json([]);
     }

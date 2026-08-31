@@ -9,17 +9,20 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Eye, Pencil, Trash2 } from "lucide-react";
+import { formatDateIndo } from "@/lib/utils";
 
 function EmployeeTable({ employees }) {
+  console.log("employees", employees);
   return (
     <div className="rounded-lg border">
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>
+            <TableHead>NIK</TableHead>
             <TableHead>Department</TableHead>
             <TableHead>Position</TableHead>
-            <TableHead>Job Level</TableHead>
+            <TableHead>Hire Date</TableHead>
             <TableHead>Status</TableHead>
             <TableHead className="w-[50px]"></TableHead>
           </TableRow>
@@ -30,15 +33,16 @@ function EmployeeTable({ employees }) {
             <TableRow key={employee.id}>
               <TableCell>
                 <div>
-                  <p className="font-medium">{employee.name}</p>
+                  <p className="font-medium capitalize">{employee.name}</p>
                   <p className="text-sm text-muted-foreground">
                     {employee.email}
                   </p>
                 </div>
               </TableCell>
-              <TableCell>{employee.department}</TableCell>
-              <TableCell>{employee.position}</TableCell>
-              <TableCell>{employee.jobLevel}</TableCell>
+              <TableCell>{employee.nik}</TableCell>
+              <TableCell>{employee.department?.name}</TableCell>
+              <TableCell>{employee.position?.name}</TableCell>
+              <TableCell>{formatDateIndo(employee.hire_date)}</TableCell>
               <TableCell>
                 <Badge
                   variant={
