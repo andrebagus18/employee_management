@@ -1,7 +1,14 @@
 import FormField from "./EmployeeFormField";
 import { Button } from "@/components/ui/button";
 
-function EmployeeForm({ form, error, loading, handleChange, handleSubmit }) {
+function EmployeeForm({
+  form,
+  error,
+  loading,
+  handleChange,
+  handleSubmit,
+  employees,
+}) {
   return (
     <form
       onSubmit={handleSubmit}
@@ -10,8 +17,8 @@ function EmployeeForm({ form, error, loading, handleChange, handleSubmit }) {
       <FormField
         form={form}
         error={error}
-        loading={loading}
         handleChange={handleChange}
+        employees={employees}
       />
       {/* Actions */}
       <div className="flex justify-end gap-3 pt-6">
