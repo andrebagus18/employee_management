@@ -11,15 +11,10 @@ function FormField({ form, error, handleChange }) {
   const { departments } = useDepartments();
   const { jobLevels } = useJobLevels();
   const { roles } = useRoles();
-
-  console.log("positions", positions);
-  console.log("departments", departments);
-  console.log("jobLevels", jobLevels);
-  console.log("roles", roles);
   return (
     <>
       {/* Personal Information */}
-      <section className="rounded-xl border bg-background p-6">
+      <section className="rounded-xl border border-slate-400/40 bg-background p-6">
         <div className="mb-6">
           <h2 className="text-base font-semibold">Personal Information</h2>
 
@@ -38,15 +33,17 @@ function FormField({ form, error, handleChange }) {
               value={form.name}
               onChange={handleChange}
               placeholder="John"
+              className="border border-slate-400/50"
             />
           </div>
           <div className="space-y-2">
+            <Label htmlFor="gender">Gender</Label>
             <select
               id="gender"
               name="gender"
               value={form.gender}
               onChange={handleChange}
-              className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              className="h-9 w-full rounded-md border border-slate-400/50 bg-background px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
             >
               <option value="">Select gender</option>
               <option value="male">Male</option>
@@ -61,6 +58,7 @@ function FormField({ form, error, handleChange }) {
               type="tel"
               value={form.phone}
               onChange={handleChange}
+              className="border border-slate-400/50"
             />
           </div>
           <div className="space-y-2">
@@ -71,13 +69,14 @@ function FormField({ form, error, handleChange }) {
               type="text"
               value={form.address}
               onChange={handleChange}
+              className="border border-slate-400/50"
             />
           </div>
         </div>
       </section>
 
       {/* Employment Information */}
-      <section className="rounded-xl border bg-background p-6">
+      <section className="rounded-xl border border-slate-400/40 bg-background p-6">
         <div className="mb-6">
           <h2 className="text-base font-semibold">Employment Information</h2>
           <p className="text-sm text-muted-foreground">
@@ -94,6 +93,7 @@ function FormField({ form, error, handleChange }) {
               value={form.nik}
               onChange={handleChange}
               placeholder="HRMS0001"
+              className="border border-slate-400/50"
             />
           </div>
           <div className="space-y-2">
@@ -104,6 +104,7 @@ function FormField({ form, error, handleChange }) {
               type="date"
               value={form.hire_date}
               onChange={handleChange}
+              className="border border-slate-400/50"
             />
           </div>
           <div className="space-y-2">
@@ -114,6 +115,7 @@ function FormField({ form, error, handleChange }) {
               type="date"
               value={form.termination_date}
               onChange={handleChange}
+              className="border border-slate-400/50"
             />
           </div>
           <div className="space-y-2">
@@ -124,6 +126,7 @@ function FormField({ form, error, handleChange }) {
               type="text"
               value={form.status}
               onChange={handleChange}
+              className="border border-slate-400/50"
             />
           </div>
           <div className="space-y-2">
@@ -133,7 +136,7 @@ function FormField({ form, error, handleChange }) {
               name="departmentId"
               value={form.departmentId}
               onChange={handleChange}
-              className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              className="h-9 w-full rounded-md border border-slate-400/40 bg-background px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
             >
               {departments.map((department) => (
                 <option key={department.id} value={department.id}>
@@ -149,7 +152,7 @@ function FormField({ form, error, handleChange }) {
               name="positionId"
               value={form.positionId}
               onChange={handleChange}
-              className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              className="h-9 w-full rounded-md border border-slate-400/40 bg-background px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
             >
               {positions.map((position) => (
                 <option key={position.id} value={position.id}>
@@ -165,7 +168,7 @@ function FormField({ form, error, handleChange }) {
               name="jobLevelId"
               value={form.jobLevelId}
               onChange={handleChange}
-              className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              className="h-9 w-full rounded-md border border-slate-400/40 bg-background px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
             >
               {jobLevels.map((jobLevel) => (
                 <option key={jobLevel.id} value={jobLevel.id}>
@@ -181,7 +184,7 @@ function FormField({ form, error, handleChange }) {
               name="managerId"
               value={form.managerId}
               onChange={handleChange}
-              className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              className="h-9 w-full rounded-md border border-slate-400/40 bg-background px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
             >
               <option value="">Select Manager</option>
               <option value="2">HR</option>
@@ -194,7 +197,7 @@ function FormField({ form, error, handleChange }) {
 
       {/* Account Information */}
       <div>
-        <section className="rounded-xl border bg-background p-6">
+        <section className="rounded-xl border border-slate-400/40 bg-background p-6">
           <div className="mb-6">
             <h2 className="text-base font-semibold">Account Information</h2>
             <p className="text-sm text-muted-foreground">
@@ -210,6 +213,7 @@ function FormField({ form, error, handleChange }) {
                 type="mail"
                 value={form.email}
                 onChange={handleChange}
+                className="border border-slate-400/50"
               />
             </div>
             <div className="space-y-2">
@@ -220,6 +224,7 @@ function FormField({ form, error, handleChange }) {
                 type="text"
                 value={form.password}
                 onChange={handleChange}
+                className="border border-slate-400/50"
               />
             </div>
             <div className="space-y-2">
@@ -229,7 +234,7 @@ function FormField({ form, error, handleChange }) {
                 name="roleId"
                 value={form.roleId}
                 onChange={handleChange}
-                className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+                className="h-9 w-full rounded-md border border-slate-400/40 bg-background px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
               >
                 {roles.map((role) => (
                   <option key={role.id} value={role.id}>

@@ -17,7 +17,7 @@ export function useDepartments() {
     } finally {
       setLoading(false);
     }
-  });
+  }, []);
 
   useEffect(() => {
     fetchDepartments();

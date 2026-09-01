@@ -17,7 +17,7 @@ export function usePositions() {
     } finally {
       setLoading(false);
     }
-  });
+  }, []);
 
   useEffect(() => {
     fetchPositions();

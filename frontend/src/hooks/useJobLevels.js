@@ -17,7 +17,7 @@ export function useJobLevels() {
     } finally {
       setLoading(false);
     }
-  });
+  }, []);
 
   useEffect(() => {
     fetchJobLevels();

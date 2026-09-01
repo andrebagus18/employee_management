@@ -17,7 +17,7 @@ export function useRoles() {
     } finally {
       setLoading(false);
     }
-  });
+  }, []);
 
   useEffect(() => {
     fetchRoles();

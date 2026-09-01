@@ -52,7 +52,7 @@ export const getPosition = async (req, res) => {
       return res.status(200).json([]);
     }
     return res.status(200).json({
-      data: positions,
+      positions,
     });
   } catch (error) {
     console.error(error);

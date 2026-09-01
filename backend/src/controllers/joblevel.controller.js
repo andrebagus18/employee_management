@@ -27,16 +27,16 @@ export const createJobLevel = async (req, res) => {
 
 export const getJobLevel = async (req, res) => {
   try {
-    const jobLevel = await prisma.jobLevel.findMany({
+    const jobLevels = await prisma.jobLevel.findMany({
       orderBy: {
         name: "asc",
       },
     });
-    if (jobLevel.length === 0) {
+    if (jobLevels.length === 0) {
       return res.status(200).json([]);
     }
     return res.status(200).json({
-      data: jobLevel,
+      jobLevels,
     });
   } catch (error) {
     console.error(error);
