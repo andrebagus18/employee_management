@@ -7,7 +7,7 @@ import { showError } from "../lib/alert";
 import { useEffect } from "react";
 
 function Employees() {
-  const { employees, loading, error, refetch } = useEmployees();
+  const { employees, loading, error } = useEmployees();
 
   useEffect(() => {
     if (error) {

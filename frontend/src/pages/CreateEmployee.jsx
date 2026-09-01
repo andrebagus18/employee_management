@@ -2,9 +2,11 @@ import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import EmployeeForm from "@/molecules/EmployeeForm";
+import { useEmployees } from "@/hooks/useEmployees";
 
 function CreateEmployee() {
   const navigate = useNavigate();
+  const { form, error, loading, handleChange, handleSubmit } = useEmployees();
 
   return (
     <div className="mx-auto w-full space-y-6">
@@ -30,7 +32,13 @@ function CreateEmployee() {
           </p>
         </div>
       </div>
-      <EmployeeForm />
+      <EmployeeForm
+        form={form}
+        error={error}
+        loading={loading}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+      />
     </div>
   );
 }

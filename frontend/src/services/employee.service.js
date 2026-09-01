@@ -5,3 +5,8 @@ export const getEmployees = async () => {
   //   console.log("employee:", response.data);
   return response.data;
 };
+
+export const createEmployee = async (data) => {
+  const response = await api.get("/employees/create", data);
+  return response.data;
+};

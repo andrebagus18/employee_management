@@ -56,6 +56,7 @@ import {
   getDetailReport,
   updateReport,
 } from "../controllers/dailyReport.contoller.js";
+import { getRoles } from "../controllers/role.controller.js";
 
 // route login
 router.post("/auth/login", userLogin);
@@ -184,6 +185,14 @@ router.delete(
   authMiddleware,
   permissionMiddleware("role.update"),
   revokePermission,
+);
+
+// route role
+router.get(
+  "/roles",
+  authMiddleware,
+  permissionMiddleware("role.view"),
+  getRoles,
 );
 
 // route permission

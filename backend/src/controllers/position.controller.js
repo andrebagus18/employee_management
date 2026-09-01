@@ -43,12 +43,16 @@ export const createPosition = async (req, res) => {
 
 export const getPosition = async (req, res) => {
   try {
-    const position = await prisma.position.findMany();
-    if (position.length === 0) {
+    const positions = await prisma.position.findMany({
+      orderBy: {
+        name: "asc",
+      },
+    });
+    if (positions.length === 0) {
       return res.status(200).json([]);
     }
     return res.status(200).json({
-      data: position,
+      data: positions,
     });
   } catch (error) {
     console.error(error);

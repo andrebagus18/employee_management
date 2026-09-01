@@ -12,7 +12,6 @@ import { Eye, Pencil, Trash2 } from "lucide-react";
 import { formatDateIndo } from "@/lib/utils";
 
 function EmployeeTable({ employees }) {
-  console.log("employees", employees);
   return (
     <div className="rounded-lg border">
       <Table>

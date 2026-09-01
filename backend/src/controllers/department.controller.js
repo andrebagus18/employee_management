@@ -28,7 +28,11 @@ export const createDepartment = async (req, res) => {
 
 export const getDepartments = async (req, res) => {
   try {
-    const department = await prisma.department.findMany();
+    const department = await prisma.department.findMany({
+      orderBy: {
+        name: "asc",
+      },
+    });
     if (department.length === 0) {
       return res.status(200).json([]);
     }
