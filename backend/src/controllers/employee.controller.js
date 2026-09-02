@@ -8,6 +8,8 @@ export const createEmployee = async (req, res) => {
       gender,
       nik,
       phone,
+      place_birth,
+      date_birth,
       address,
       hire_date,
       termination_date,
@@ -26,6 +28,8 @@ export const createEmployee = async (req, res) => {
       !gender ||
       !nik ||
       !phone ||
+      !place_birth ||
+      !date_birth ||
       !address ||
       !hire_date ||
       !status ||
@@ -126,6 +130,8 @@ export const createEmployee = async (req, res) => {
           gender: gender,
           nik: nik,
           phone: phone,
+          place_birth: place_birth,
+          date_birth: date_birth,
           address: address,
           hire_date: new Date(hire_date),
           termination_date: termination_date,
@@ -177,24 +183,88 @@ export const createEmployee = async (req, res) => {
 
 export const getEmployees = async (req, res) => {
   try {
-    const employees = await prisma.employee.findMany({
-      include: {
-        department: true,
-        position: true,
-        jobLevel: true,
-      },
+    const {
+      search = "",
+      departmentId,
+      positionId,
+      status,
+      page = 1,
+      limit = 10,
+    } = req.query;
+    const where = searchEmployee({
+      search,
+      departmentId,
+      positionId,
+      status,
     });
+    const pageNumber = Number(page);
+    const limitNumber = Number(limit);
+    const skip = (pageNumber - 1) * limitNumber;
+    const [employees, total] = await Promise.all([
+      prisma.employee.findMany({
+        where,
+        skip,
+        take: limitNumber,
+        include: {
+          department: true,
+          position: true,
+          jobLevel: true,
+          manager: true,
+          users: {
+            select: {
+              email: true,
+            },
+          },
+        },
+      }),
+      prisma.employee.count({
+        where,
+      }),
+    ]);
+    const totalPage = Math.ceil(total / limitNumber);
     if (employees.length === 0) {
       return res.status(200).json([]);
     }
     return res.status(200).json({
       employees,
+      pagination: {
+        page: pageNumber,
+        limit: limitNumber,
+        total,
+        totalPage,
+      },
     });
   } catch (error) {
     return res.status(500).json({
       msg: "Internal server error",
     });
   }
+};
+
+export const searchEmployee = ({
+  search = "",
+  departmentId,
+  positionId,
+  status,
+  page = 1,
+  limit = 10,
+}) => {
+  const where = {};
+  if (search) {
+    where.name = {
+      contains: search,
+    };
+  }
+  if (departmentId) {
+    where.departmentId = Number(departmentId);
+  }
+  if (positionId) {
+    where.positionId = Number(positionId);
+  }
+  if (status) {
+    where.status = status;
+  }
+  return where;
 };
 
 export const getEmployeeById = async (req, res) => {

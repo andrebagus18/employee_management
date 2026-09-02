@@ -12,7 +12,7 @@ import { Eye, Pencil, Trash2 } from "lucide-react";
 import { formatDateIndo } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 
-function EmployeeTable({ employees, employee }) {
+function EmployeeTable({ employees }) {
   const navigate = useNavigate();
 
   return (
@@ -20,6 +20,7 @@ function EmployeeTable({ employees, employee }) {
       <Table>
         <TableHeader className="sticky top-0 z-10 bg-background">
           <TableRow>
+            <TableHead>No.</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>NIK</TableHead>
             <TableHead>Department</TableHead>
@@ -31,13 +32,14 @@ function EmployeeTable({ employees, employee }) {
         </TableHeader>
 
         <TableBody>
-          {employees.map((employee) => (
+          {(employees ?? []).map((employee, index) => (
             <TableRow key={employee.id}>
+              <TableCell>{index + 1}</TableCell>
               <TableCell>
                 <div>
                   <p className="font-medium capitalize">{employee.name}</p>
                   <p className="text-sm text-muted-foreground">
-                    {employee.email}
+                    {employee.users?.[0]?.email}
                   </p>
                 </div>
               </TableCell>
@@ -48,7 +50,7 @@ function EmployeeTable({ employees, employee }) {
               <TableCell>
                 <Badge
                   variant={
-                    employee.status === "Active" ? "default" : "secondary"
+                    employee.status === "ACTIVE" ? "default" : "secondary"
                   }
                 >
                   {employee.status}

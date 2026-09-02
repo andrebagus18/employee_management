@@ -1,7 +1,7 @@
 import api from "@/services/api";
 
-export const getEmployees = async () => {
-  const response = await api.get("/employees");
+export const getEmployees = async (params = {}) => {
+  const response = await api.get("/employees", { params });
   //   console.log("employee:", response.data);
   return response.data;
 };

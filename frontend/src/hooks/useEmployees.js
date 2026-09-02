@@ -12,6 +12,8 @@ const initialForm = {
   gender: "",
   nik: "",
   phone: "",
+  place_birth: "",
+  date_birth: "",
   address: "",
   hire_date: "",
   termination_date: "",
@@ -27,6 +29,16 @@ const initialForm = {
 
 export function useEmployees() {
   const [employees, setEmployees] = useState([]);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPage: 0,
+  });
+  const [departmentId, setDepartmentId] = useState("");
+  const [positionId, setPositionId] = useState("");
+  const [status, setStatus] = useState("");
+  const [search, setSearch] = useState("");
   const [employee, setEmployee] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -36,12 +48,15 @@ export function useEmployees() {
   const navigate = useNavigate();
 
   //GET
-  const fetchEmployees = useCallback(async () => {
+  const fetchEmployees = useCallback(async (params = {}) => {
     try {
       setLoading(true);
       setError(null);
-      const data = await getEmployees();
+      const data = await getEmployees(params);
+      console.log("params", params);
+      console.log("data:", data);
       setEmployees(data.employees);
+      setPagination(data.pagination);
     } catch (error) {
       console.error(error);
       setError(error);
@@ -49,10 +64,6 @@ export function useEmployees() {
       setLoading(false);
     }
   }, []);
-
-  useEffect(() => {
-    fetchEmployees();
-  }, [fetchEmployees]);
 
   const getEmployeeId = async (id) => {
     try {
@@ -77,7 +88,7 @@ export function useEmployees() {
       [name]: value,
     }));
     // hapus error field yang sudah diperbaiki
-    setError((prev) => ({
+    setErrors((prev) => ({
       ...prev,
       [name]: "",
     }));
@@ -91,6 +102,8 @@ export function useEmployees() {
       ["gender", "Gender"],
       ["nik", "NIK"],
       ["phone", "Phone"],
+      ["place_birth", "Place of Birth"],
+      ["date_birth", "Date of Birth"],
       ["address", "Address"],
       ["hire_date", "Hire Date"],
       ["departmentId", "Department"],
@@ -102,7 +115,7 @@ export function useEmployees() {
     ];
     requiredField.forEach(([field, label]) => {
       if (!String(form[field]).trim()) {
-        newError[field] = `${label} is required`;
+        newErrors[field] = `${label} is required`;
       }
     });
     // error disimpan ke state error
@@ -137,6 +150,8 @@ export function useEmployees() {
       gender: form.gender.trim(),
       nik: form.nik.trim(),
       phone: form.phone.trim(),
+      place_birth: form.place_birth.trim(),
+      date_birth: form.date_birth,
       address: form.address.trim(),
       hire_date: form.hire_date,
       termination_date: form.termination_date || null,
@@ -156,12 +171,15 @@ export function useEmployees() {
     employees,
     employee,
     loading,
-    refetch: fetchEmployees,
+    fetchEmployees,
     form,
     error,
     errors,
+    search,
+    setSearch,
     handleSubmit,
     handleChange,
     getEmployeeId,
+    pagination,
   };
 }

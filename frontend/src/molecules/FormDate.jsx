@@ -14,6 +14,7 @@ function FormDate({
   label,
   name,
   value,
+  error,
   onChange,
   placeholder = "Select Date",
 }) {
@@ -47,9 +48,15 @@ function FormDate({
               });
               setOpen(false);
             }}
+            captionLayout="dropdown"
+            startMonth={new Date(1950, 0)}
+            endMonth={new Date()}
+            formYear={1950}
+            toYear={new Date().getFullYear()}
           />
         </PopoverContent>
       </Popover>
+      {error && <p className="text-sm text-destructive">{error}</p>}
     </div>
   );
 }

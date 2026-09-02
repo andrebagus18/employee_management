@@ -1,12 +1,5 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { usePositions } from "@/hooks/usePositions";
 import { useDepartments } from "@/hooks/useDepartments";
@@ -44,6 +37,9 @@ function FormField({ form, errors, handleChange, employees }) {
               placeholder="John"
               className="border border-slate-400/50"
             />
+            {errors.name && (
+              <p className="font-sm text-destructive">{errors.name}</p>
+            )}
           </div>
           <FormSelect
             label="Gender"
@@ -68,6 +64,9 @@ function FormField({ form, errors, handleChange, employees }) {
               placeholder="0812..."
               className="border border-slate-400/50"
             />
+            {errors.phone && (
+              <p className="font-sm text-destructive">{errors.phone}</p>
+            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="place_birth">Place of Birth</Label>
@@ -79,12 +78,16 @@ function FormField({ form, errors, handleChange, employees }) {
               onChange={handleChange}
               className="border border-slate-400/50"
             />
+            {errors.place_birth && (
+              <p className="font-sm text-destructive">{errors.place_birth}</p>
+            )}
           </div>
           <FormDate
             label="Date of Birth"
-            name="birth_date"
-            value={form.birth_date}
+            name="date_birth"
+            value={form.date_birth}
             onChange={handleChange}
+            error={errors.date_birth}
           />
           <div className="space-y-2">
             <Label htmlFor="address">Address</Label>
@@ -122,12 +125,16 @@ function FormField({ form, errors, handleChange, employees }) {
               placeholder="HRMS0001"
               className="border border-slate-400/50"
             />
+            {errors.nik && (
+              <p className="font-sm text-destructive">{errors.nik}</p>
+            )}
           </div>
           <FormDate
             label="Hire Date"
             name="hire_date"
             value={form.hire_date}
             onChange={handleChange}
+            error={errors.hire_date}
           />
           <FormDate
             label="Termination Date"
@@ -218,6 +225,9 @@ function FormField({ form, errors, handleChange, employees }) {
                 onChange={handleChange}
                 className="border border-slate-400/50"
               />
+              {errors.email && (
+                <p className="font-sm text-destructive">{errors.email}</p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
@@ -229,6 +239,9 @@ function FormField({ form, errors, handleChange, employees }) {
                 onChange={handleChange}
                 className="border border-slate-400/50"
               />
+              {errors.password && (
+                <p className="font-sm text-destructive">{errors.password}</p>
+              )}
             </div>
             <FormSelect
               label="Role"

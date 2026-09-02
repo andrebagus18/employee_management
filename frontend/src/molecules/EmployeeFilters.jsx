@@ -2,8 +2,7 @@ import { useState } from "react";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
-function EmployeeFilters() {
-  const [search, setSearch] = useState("");
+function EmployeeFilters({ search, setSearch }) {
   const [department, setDepartment] = useState("all");
   const [jobLevel, setJobLevel] = useState("all");
   const [status, setStatus] = useState("all");
