@@ -8,7 +8,7 @@ function Table({ className, ...props }) {
   return (
     <div
       data-slot="table-container"
-      className="relative w-full overflow-x-auto"
+      className="w-full max-h-120 scrollbar-hide overflow-y-auto"
     >
       <table
         data-slot="table"

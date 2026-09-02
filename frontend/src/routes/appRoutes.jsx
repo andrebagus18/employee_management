@@ -14,6 +14,7 @@ import Roles from "@/pages/Roles";
 import Permissions from "@/pages/Permissions";
 import DailyReports from "@/pages/DailyReports";
 import ActivityLogs from "@/pages/ActivityLogs";
+import EmployeeDetail from "../pages/EmployeeDetail";
 
 function AppRoutes() {
   return (
@@ -26,6 +27,7 @@ function AppRoutes() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/employees" element={<Employees />} />
             <Route path="/employees/create" element={<CreateEmployee />} />
+            <Route path="/employees/:id" element={<EmployeeDetail />} />
             <Route path="/departments" element={<Departments />} />
             <Route path="/positions" element={<Positions />} />
             <Route path="/job-levels" element={<JobLevels />} />

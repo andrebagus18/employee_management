@@ -7,12 +7,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { usePositions } from "@/hooks/usePositions";
 import { useDepartments } from "@/hooks/useDepartments";
 import { useJobLevels } from "@/hooks/useJobLevels";
 import { useRoles } from "@/hooks/useRoles";
+import FormDate from "./FormDate";
+import FormSelect from "./FormSelect";
 
-function FormField({ form, error, handleChange, employees }) {
+function FormField({ form, errors, handleChange, employees }) {
   const { positions } = usePositions();
   const { departments } = useDepartments();
   const { jobLevels } = useJobLevels();
@@ -42,28 +45,18 @@ function FormField({ form, error, handleChange, employees }) {
               className="border border-slate-400/50"
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="gender">Gender</Label>
-            <Select
-              value={String(form.gender)}
-              onValueChange={(value) =>
-                handleChange({
-                  target: {
-                    name: "gender",
-                    value,
-                  },
-                })
-              }
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select Gender" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="MALE">Male</SelectItem>
-                <SelectItem value="FEMALE">Female</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <FormSelect
+            label="Gender"
+            name="gender"
+            value={form.gender}
+            onChange={handleChange}
+            options={[
+              { value: "MALE", label: "Male" },
+              { value: "FEMALE", label: "Female" },
+            ]}
+            placehorder="Select gender"
+            error={errors.gender}
+          />
           <div className="space-y-2">
             <Label htmlFor="phone">Phone</Label>
             <Input
@@ -72,19 +65,39 @@ function FormField({ form, error, handleChange, employees }) {
               type="tel"
               value={form.phone}
               onChange={handleChange}
+              placeholder="0812..."
               className="border border-slate-400/50"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="address">Address</Label>
+            <Label htmlFor="place_birth">Place of Birth</Label>
             <Input
-              id="address"
-              name="address"
+              id="place_birth"
+              name="place_birth"
               type="text"
-              value={form.address}
+              value={form.place_birth}
               onChange={handleChange}
               className="border border-slate-400/50"
             />
+          </div>
+          <FormDate
+            label="Date of Birth"
+            name="birth_date"
+            value={form.birth_date}
+            onChange={handleChange}
+          />
+          <div className="space-y-2">
+            <Label htmlFor="address">Address</Label>
+            <Textarea
+              id="address"
+              name="address"
+              value={form.address}
+              onChange={handleChange}
+              className="min-h-24 resize-none"
+            />
+            {errors.address && (
+              <p className="font-sm text-destructive">{errors.address}</p>
+            )}
           </div>
         </div>
       </section>
@@ -110,150 +123,78 @@ function FormField({ form, error, handleChange, employees }) {
               className="border border-slate-400/50"
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="hire_date">Hire Date</Label>
-            <Input
-              id="hire_date"
-              name="hire_date"
-              type="date"
-              value={form.hire_date}
-              onChange={handleChange}
-              className="border border-slate-400/50"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="termination_date">Termination Date</Label>
-            <Input
-              id="termination_date"
-              name="termination_date"
-              type="date"
-              value={form.termination_date}
-              onChange={handleChange}
-              className="border border-slate-400/50"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="status">Status</Label>
-            <Select
-              value={String(form.status)}
-              onValueChange={(value) =>
-                handleChange({
-                  target: {
-                    name: "status",
-                    value,
-                  },
-                })
-              }
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ACTIVE">Active</SelectItem>
-                <SelectItem value="INACTIVE">Inactive</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="departmentId">Department</Label>
-            <Select
-              value={String(form.departmentId)}
-              onValueChange={(value) =>
-                handleChange({
-                  target: {
-                    name: "departmentId",
-                    value,
-                  },
-                })
-              }
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select Department" />
-              </SelectTrigger>
-              <SelectContent className="max-h-50">
-                {departments.map((department) => (
-                  <SelectItem key={department.id} value={String(department.id)}>
-                    {department.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="positionId">Position</Label>
-            <Select
-              value={String(form.positionId)}
-              onValueChange={(value) =>
-                handleChange({
-                  target: {
-                    name: "positionId",
-                    value,
-                  },
-                })
-              }
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select Position" />
-              </SelectTrigger>
-              <SelectContent className="max-h-50">
-                {positions.map((position) => (
-                  <SelectItem key={position.id} value={String(position.id)}>
-                    {position.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="jobLevelId">Job Level</Label>
-            <Select
-              value={String(form.jobLevelId)}
-              onValueChange={(value) =>
-                handleChange({
-                  target: {
-                    name: "jobLevelId",
-                    value,
-                  },
-                })
-              }
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select Department" />
-              </SelectTrigger>
-              <SelectContent className="max-h-50">
-                {jobLevels.map((jobLevel) => (
-                  <SelectItem key={jobLevel.id} value={String(jobLevel.id)}>
-                    {jobLevel.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="managerId">Direct Manager</Label>
-            <Select
-              value={String(form.managerId)}
-              onValueChange={(value) =>
-                handleChange({
-                  target: {
-                    name: "managerId",
-                    value,
-                  },
-                })
-              }
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select Manager" />
-              </SelectTrigger>
-              <SelectContent className="max-h-50">
-                {employees.map((employee) => (
-                  <SelectItem key={employee.id} value={employee.id}>
-                    {employee.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <FormDate
+            label="Hire Date"
+            name="hire_date"
+            value={form.hire_date}
+            onChange={handleChange}
+          />
+          <FormDate
+            label="Termination Date"
+            name="termination_date"
+            value={form.termination_date}
+            onChange={handleChange}
+          />
+          <FormSelect
+            label="Status"
+            name="status"
+            value={form.status}
+            onChange={handleChange}
+            options={[
+              { value: "ACTIVE", label: "Active" },
+              { value: "INACTIVE", label: "Inactive" },
+            ]}
+            placehorder="Select status"
+            error={errors.status}
+          />
+          <FormSelect
+            label="Department"
+            name="departmentId"
+            value={form.departmentId}
+            onChange={handleChange}
+            options={departments.map((department) => ({
+              value: department.id,
+              label: department.name,
+            }))}
+            placehorder="Select Department"
+            error={errors.departmentId}
+          />
+          <FormSelect
+            label="Position"
+            name="positionId"
+            value={form.positionId}
+            onChange={handleChange}
+            options={positions.map((position) => ({
+              value: position.id,
+              label: position.name,
+            }))}
+            placehorder="Select Position"
+            error={errors.positionId}
+          />
+          <FormSelect
+            label="Job Level"
+            name="jobLevelId"
+            value={form.jobLevelId}
+            onChange={handleChange}
+            options={jobLevels.map((jobLevel) => ({
+              value: jobLevel.id,
+              label: jobLevel.name,
+            }))}
+            placehorder="Select Job Level"
+            error={errors.jobLevelId}
+          />
+          <FormSelect
+            label="Direct Manager"
+            name="managerId"
+            value={form.managerId}
+            onChange={handleChange}
+            options={employees.map((employee) => ({
+              value: employee.id,
+              label: employee.name,
+            }))}
+            placehorder="Select a top"
+            error={errors.managerId}
+          />
         </div>
       </section>
 
@@ -289,31 +230,18 @@ function FormField({ form, error, handleChange, employees }) {
                 className="border border-slate-400/50"
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="roleId">Role</Label>
-              <Select
-                value={String(form.roleId)}
-                onValueChange={(value) =>
-                  handleChange({
-                    target: {
-                      name: "roleId",
-                      value,
-                    },
-                  })
-                }
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select Role" />
-                </SelectTrigger>
-                <SelectContent className="max-h-50">
-                  {roles.map((role) => (
-                    <SelectItem key={role.id} value={String(role.id)}>
-                      {role.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <FormSelect
+              label="Role"
+              name="roleId"
+              value={form.roleId}
+              onChange={handleChange}
+              options={roles.map((role) => ({
+                value: role.id,
+                label: role.name,
+              }))}
+              placehorder="Select Role"
+              error={errors.roleId}
+            />
           </div>
         </section>
       </div>

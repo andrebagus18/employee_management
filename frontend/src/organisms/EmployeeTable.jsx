@@ -10,12 +10,15 @@ import {
 } from "@/components/ui/table";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { formatDateIndo } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
-function EmployeeTable({ employees }) {
+function EmployeeTable({ employees, employee }) {
+  const navigate = useNavigate();
+
   return (
-    <div className="rounded-lg border">
+    <div className="rounded-lg border p-2">
       <Table>
-        <TableHeader>
+        <TableHeader className="sticky top-0 z-10 bg-background">
           <TableRow>
             <TableHead>Name</TableHead>
             <TableHead>NIK</TableHead>
@@ -23,7 +26,7 @@ function EmployeeTable({ employees }) {
             <TableHead>Position</TableHead>
             <TableHead>Hire Date</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead className="w-[50px]"></TableHead>
+            <TableHead className="w-14"></TableHead>
           </TableRow>
         </TableHeader>
 
@@ -57,7 +60,7 @@ function EmployeeTable({ employees }) {
                     {
                       label: "View",
                       icon: Eye,
-                      onClick: () => console.log("VIEW", employee.id),
+                      onClick: () => navigate(`/employees/${employee.id}`),
                     },
                     {
                       label: "Edit",

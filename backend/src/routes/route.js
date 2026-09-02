@@ -16,6 +16,7 @@ import {
 import {
   createEmployee,
   getEmployees,
+  getEmployeeById,
   updateEmployeeUser,
   deleteEmployeeUser,
 } from "../controllers/employee.controller.js";
@@ -75,6 +76,12 @@ router.get(
   authMiddleware,
   permissionMiddleware("employee.view"),
   getEmployees,
+);
+router.get(
+  "/employees/:id",
+  authMiddleware,
+  permissionMiddleware("employee.view"),
+  getEmployeeById,
 );
 router.put(
   "/employees/:id/update",

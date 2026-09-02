@@ -6,7 +6,7 @@ import { useEmployees } from "@/hooks/useEmployees";
 
 function CreateEmployee() {
   const navigate = useNavigate();
-  const { form, error, loading, handleChange, handleSubmit, employees } =
+  const { form, errors, loading, handleChange, handleSubmit, employees } =
     useEmployees();
 
   return (
@@ -35,7 +35,7 @@ function CreateEmployee() {
       </div>
       <EmployeeForm
         form={form}
-        error={error}
+        errors={errors}
         loading={loading}
         handleChange={handleChange}
         handleSubmit={handleSubmit}

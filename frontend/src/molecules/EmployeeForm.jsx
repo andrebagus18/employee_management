@@ -1,14 +1,16 @@
 import FormField from "./EmployeeFormField";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 function EmployeeForm({
   form,
-  error,
+  errors,
   loading,
   handleChange,
   handleSubmit,
   employees,
 }) {
+  const navigate = useNavigate();
   return (
     <form
       onSubmit={handleSubmit}
@@ -16,7 +18,7 @@ function EmployeeForm({
     >
       <FormField
         form={form}
-        error={error}
+        errors={errors}
         handleChange={handleChange}
         employees={employees}
       />

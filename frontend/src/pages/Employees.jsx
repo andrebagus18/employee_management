@@ -7,7 +7,7 @@ import { showError } from "../lib/alert";
 import { useEffect } from "react";
 
 function Employees() {
-  const { employees, loading, error } = useEmployees();
+  const { employees, employee, loading, error } = useEmployees();
 
   useEffect(() => {
     if (error) {
@@ -41,7 +41,7 @@ function Employees() {
       </div>
 
       {/* Table */}
-      <EmployeeTable employees={employees} />
+      <EmployeeTable employees={employees} employee={employee} />
     </div>
   );
 }

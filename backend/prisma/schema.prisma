@@ -22,6 +22,11 @@ enum employeeStatus {
   INACTIVE
 }
 
+enum employeeGender {
+  MALE
+  FEMALE
+}
+
 model Role {
   id Int @id @default(autoincrement())
   name String
@@ -80,9 +85,11 @@ model Employee {
   manager Employee? @relation("EmployeeManager", fields: [managerId], references: [id])
   subordinates Employee[] @relation("EmployeeManager")
   name String
-  gender String
+  gender employeeGender @default(MALE)
   nik String @unique
   phone String
+  place_birth String?
+  date_birth DateTime? @db.Date
   address String @db.Text
   hire_date DateTime @db.Date
   termination_date DateTime? @db.Date

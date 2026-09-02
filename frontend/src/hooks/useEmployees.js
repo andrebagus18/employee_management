@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import { getEmployees } from "@/services/employee.service";
-import { createEmployee } from "@/services/employee.service";
+import {
+  createEmployee,
+  getEmployeeById,
+  getEmployees,
+} from "@/services/employee.service";
 import { showError, showSuccess } from "@/lib/alert";
 import { useNavigate } from "react-router-dom";
 
@@ -24,8 +27,10 @@ const initialForm = {
 
 export function useEmployees() {
   const [employees, setEmployees] = useState([]);
+  const [employee, setEmployee] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState({});
+  const [error, setError] = useState(null);
+  const [errors, setErrors] = useState({});
   const [form, setForm] = useState(initialForm);
 
   const navigate = useNavigate();
@@ -34,6 +39,7 @@ export function useEmployees() {
   const fetchEmployees = useCallback(async () => {
     try {
       setLoading(true);
+      setError(null);
       const data = await getEmployees();
       setEmployees(data.employees);
     } catch (error) {
@@ -47,6 +53,19 @@ export function useEmployees() {
   useEffect(() => {
     fetchEmployees();
   }, [fetchEmployees]);
+
+  const getEmployeeId = async (id) => {
+    try {
+      setLoading(true);
+      const response = await getEmployeeById(id);
+      setEmployee(response.employee);
+      return response;
+    } catch (error) {
+      showError(error.response?.data?.msg || "Failed to load employee");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // CREATE
   // ambil input
@@ -65,7 +84,7 @@ export function useEmployees() {
   };
   // validasi form sebelum dikirim
   const validate = () => {
-    const newError = {};
+    const newErrors = {};
     const requiredField = [
       // property, label
       ["name", "Name"],
@@ -87,9 +106,9 @@ export function useEmployees() {
       }
     });
     // error disimpan ke state error
-    setError(newError);
+    setErrors(newErrors);
     // jika sudah tidak ada error
-    return Object.keys(newError).length === 0;
+    return Object.keys(newErrors).length === 0;
   };
   const create = async (data) => {
     try {
@@ -97,7 +116,7 @@ export function useEmployees() {
       const response = await createEmployee(data);
       await showSuccess(response.msg);
       setForm(initialForm);
-      setError({});
+      setErrors({});
       navigate("/employees");
       return response;
     } catch (error) {
@@ -135,11 +154,14 @@ export function useEmployees() {
 
   return {
     employees,
+    employee,
     loading,
     refetch: fetchEmployees,
     form,
     error,
+    errors,
     handleSubmit,
     handleChange,
+    getEmployeeId,
   };
 }
