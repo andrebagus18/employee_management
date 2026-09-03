@@ -5,6 +5,14 @@ import EmployeeTable from "@/organisms/EmployeeTable";
 import { useEmployees } from "@/hooks/useEmployees";
 import { showError } from "../lib/alert";
 import { useEffect } from "react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 function Employees() {
   const {
@@ -21,6 +29,7 @@ function Employees() {
     setPositionId,
     status,
     setStatus,
+    pagination,
     resetFilters,
     handleActivate,
     handleDeactivate,
@@ -43,6 +52,28 @@ function Employees() {
       showError(error.response?.data?.msg || "Failed to load employees.");
     }
   }, [error]);
+
+  const handlePageChange = (page) => {
+    fetchEmployees({
+      page,
+      limit: pagination.limit,
+      search,
+      departmentId,
+      positionId,
+      status,
+    });
+  };
+
+  const handleLimitChange = (limit) => {
+    fetchEmployees({
+      page: 1,
+      limit: Number(limit),
+      search,
+      departmentId,
+      positionId,
+      status,
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -81,10 +112,64 @@ function Employees() {
       <EmployeeTable
         employees={employees}
         employee={employee}
+        loading={loading}
         onResetFilters={resetFilters}
         onActivate={handleActivate}
         onDeactivate={handleDeactivate}
       />
+      <div className="flex items-center justify-between border-t pt-4">
+        <div className="text-sm text-muted-foreground">
+          Showing{" "}
+          {pagination.total === 0
+            ? 0
+            : (pagination.page - 1) * pagination.limit + 1}{" "}
+          – {Math.min(pagination.page * pagination.limit, pagination.total)} of{" "}
+          {pagination.total} employees
+        </div>
+
+        <div className="flex items-center gap-6">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => handlePageChange(pagination.page - 1)}
+                  className={
+                    pagination.page === 1
+                      ? "pointer-events-none opacity-50"
+                      : "cursor-pointer"
+                  }
+                />
+              </PaginationItem>
+
+              {Array.from(
+                { length: pagination.totalPage },
+                (_, index) => index + 1,
+              ).map((page) => (
+                <PaginationItem key={page}>
+                  <PaginationLink
+                    isActive={pagination.page === page}
+                    onClick={() => handlePageChange(page)}
+                    className="cursor-pointer"
+                  >
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => handlePageChange(pagination.page + 1)}
+                  className={
+                    pagination.page === pagination.totalPage
+                      ? "pointer-events-none opacity-50"
+                      : "cursor-pointer"
+                  }
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      </div>
     </div>
   );
 }

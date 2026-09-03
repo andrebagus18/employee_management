@@ -20,9 +20,11 @@ import {
 import { formatDateIndo } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
+import TableSkeleton from "../molecules/TableSkeleton";
 
 function EmployeeTable({
   employees,
+  loading,
   onResetFilters,
   onActivate,
   onDeactivate,
@@ -46,7 +48,9 @@ function EmployeeTable({
         </TableHeader>
 
         <TableBody>
-          {(employees ?? []).length > 0 ? (
+          {loading ? (
+            <TableSkeleton />
+          ) : (employees ?? []).length > 0 ? (
             employees.map((employee, index) => (
               <TableRow key={employee.id}>
                 <TableCell>{index + 1}</TableCell>

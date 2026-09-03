@@ -57,8 +57,8 @@ export function useEmployees() {
       setLoading(true);
       setError(null);
       const data = await getEmployees(params);
-      // console.log("params", params);
-      // console.log("data:", data);
+      console.log("params", params);
+      console.log("data:", data);
       setEmployees(data.employees);
       setPagination(data.pagination);
     } catch (error) {
