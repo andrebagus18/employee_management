@@ -15,6 +15,13 @@ function Employees() {
     fetchEmployees,
     search,
     setSearch,
+    departmentId,
+    setDepartmentId,
+    positionId,
+    setPositionId,
+    status,
+    setStatus,
+    resetFilters,
   } = useEmployees();
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -22,10 +29,13 @@ function Employees() {
         page: 1,
         limit: 10,
         search,
+        departmentId,
+        positionId,
+        status,
       });
     }, 500);
     return () => clearTimeout(timer);
-  }, [fetchEmployees, search]);
+  }, [fetchEmployees, search, departmentId, positionId, status]);
   useEffect(() => {
     if (error) {
       showError(error.response?.data?.msg || "Failed to load employees.");
@@ -46,7 +56,16 @@ function Employees() {
 
       {/* Filters */}
       <div className="flex justify-between items-center">
-        <EmployeeFilters search={search} setSearch={setSearch} />
+        <EmployeeFilters
+          search={search}
+          setSearch={setSearch}
+          departmentId={departmentId}
+          setDepartmentId={setDepartmentId}
+          positionId={positionId}
+          setPositionId={setPositionId}
+          status={status}
+          setStatus={setStatus}
+        />
         <NavLink
           to={"/employees/create"}
           className="flex items-center justify-center max-w-42 w-full bg-black text-white gap-4 py-2 rounded-md text-md cursor-pointer"
@@ -57,7 +76,11 @@ function Employees() {
       </div>
 
       {/* Table */}
-      <EmployeeTable employees={employees} employee={employee} />
+      <EmployeeTable
+        employees={employees}
+        employee={employee}
+        onResetFilters={resetFilters}
+      />
     </div>
   );
 }

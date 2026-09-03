@@ -53,8 +53,8 @@ export function useEmployees() {
       setLoading(true);
       setError(null);
       const data = await getEmployees(params);
-      console.log("params", params);
-      console.log("data:", data);
+      // console.log("params", params);
+      // console.log("data:", data);
       setEmployees(data.employees);
       setPagination(data.pagination);
     } catch (error) {
@@ -64,6 +64,13 @@ export function useEmployees() {
       setLoading(false);
     }
   }, []);
+
+  const resetFilters = () => {
+    setSearch("");
+    setDepartmentId("");
+    setPositionId("");
+    setStatus("");
+  };
 
   const getEmployeeId = async (id) => {
     try {
@@ -177,9 +184,16 @@ export function useEmployees() {
     errors,
     search,
     setSearch,
+    departmentId,
+    setDepartmentId,
+    positionId,
+    setPositionId,
+    status,
+    setStatus,
     handleSubmit,
     handleChange,
     getEmployeeId,
     pagination,
+    resetFilters,
   };
 }

@@ -1,14 +1,35 @@
-import { useState } from "react";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { usePositions } from "@/hooks/usePositions";
+import { useDepartments } from "@/hooks/useDepartments";
+import FormSelect from "./FormSelect";
 
-function EmployeeFilters({ search, setSearch }) {
-  const [department, setDepartment] = useState("all");
-  const [jobLevel, setJobLevel] = useState("all");
-  const [status, setStatus] = useState("all");
+const statusOption = [
+  {
+    label: "Active",
+    value: "ACTIVE",
+  },
+  {
+    label: "Inactive",
+    value: "INACTIVE",
+  },
+];
+
+function EmployeeFilters({
+  search,
+  setSearch,
+  departmentId,
+  setDepartmentId,
+  positionId,
+  setPositionId,
+  status,
+  setStatus,
+}) {
+  const { positions } = usePositions();
+  const { departments } = useDepartments();
 
   return (
-    <div className="flex gap-3">
+    <div className="flex items-center justify-center gap-3">
       {/* Search */}
       <div className="relative flex-1">
         <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -20,37 +41,35 @@ function EmployeeFilters({ search, setSearch }) {
         />
       </div>
       {/* Department */}
-      <select
-        value={department}
-        onChange={(e) => setDepartment(e.target.value)}
-        className="h-9 rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
-      >
-        <option value="all">All Departments</option>
-        <option value="engineering">Engineering</option>
-        <option value="hr">Human Resources</option>
-        <option value="finance">Finance</option>
-      </select>
-      {/* Job Level */}
-      <select
-        value={jobLevel}
-        onChange={(e) => setJobLevel(e.target.value)}
-        className="h-9 rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
-      >
-        <option value="all">All Job Levels</option>
-        <option value="junior">Junior</option>
-        <option value="mid">Mid</option>
-        <option value="senior">Senior</option>
-      </select>
+      <FormSelect
+        name="departmentId"
+        value={departmentId}
+        onChange={(e) => setDepartmentId(e.target.value)}
+        options={departments.map((department) => ({
+          value: String(department.id),
+          label: department.name,
+        }))}
+        placehorder="Department"
+      />
+      {/* Position */}
+      <FormSelect
+        name="positionId"
+        value={positionId}
+        onChange={(e) => setPositionId(e.target.value)}
+        options={positions.map((position) => ({
+          value: String(position.id),
+          label: position.name,
+        }))}
+        placehorder="Position"
+      />
       {/* Status */}
-      <select
+      <FormSelect
+        name="status"
         value={status}
         onChange={(e) => setStatus(e.target.value)}
-        className="h-9 rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
-      >
-        <option value="all">All Status</option>
-        <option value="active">Active</option>
-        <option value="inactive">Inactive</option>
-      </select>
+        options={statusOption}
+        placehorder="Status"
+      />
     </div>
   );
 }

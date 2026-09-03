@@ -8,11 +8,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { Eye, Pencil, SearchX, Trash2, RotateCcw } from "lucide-react";
 import { formatDateIndo } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
+import { Button } from "../components/ui/button";
 
-function EmployeeTable({ employees }) {
+function EmployeeTable({ employees, onResetFilters }) {
   const navigate = useNavigate();
 
   return (
@@ -32,54 +33,80 @@ function EmployeeTable({ employees }) {
         </TableHeader>
 
         <TableBody>
-          {(employees ?? []).map((employee, index) => (
-            <TableRow key={employee.id}>
-              <TableCell>{index + 1}</TableCell>
-              <TableCell>
-                <div>
-                  <p className="font-medium capitalize">{employee.name}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {employee.users?.[0]?.email}
-                  </p>
+          {(employees ?? []).length > 0 ? (
+            employees.map((employee, index) => (
+              <TableRow key={employee.id}>
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>
+                  <div>
+                    <p className="font-medium capitalize">{employee.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {employee.users?.[0]?.email}
+                    </p>
+                  </div>
+                </TableCell>
+                <TableCell>{employee.nik}</TableCell>
+                <TableCell>{employee.department?.name}</TableCell>
+                <TableCell>{employee.position?.name}</TableCell>
+                <TableCell>{formatDateIndo(employee.hire_date)}</TableCell>
+                <TableCell>
+                  <Badge
+                    variant={
+                      employee.status === "ACTIVE" ? "default" : "secondary"
+                    }
+                  >
+                    {employee.status}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  <ActionMenu
+                    actions={[
+                      {
+                        label: "View",
+                        icon: Eye,
+                        onClick: () => navigate(`/employees/${employee.id}`),
+                      },
+                      {
+                        label: "Edit",
+                        icon: Pencil,
+                        onClick: () => console.log("EDIT", employee.id),
+                      },
+                      {
+                        label: "Delete",
+                        icon: Trash2,
+                        variant: "destructive",
+                        onClick: () => console.log("DELETE", employee.id),
+                      },
+                    ]}
+                  />
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={8} className="h-48 text-center">
+                <div className="flex flex-col items-center justify-center gap-3">
+                  <div className="flex size-12 items-center justify-center rounded-full bg-muted">
+                    <SearchX className="size-10 text-muted-foreground animate-[bounce_1.5s_ease-in-out_infinite]" />
+                  </div>
+                  <div>
+                    <p className="font-medium"> No employees found</p>
+                    <p className="text-sm text-muted-foreground">
+                      Try adjusting your search or filters
+                    </p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    onClick={onResetFilters}
+                    className="gap-2 border border-slate-400/50 cursor-pointer bg-slate-200 hover:bg-slate-400/30"
+                  >
+                    <RotateCcw className="sixe-4" />
+                    Reset Filters
+                  </Button>
                 </div>
               </TableCell>
-              <TableCell>{employee.nik}</TableCell>
-              <TableCell>{employee.department?.name}</TableCell>
-              <TableCell>{employee.position?.name}</TableCell>
-              <TableCell>{formatDateIndo(employee.hire_date)}</TableCell>
-              <TableCell>
-                <Badge
-                  variant={
-                    employee.status === "ACTIVE" ? "default" : "secondary"
-                  }
-                >
-                  {employee.status}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <ActionMenu
-                  actions={[
-                    {
-                      label: "View",
-                      icon: Eye,
-                      onClick: () => navigate(`/employees/${employee.id}`),
-                    },
-                    {
-                      label: "Edit",
-                      icon: Pencil,
-                      onClick: () => console.log("EDIT", employee.id),
-                    },
-                    {
-                      label: "Delete",
-                      icon: Trash2,
-                      variant: "destructive",
-                      onClick: () => console.log("DELETE", employee.id),
-                    },
-                  ]}
-                />
-              </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
     </div>
