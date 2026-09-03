@@ -4,9 +4,12 @@ import {
   getEmployeeById,
   getEmployees,
   updateEmployeeId,
+  activateEmployee,
+  deactivateEmployee,
 } from "@/services/employee.service";
 import { showError, showSuccess } from "@/lib/alert";
 import { useNavigate } from "react-router-dom";
+import { showConfirm } from "../lib/alert";
 
 const initialForm = {
   name: "",
@@ -245,6 +248,59 @@ export function useEmployees() {
     await create(payload);
   };
 
+  const handleActivate = async (id) => {
+    const confirm = await showConfirm({
+      title: "Acyivate Employee?",
+      text: "This employee will be able to access the system again.",
+      confirmText: "Yes, Activate",
+    });
+    if (!confirm.isConfirmed) return;
+    try {
+      setLoading(true);
+      const response = await activateEmployee(id);
+      await fetchEmployees({
+        page: pagination.page,
+        limit: pagination.limit,
+        search,
+        departmentId,
+        positionId,
+        status,
+      });
+      showSuccess(response.msg);
+    } catch (error) {
+      showError(error.response?.data?.msg || "Failed to activate employee");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeactivate = async (id) => {
+    const confirm = await showConfirm({
+      title: "Deactivate Employee?",
+      text: "This employee will no longer be able to acces the system.",
+      confirmText: "Yes, Deactivate",
+    });
+    if (!confirm.isConfirmed) return;
+    try {
+      setLoading(true);
+      const response = await deactivateEmployee(id);
+      await fetchEmployees({
+        page: pagination.page,
+        limit: pagination.limit,
+        search,
+        departmentId,
+        positionId,
+        status,
+      });
+      showSuccess(response.msg);
+      return response;
+    } catch (error) {
+      showError(error.response?.data?.msg || "Failed to deactivate employee");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     employees,
     employee,
@@ -268,5 +324,7 @@ export function useEmployees() {
     pagination,
     resetFilters,
     updateEmployee,
+    handleActivate,
+    handleDeactivate,
   };
 }

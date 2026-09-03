@@ -1,5 +1,4 @@
 import Swal from "sweetalert2";
-import swal from "sweetalert2";
 
 export const showSuccess = (message) => {
   return Swal.fire({

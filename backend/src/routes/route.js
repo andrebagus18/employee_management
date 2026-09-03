@@ -18,7 +18,8 @@ import {
   getEmployees,
   getEmployeeById,
   updateEmployeeUser,
-  deleteEmployeeUser,
+  activateEmployeeUser,
+  deactivateEmployeeUser,
 } from "../controllers/employee.controller.js";
 import {
   createDepartment,
@@ -92,8 +93,14 @@ router.put(
 router.delete(
   "/employees/:id/delete",
   authMiddleware,
-  permissionMiddleware("employee.delete"),
-  deleteEmployeeUser,
+  permissionMiddleware("employee.update"),
+  deactivateEmployeeUser,
+);
+router.patch(
+  "/employees/:id/activate",
+  authMiddleware,
+  permissionMiddleware("employee.update"),
+  activateEmployeeUser,
 );
 
 // route department

@@ -483,58 +483,88 @@ export const updateEmployeeUser = async (req, res) => {
   }
 };
 
-export const deleteEmployeeUser = async (req, res) => {
+export const deactivateEmployeeUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const findEmployeeId = await prisma.employee.findUnique({
+    const employee = await prisma.employee.findUnique({
       where: {
         id: Number(id),
       },
     });
-    if (!findEmployeeId) {
+    if (!employee) {
       return res.status(404).json({
         msg: "Employee not found",
       });
     }
-    const findUserId = await prisma.user.findUnique({
+    // deactivated
+    await prisma.employee.update({
       where: {
-        employeeId: Number(id),
+        id: Number(id),
+      },
+      data: {
+        status: "INACTIVE",
       },
     });
-    if (!findUserId) {
+    await prisma.activityLog.create({
+      data: {
+        userId: req.user.userId,
+        action: "DEACTIVATE",
+        entity: "Employee",
+        entityId: employee.id,
+        description: `Employee ${employee.name} was deactivated`,
+      },
+    });
+
+    return res.status(200).json({
+      msg: "Deactivated employee successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      msg: "Internal server error",
+    });
+  }
+};
+
+export const activateEmployeeUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const employee = await prisma.employee.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+    if (!employee) {
       return res.status(404).json({
-        msg: "User not found",
+        msg: "Employee not found",
       });
     }
-    // delete
-    await prisma.$transaction(async (tx) => {
-      const employee = await tx.employee.findUnique({
-        where: {
-          id: Number(id),
-        },
+    if (employee.status === "ACTIVE") {
+      return res.status(400).json({
+        msg: "Employee is already active",
       });
-      await tx.user.delete({
-        where: {
-          id: findUserId.id,
-        },
-      });
-      await tx.employee.delete({
-        where: {
-          id: Number(id),
-        },
-      });
-      await tx.activityLog.create({
-        data: {
-          userId: req.user.userId,
-          action: "DELETE",
-          entity: "Employee",
-          entityId: employee.id,
-          description: `Employee ${employee.name} and User account was deleted`,
-        },
-      });
+    }
+    // deactivated
+    await prisma.employee.update({
+      where: {
+        id: Number(id),
+      },
+      data: {
+        status: "ACTIVE",
+      },
     });
+    await prisma.activityLog.create({
+      data: {
+        userId: req.user.userId,
+        action: "ACTIVATE",
+        entity: "Employee",
+        entityId: employee.id,
+        description: `Employee ${employee.name} was activated`,
+      },
+    });
+
     return res.status(200).json({
-      msg: "Delete employee successfully",
+      msg: "Activated employee successfully",
     });
   } catch (error) {
     console.error(error);

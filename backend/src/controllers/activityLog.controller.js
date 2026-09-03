@@ -4,11 +4,15 @@ export const activityLog = async (req, res) => {
   try {
     const activity = await prisma.activityLog.findMany({
       include: {
-        user: true,
+        user: {
+          include: {
+            employee: true,
+          },
+        },
       },
     });
     return res.status(200).json({
-      data: activity,
+      activity,
     });
   } catch (error) {
     console.error(error);

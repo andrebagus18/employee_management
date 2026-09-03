@@ -6,6 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { cn } from "../lib/utils";
 
 function ActionMenu({ actions = [] }) {
   return (
@@ -22,9 +23,11 @@ function ActionMenu({ actions = [] }) {
             key={action.label}
             onClick={action.onClick}
             variant={action.variant}
-            className="cursor-pointer"
+            className={cn("cursor-pointer", action.className)}
           >
-            {action.icon && <action.icon className="size-4" />}
+            {action.icon && (
+              <action.icon className={`size-4 ${action.iconClassName || ""}`} />
+            )}
 
             {action.label}
           </DropdownMenuItem>

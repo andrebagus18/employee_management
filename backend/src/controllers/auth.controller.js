@@ -13,6 +13,16 @@ export const userLogin = async (req, res) => {
         password: true,
         roleId: true,
         employeeId: true,
+        employee: true,
+        role: {
+          include: {
+            rolepermission: {
+              include: {
+                permission: true,
+              },
+            },
+          },
+        },
       },
     });
     // console.log("USER", users);
@@ -20,6 +30,12 @@ export const userLogin = async (req, res) => {
     if (!users) {
       return res.status(401).json({
         msg: "Wrong Email or password",
+      });
+    }
+    // cek status active or inactive
+    if (users.employee.status === "INACTIVE") {
+      return res.status(403).json({
+        msg: "Your account is inactive",
       });
     }
     // console.log("psw:", password);

@@ -22,6 +22,8 @@ function Employees() {
     status,
     setStatus,
     resetFilters,
+    handleActivate,
+    handleDeactivate,
   } = useEmployees();
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -80,6 +82,8 @@ function Employees() {
         employees={employees}
         employee={employee}
         onResetFilters={resetFilters}
+        onActivate={handleActivate}
+        onDeactivate={handleDeactivate}
       />
     </div>
   );

@@ -1,55 +1,17 @@
 import ActivityLogFilters from "@/molecules/ActivityLogFilters";
 import ActivityLogTable from "@/organisms/ActivityLogTable";
-
-const activities = [
-  {
-    id: 1,
-    user: "Andre Bagus",
-    email: "andre@company.com",
-    action: "Login",
-    module: "Authentication",
-    description: "User logged into the system.",
-    date: "Aug 31, 2026 08:42",
-  },
-  {
-    id: 2,
-    user: "Sarah Smith",
-    email: "sarah@company.com",
-    action: "Create",
-    module: "Employees",
-    description: "Created a new employee John Doe.",
-    date: "Aug 31, 2026 08:35",
-  },
-  {
-    id: 3,
-    user: "Michael Lee",
-    email: "michael@company.com",
-    action: "Update",
-    module: "Leave Requests",
-    description: "Approved a leave request.",
-    date: "Aug 31, 2026 08:21",
-  },
-  {
-    id: 4,
-    user: "Sarah Smith",
-    email: "sarah@company.com",
-    action: "Update",
-    module: "Employees",
-    description: "Updated employee information.",
-    date: "Aug 31, 2026 08:05",
-  },
-  {
-    id: 5,
-    user: "Andre Bagus",
-    email: "andre@company.com",
-    action: "Delete",
-    module: "Departments",
-    description: "Deleted an inactive department.",
-    date: "Aug 30, 2026 17:42",
-  },
-];
+import { useActivityLogs } from "@/hooks/useActivityLogs";
+import { useEffect } from "react";
 
 function ActivityLogs() {
+  const { getActivities, activities, loading, pagination, error } =
+    useActivityLogs();
+  useEffect(() => {
+    getActivities({
+      page: 1,
+      limit: 10,
+    });
+  }, [getActivities]);
   return (
     <div className="space-y-6">
       {/* Header */}

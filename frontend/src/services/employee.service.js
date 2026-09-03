@@ -21,3 +21,13 @@ export const updateEmployeeId = async (id, data) => {
   const response = await api.put(`/employees/${id}/update`, data);
   return response.data;
 };
+
+export const deactivateEmployee = async (id) => {
+  const response = await api.delete(`employees/${id}/delete`);
+  return response;
+};
+
+export const activateEmployee = async (id) => {
+  const response = await api.patch(`employees/${id}/activate`);
+  return response;
+};

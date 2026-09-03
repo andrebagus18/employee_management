@@ -8,12 +8,25 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Eye, Pencil, SearchX, Trash2, RotateCcw } from "lucide-react";
+import {
+  Eye,
+  Pencil,
+  SearchX,
+  Trash2,
+  RotateCcw,
+  UserCheck,
+  UserX,
+} from "lucide-react";
 import { formatDateIndo } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 
-function EmployeeTable({ employees, onResetFilters }) {
+function EmployeeTable({
+  employees,
+  onResetFilters,
+  onActivate,
+  onDeactivate,
+}) {
   const navigate = useNavigate();
 
   return (
@@ -59,27 +72,52 @@ function EmployeeTable({ employees, onResetFilters }) {
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  <ActionMenu
-                    actions={[
-                      {
-                        label: "View",
-                        icon: Eye,
-                        onClick: () => navigate(`/employees/${employee.id}`),
-                      },
-                      {
-                        label: "Edit",
-                        icon: Pencil,
-                        onClick: () =>
-                          navigate(`/employees/${employee.id}/update`),
-                      },
-                      {
-                        label: "Delete",
-                        icon: Trash2,
-                        variant: "destructive",
-                        onClick: () => console.log("DELETE", employee.id),
-                      },
-                    ]}
-                  />
+                  {employee.status === "ACTIVE" ? (
+                    <ActionMenu
+                      actions={[
+                        {
+                          label: "View",
+                          icon: Eye,
+                          onClick: () => navigate(`/employees/${employee.id}`),
+                        },
+                        {
+                          label: "Edit",
+                          icon: Pencil,
+                          onClick: () =>
+                            navigate(`/employees/${employee.id}/update`),
+                        },
+                        {
+                          label: "Deactivate",
+                          icon: UserX,
+                          variant: "destructive",
+                          onClick: () => onDeactivate(employee.id),
+                        },
+                      ]}
+                    />
+                  ) : (
+                    <ActionMenu
+                      actions={[
+                        {
+                          label: "View",
+                          icon: Eye,
+                          onClick: () => navigate(`/employees/${employee.id}`),
+                        },
+                        {
+                          label: "Edit",
+                          icon: Pencil,
+                          onClick: () =>
+                            navigate(`/employees/${employee.id}/update`),
+                        },
+                        {
+                          label: "Activate",
+                          icon: UserCheck,
+                          iconClassName: "text-green-500",
+                          className: "text-green-500",
+                          onClick: () => onActivate(employee.id),
+                        },
+                      ]}
+                    />
+                  )}
                 </TableCell>
               </TableRow>
             ))
