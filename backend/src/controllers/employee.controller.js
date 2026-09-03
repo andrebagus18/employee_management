@@ -320,7 +320,7 @@ export const updateEmployeeUser = async (req, res) => {
     const managerId = employee.managerId;
 
     if (managerId) {
-      if (!managerId && Number(managerId) === Number(id)) {
+      if (Number(managerId) === Number(id)) {
         return res.status(400).json({
           msg: "Employee cannot be their own manager",
         });

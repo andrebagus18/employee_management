@@ -56,7 +56,9 @@ function EmployeeDetail({ label, value }) {
       <Card>
         <CardContent className="flex items-center justify-between p-6">
           <div>
-            <h2 className="text-xl font-semibold">{employee.name}</h2>
+            <h2 className="text-xl font-semibold capitalize">
+              {employee.name}
+            </h2>
             <p className="text-sm text-muted-foreground">
               {employee.position?.name}
             </p>
@@ -73,8 +75,8 @@ function EmployeeDetail({ label, value }) {
         <CardHeader>
           <CardTitle>Personal Information</CardTitle>
         </CardHeader>
-        <CardContent className="grid gap-4 md:grid-cols-2">
-          <ItemDetail label="Full Name" value={employee.name} />
+        <CardContent className="grid gap-4 md:grid-cols-2 capitalize">
+          <ItemDetail label="Name" value={employee.name} />
           <ItemDetail label="Gender" value={employee.gender} />
           <ItemDetail label="NIK" value={employee.nik} />
           <ItemDetail label="Phone" value={employee.phone} />

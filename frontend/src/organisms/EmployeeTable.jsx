@@ -69,7 +69,8 @@ function EmployeeTable({ employees, onResetFilters }) {
                       {
                         label: "Edit",
                         icon: Pencil,
-                        onClick: () => console.log("EDIT", employee.id),
+                        onClick: () =>
+                          navigate(`/employees/${employee.id}/update`),
                       },
                       {
                         label: "Delete",

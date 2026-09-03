@@ -19,12 +19,10 @@ function FormField({ form, errors, handleChange, employees }) {
       <section className="rounded-xl border border-slate-400/40 bg-background p-6">
         <div className="mb-6">
           <h2 className="text-base font-semibold">Personal Information</h2>
-
           <p className="text-sm text-muted-foreground">
             Basic information about the employee.
           </p>
         </div>
-
         <div className="grid gap-5 md:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="name">Name</Label>
@@ -113,7 +111,6 @@ function FormField({ form, errors, handleChange, employees }) {
             Assign the employee to their organizational position.
           </p>
         </div>
-
         <div className="grid gap-5 md:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="nik">NIK</Label>

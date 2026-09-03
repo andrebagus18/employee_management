@@ -3,6 +3,7 @@ import {
   createEmployee,
   getEmployeeById,
   getEmployees,
+  updateEmployeeId,
 } from "@/services/employee.service";
 import { showError, showSuccess } from "@/lib/alert";
 import { useNavigate } from "react-router-dom";
@@ -76,13 +77,83 @@ export function useEmployees() {
     try {
       setLoading(true);
       const response = await getEmployeeById(id);
-      setEmployee(response.employee);
+      const employee = response.employee;
+      setEmployee(employee);
+      setForm({
+        name: employee.name || "",
+        gender: employee.gender || "",
+        nik: employee.nik || "",
+        phone: employee.phone || "",
+        place_birth: employee.place_birth || "",
+        date_birth: employee.date_birth ? employee.date_birth.slice(0, 10) : "",
+        address: employee.address || "",
+        hire_date: employee.hire_date ? employee.hire_date.slice(0, 10) : "",
+        termination_date: employee.termination_date
+          ? employee.termination_date.slice(0, 10)
+          : "",
+        status: employee.status || "ACTIVE",
+        departmentId: employee.departmentId
+          ? String(employee.departmentId)
+          : "",
+        positionId: employee.positionId ? String(employee.positionId) : "",
+        jobLevelId: employee.jobLevelId ? String(employee.jobLevelId) : "",
+        managerId: employee.managerId ? String(employee.managerId) : "",
+        email: employee.users?.[0]?.email || "",
+        password: "",
+        roleId: employee.users?.[0]?.roleId
+          ? String(employee.users[0].roleId)
+          : "",
+      });
       return response;
     } catch (error) {
       showError(error.response?.data?.msg || "Failed to load employee");
     } finally {
       setLoading(false);
     }
+  };
+
+  // Mode Edit
+  const updateEmployee = async (id, data) => {
+    try {
+      setLoading(true);
+      const response = await updateEmployeeId(id, data);
+      await showSuccess(response.msg);
+      navigate("/employees");
+      return response;
+    } catch (error) {
+      showError(error.response?.data?.msg || "Failed to update employee");
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleUpdate = async (e, id) => {
+    e.preventDefault();
+
+    const payload = {
+      employee: {
+        name: form.name.trim(),
+        gender: form.gender,
+        nik: form.nik.trim(),
+        phone: form.phone.trim(),
+        place_birth: form.place_birth || null,
+        date_birth: form.date_birth || null,
+        address: form.address.trim(),
+        hire_date: form.hire_date,
+        termination_date: form.termination_date || null,
+        status: form.status,
+        departmentId: Number(form.departmentId),
+        positionId: Number(form.positionId),
+        jobLevelId: Number(form.jobLevelId),
+        managerId: form.managerId ? Number(form.managerId) : null,
+      },
+      user: {
+        email: form.email.trim(),
+        password: form.password.trim(),
+        roleId: Number(form.roleId),
+      },
+    };
+    await updateEmployee(id, payload);
   };
 
   // CREATE
@@ -191,9 +262,11 @@ export function useEmployees() {
     status,
     setStatus,
     handleSubmit,
+    handleUpdate,
     handleChange,
     getEmployeeId,
     pagination,
     resetFilters,
+    updateEmployee,
   };
 }

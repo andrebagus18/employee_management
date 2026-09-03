@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
 function EmployeeForm({
+  mode = "create",
   form,
   errors,
   loading,
@@ -32,10 +33,15 @@ function EmployeeForm({
         >
           Cancel
         </Button>
-        <Button type="submit" className="cursor-pointer" disabled={loading}>
-          {" "}
-          {loading ? "Creating..." : "Create Employee"}
-        </Button>
+        {mode === "create" ? (
+          <Button type="submit" className="cursor-pointer" disabled={loading}>
+            {loading ? "Creating..." : "Create Employee"}
+          </Button>
+        ) : (
+          <Button type="submit" className="cursor-pointer" disabled={loading}>
+            {loading ? "Update..." : "Update Employee"}
+          </Button>
+        )}
       </div>
     </form>
   );
