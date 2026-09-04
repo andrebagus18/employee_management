@@ -45,6 +45,7 @@ export function useEmployees() {
   const [search, setSearch] = useState("");
   const [employee, setEmployee] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState(null);
   const [error, setError] = useState(null);
   const [errors, setErrors] = useState({});
   const [form, setForm] = useState(initialForm);
@@ -255,8 +256,9 @@ export function useEmployees() {
       confirmText: "Yes, Activate",
     });
     if (!confirm.isConfirmed) return;
+    setActionLoading(id);
     try {
-      setLoading(true);
+      // setLoading(true);
       const response = await activateEmployee(id);
       await fetchEmployees({
         page: pagination.page,
@@ -270,7 +272,7 @@ export function useEmployees() {
     } catch (error) {
       showError(error.response?.data?.msg || "Failed to activate employee");
     } finally {
-      setLoading(false);
+      setActionLoading(null);
     }
   };
 
@@ -281,6 +283,7 @@ export function useEmployees() {
       confirmText: "Yes, Deactivate",
     });
     if (!confirm.isConfirmed) return;
+    setActionLoading(id);
     try {
       setLoading(true);
       const response = await deactivateEmployee(id);
@@ -297,7 +300,7 @@ export function useEmployees() {
     } catch (error) {
       showError(error.response?.data?.msg || "Failed to deactivate employee");
     } finally {
-      setLoading(false);
+      setActionLoading(null);
     }
   };
 
@@ -305,6 +308,7 @@ export function useEmployees() {
     employees,
     employee,
     loading,
+    actionLoading,
     fetchEmployees,
     form,
     error,

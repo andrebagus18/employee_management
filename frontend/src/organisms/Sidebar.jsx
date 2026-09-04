@@ -27,7 +27,7 @@ function Sidebar({ onLogout }) {
     `w-full flex h-8 text-black items-center gap-2 rounded-md px-2.5 py-3 hover:bg-slate-600/10 hover:text-black ${isActive ? "bg-slate-600 text-white" : "bg-transparent "}`;
 
   return (
-    <aside className="flex h-screen w-64 flex-col border-r border-slate-300/40 bg-background">
+    <aside className="flex min-h-screen w-64 flex-col border-r border-slate-300/40 bg-background">
       {/* Logo */}
       <div className="flex flex-col gap-4 h-24 items-center px-4 py-6">
         <h1 className="text-lg font-semibold">Employee Management</h1>
@@ -101,13 +101,6 @@ function Sidebar({ onLogout }) {
           <Activity className="size-4 shrink-0" />
           Activity Logs
         </NavLink>
-      </nav>
-      {/* Bottom */}
-      <div className="space-y-1 border-t p-4 pb-8">
-        <NavLink to={"/setting"} className={navClass}>
-          <Settings className="aize-4 shrink-0" />
-          Setting
-        </NavLink>
         <Button
           variant="destructive"
           className="w-full justify-start"
@@ -116,7 +109,7 @@ function Sidebar({ onLogout }) {
           <LogOut />
           Logout
         </Button>
-      </div>
+      </nav>
     </aside>
   );
 }

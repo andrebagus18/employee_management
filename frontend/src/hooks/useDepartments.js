@@ -19,12 +19,9 @@ export function useDepartments() {
     }
   }, []);
 
-  useEffect(() => {
-    fetchDepartments();
-  }, [fetchDepartments]);
-
   return {
     departments,
+    fetchDepartments,
     loading,
   };
 }

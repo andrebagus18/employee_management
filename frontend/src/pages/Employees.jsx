@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { CirclePlus, Users2 } from "lucide-react";
+import { CirclePlus, Users2, LoaderCircle } from "lucide-react";
 import EmployeeFilters from "@/molecules/EmployeeFilters";
 import EmployeeTable from "@/organisms/EmployeeTable";
 import { useEmployees } from "@/hooks/useEmployees";
@@ -19,6 +19,7 @@ function Employees() {
     employees,
     employee,
     loading,
+    actionLoading,
     error,
     fetchEmployees,
     search,
@@ -79,8 +80,8 @@ function Employees() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="flex items-center gap-4 text-2xl font-semibold">
-          Employees <Users2 className="text-slate-500" />
+        <h1 className="flex items-center gap-2 text-2xl font-semibold">
+          Employees <Users2 className="text-slate-400" />
         </h1>
         <p className="text-muted-foreground">
           Manage the organization's employees.
@@ -113,6 +114,7 @@ function Employees() {
         employees={employees}
         employee={employee}
         loading={loading}
+        actionLoading={actionLoading}
         onResetFilters={resetFilters}
         onActivate={handleActivate}
         onDeactivate={handleDeactivate}

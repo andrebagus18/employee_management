@@ -12,22 +12,22 @@ import ActionMenu from "@/molecules/ActionMenu";
 function DepartmentTable({ departments }) {
   return (
     <div className="rounded-xl border bg-background">
-      <div className="overflow-x-auto">
+      <div className="w-full max-h-80 scrollbar-hide overflow-y-auto">
         <Table>
-          <TableHeader>
+          <TableHeader className="sticky top-0 z-10 bg-background">
             <TableRow>
-              <TableHead>Department</TableHead>
-              <TableHead>Description</TableHead>
+              <TableHead>No.</TableHead>
+              <TableHead>Name</TableHead>
               <TableHead>Employees</TableHead>
               <TableHead className="w-[50px]"></TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
-            {departments.map((department) => (
+            {departments.map((department, index) => (
               <TableRow key={department.id}>
+                <TableCell>{index + 1}</TableCell>
                 <TableCell>{department.name}</TableCell>
-                <TableCell>{department.description}</TableCell>
                 <TableCell>{department.employees}</TableCell>
                 <TableCell>
                   <ActionMenu

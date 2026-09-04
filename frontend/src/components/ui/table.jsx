@@ -6,16 +6,16 @@ import { cn } from "@/lib/utils";
 
 function Table({ className, ...props }) {
   return (
-    <div
-      data-slot="table-container"
-      className="w-full max-h-120 scrollbar-hide overflow-y-auto"
-    >
-      <table
-        data-slot="table"
-        className={cn("w-full caption-bottom text-sm", className)}
-        {...props}
-      />
-    </div>
+    // <div
+    //   data-slot="table-container"
+    //   className="w-full max-h-120 scrollbar-hide overflow-y-auto"
+    // >
+    <table
+      data-slot="table"
+      className={cn("w-full caption-bottom text-sm", className)}
+      {...props}
+    />
+    // </div>
   );
 }
 

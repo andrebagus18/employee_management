@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { CirclePlus, Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Building2, CirclePlus, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,35 +13,10 @@ import {
 import DepartmentFilters from "@/molecules/DepartmentFilters";
 import DepartmentForm from "@/molecules/DepartmentForm";
 import DepartmentTable from "@/organisms/DepartmentTable";
-
-const departments = [
-  {
-    id: 1,
-    name: "Engineering",
-    description: "Software & IT department",
-    employees: 32,
-  },
-  {
-    id: 2,
-    name: "Human Resources",
-    description: "People & Culture",
-    employees: 12,
-  },
-  {
-    id: 3,
-    name: "Finance",
-    description: "Financial Operations",
-    employees: 8,
-  },
-  {
-    id: 4,
-    name: "Marketing",
-    description: "Marketing Team",
-    employees: 15,
-  },
-];
+import { useDepartments } from "@/hooks/useDepartments";
 
 function Departments() {
+  const { departments, fetchDepartments } = useDepartments();
   const [open, setOpen] = useState(false);
 
   const handleCreate = (data) => {
@@ -53,13 +28,19 @@ function Departments() {
   const handleCancel = () => {
     setOpen(false);
   };
+  useEffect(() => {
+    fetchDepartments();
+  }, [fetchDepartments]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Departments</h1>
+          <h1 className="text-2xl flex gap-2 items-center font-semibold tracking-tight">
+            Departments
+            <Building2 className="text-slate-400" />
+          </h1>
 
           <p className="text-sm text-muted-foreground">
             Manage your organization's departments.
@@ -95,7 +76,10 @@ function Departments() {
       </div>
 
       {/* Table */}
-      <DepartmentTable departments={departments} />
+      <div className="grid grid-cols-2 gap-3">
+        <DepartmentTable departments={departments} />
+        <DepartmentTable departments={departments} />
+      </div>
     </div>
   );
 }

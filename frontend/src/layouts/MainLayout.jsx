@@ -12,7 +12,7 @@ function DashboardLayout() {
   };
 
   return (
-    <div className="flex min-h-screen bg-muted/30">
+    <div className="flex min-h-screen overflow-hidden bg-muted/30">
       <Sidebar onLogout={handleLogout} />
       <div className="flex flex-col flex-1">
         <Header title="Dashboard" />
