@@ -1,15 +1,5 @@
 import { useEffect, useState } from "react";
-import { Building2, CirclePlus, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-
+import { Building2 } from "lucide-react";
 import DepartmentFilters from "@/molecules/DepartmentFilters";
 import DepartmentForm from "@/molecules/DepartmentForm";
 import DepartmentTable from "@/organisms/DepartmentTable";
@@ -48,7 +38,7 @@ function Departments() {
         </div>
 
         {/* Create Department */}
-        <Dialog open={open} onOpenChange={setOpen}>
+        {/* <Dialog open={open} onOpenChange={setOpen}>
           <DialogContent className="sm:max-w-xl">
             <DialogHeader>
               <DialogTitle>Create Department</DialogTitle>
@@ -57,28 +47,26 @@ function Departments() {
                 Add a new department to organization.
               </DialogDescription>
             </DialogHeader>
-
-            <DepartmentForm onSubmit={handleCreate} onCancel={handleCancel} />
           </DialogContent>
-        </Dialog>
+        </Dialog> */}
       </div>
 
       {/* Filters */}
       <div className="w-full flex justify-between items-center">
         <DepartmentFilters />
-        <Button
+        {/* <Button
           className="max-w-3xs w-full flex gap-4 py-5 text-md cursor-pointer"
           onClick={() => setOpen(true)}
         >
           <CirclePlus className="size-5" />
           Add Department
-        </Button>
+        </Button> */}
       </div>
 
       {/* Table */}
       <div className="grid grid-cols-2 gap-3">
         <DepartmentTable departments={departments} />
-        <DepartmentTable departments={departments} />
+        <DepartmentForm onSubmit={handleCreate} />
       </div>
     </div>
   );

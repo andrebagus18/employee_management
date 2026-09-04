@@ -32,6 +32,15 @@ export const getDepartments = async (req, res) => {
       orderBy: {
         name: "asc",
       },
+      select: {
+        id: true,
+        name: true,
+        _count: {
+          select: {
+            employees: true,
+          },
+        },
+      },
     });
     if (departments.length === 0) {
       return res.status(200).json([]);
@@ -40,6 +49,7 @@ export const getDepartments = async (req, res) => {
       departments,
     });
   } catch (error) {
+    // console.error(error);
     return res.status(500).json({
       msg: "Internal server error",
     });

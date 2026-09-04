@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/table";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import ActionMenu from "@/molecules/ActionMenu";
+import { Button } from "@/components/ui/button";
 
 function DepartmentTable({ departments }) {
   return (
@@ -28,28 +29,16 @@ function DepartmentTable({ departments }) {
               <TableRow key={department.id}>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{department.name}</TableCell>
-                <TableCell>{department.employees}</TableCell>
-                <TableCell>
-                  <ActionMenu
-                    actions={[
-                      {
-                        label: "View",
-                        icon: Eye,
-                        onClick: () => console.log("VIEW", department.id),
-                      },
-                      {
-                        label: "Edit",
-                        icon: Pencil,
-                        onClick: () => console.log("EDIT", department.id),
-                      },
-                      {
-                        label: "Delete",
-                        icon: Trash2,
-                        variant: "destructive",
-                        onClick: () => console.log("DELETE", department.id),
-                      },
-                    ]}
-                  />
+                <TableCell className="pl-8">
+                  {department._count?.employees}
+                </TableCell>
+                <TableCell className="flex gap-1">
+                  <Button variant="outline" className="cursor-pointer">
+                    <Pencil />
+                  </Button>
+                  <Button variant="destructive" className="cursor-pointer">
+                    <Trash2 />
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}

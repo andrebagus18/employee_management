@@ -12,7 +12,6 @@ export function useDepartments() {
       const data = await getDepartments();
       return setDepartments(data.departments);
     } catch (error) {
-      console.error(error);
       setError(error);
     } finally {
       setLoading(false);

@@ -1,9 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 
-function DepartmentForm({ onSubmit, onCancel }) {
+function DepartmentForm({ onSubmit }) {
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -18,32 +17,27 @@ function DepartmentForm({ onSubmit, onCancel }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="space-y-2">
-        <Label htmlFor="name">Department Name</Label>
-
-        <Input id="name" name="name" placeholder="e.g. Engineering" />
+    <div className="space-y-5 border border-slate-400/30 rounded-xl p-4">
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col">
+          <h1 className="text-2xl font-medium">Create Department</h1>
+          <p className="text-sm text-muted-foreground">
+            Add a new department to organization.
+          </p>
+        </div>
+        <form onSubmit={handleSubmit}>
+          <div className="space-y-3">
+            <Label htmlFor="name">Department Name</Label>
+            <Input id="name" name="name" placeholder="e.g. Engineering" />
+          </div>
+          <div className="flex justify-end mt-4 ">
+            <Button type="submit" className="cursor-pointer">
+              Create Department
+            </Button>
+          </div>
+        </form>
       </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="description">Description</Label>
-
-        <Textarea
-          id="description"
-          name="description"
-          placeholder="Describe this department..."
-          className="min-h-24 resize-none"
-        />
-      </div>
-
-      <div className="flex justify-end gap-3 pt-2">
-        <Button type="button" variant="outline" onClick={onCancel}>
-          Cancel
-        </Button>
-
-        <Button type="submit">Create Department</Button>
-      </div>
-    </form>
+    </div>
   );
 }
 
