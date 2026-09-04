@@ -7,10 +7,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Eye, Pencil, Trash2 } from "lucide-react";
-import ActionMenu from "@/molecules/ActionMenu";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 function DepartmentTable({ departments }) {
+  const navigate = useNavigate();
   return (
     <div className="rounded-xl border bg-background">
       <div className="w-full max-h-80 scrollbar-hide overflow-y-auto">
@@ -33,7 +34,13 @@ function DepartmentTable({ departments }) {
                   {department._count?.employees}
                 </TableCell>
                 <TableCell className="flex gap-1">
-                  <Button variant="outline" className="cursor-pointer">
+                  <Button
+                    variant="outline"
+                    className="cursor-pointer"
+                    onClick={() =>
+                      navigate(`/departments/${department.id}/update`)
+                    }
+                  >
                     <Pencil />
                   </Button>
                   <Button variant="destructive" className="cursor-pointer">

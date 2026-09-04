@@ -4,20 +4,25 @@ import DepartmentFilters from "@/molecules/DepartmentFilters";
 import DepartmentForm from "@/molecules/DepartmentForm";
 import DepartmentTable from "@/organisms/DepartmentTable";
 import { useDepartments } from "@/hooks/useDepartments";
+import { useParams } from "react-router-dom";
 
 function Departments() {
-  const { departments, fetchDepartments } = useDepartments();
-  const [open, setOpen] = useState(false);
+  const { id } = useParams();
+  const isEdit = Boolean(id);
+  const {
+    departments,
+    fetchDepartments,
+    handleChange,
+    handleSubmit,
+    form,
+    setForm,
+    errors,
+    loading,
+  } = useDepartments();
+  const selectDepartment = departments.filter(
+    (department) => department.id === Number(id),
+  );
 
-  const handleCreate = (data) => {
-    console.log("CREATE DEPARTMENT:", data);
-
-    setOpen(false);
-  };
-
-  const handleCancel = () => {
-    setOpen(false);
-  };
   useEffect(() => {
     fetchDepartments();
   }, [fetchDepartments]);
@@ -66,7 +71,16 @@ function Departments() {
       {/* Table */}
       <div className="grid grid-cols-2 gap-3">
         <DepartmentTable departments={departments} />
-        <DepartmentForm onSubmit={handleCreate} />
+        <DepartmentForm
+          handleSubmit={handleSubmit}
+          handleChange={handleChange}
+          isEdit={isEdit}
+          selectDepartment={selectDepartment}
+          form={form}
+          setForm={setForm}
+          errors={errors}
+          loading={loading}
+        />
       </div>
     </div>
   );

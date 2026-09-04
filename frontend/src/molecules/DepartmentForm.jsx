@@ -1,21 +1,25 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useEffect } from "react";
 
-function DepartmentForm({ onSubmit }) {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    const formData = new FormData(event.currentTarget);
-
-    const data = {
-      name: formData.get("name"),
-      description: formData.get("description"),
-    };
-
-    onSubmit?.(data);
-  };
-
+function DepartmentForm({
+  handleSubmit,
+  handleChange,
+  form,
+  setForm,
+  errors,
+  loading,
+  selectDepartment,
+  isEdit,
+}) {
+  useEffect(() => {
+    if (selectDepartment) {
+      setForm({
+        name: selectDepartment.name,
+      });
+    }
+  }, [selectDepartment?.id]);
   return (
     <div className="space-y-5 border border-slate-400/30 rounded-xl p-4">
       <div className="flex flex-col gap-4">
@@ -28,12 +32,36 @@ function DepartmentForm({ onSubmit }) {
         <form onSubmit={handleSubmit}>
           <div className="space-y-3">
             <Label htmlFor="name">Department Name</Label>
-            <Input id="name" name="name" placeholder="e.g. Engineering" />
+            <Input
+              id="name"
+              name="name"
+              type="text"
+              value={form.name}
+              onChange={handleChange}
+              placeholder="e.g. Engineering"
+            />
+            {errors.name && (
+              <p className="font-sm text-destructive">{errors.name}</p>
+            )}
           </div>
           <div className="flex justify-end mt-4 ">
-            <Button type="submit" className="cursor-pointer">
-              Create Department
-            </Button>
+            {isEdit ? (
+              <Button
+                type="submit"
+                className="cursor-pointer"
+                disabled={loading}
+              >
+                {loading ? "Creating..." : "Create Department"}
+              </Button>
+            ) : (
+              <Button
+                type="submit"
+                className="cursor-pointer"
+                disabled={loading}
+              >
+                {loading ? "Update..." : "Update Department"}
+              </Button>
+            )}
           </div>
         </form>
       </div>
