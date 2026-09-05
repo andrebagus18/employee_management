@@ -3,7 +3,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RotateCcw } from "lucide-react";
 import { useEffect } from "react";
-import { useDepartments } from "@/hooks/useDepartments";
 
 function DepartmentForm({
   departments,

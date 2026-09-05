@@ -20,11 +20,17 @@ function Departments() {
     errors,
     loading,
     deleted,
+    search,
+    setSearch,
+    resetFilters,
   } = useDepartments({ mode, id });
 
   useEffect(() => {
-    fetchDepartments();
-  }, [fetchDepartments]);
+    const timer = setTimeout(() => {
+      fetchDepartments({ search });
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [fetchDepartments, search]);
 
   // console.log("mode", mode);
   // console.log("id", id);
@@ -59,7 +65,7 @@ function Departments() {
 
       {/* Filters */}
       <div className="w-full flex justify-between items-center">
-        <DepartmentFilters />
+        <DepartmentFilters search={search} setSearch={setSearch} />
         {/* <Button
           className="max-w-3xs w-full flex gap-4 py-5 text-md cursor-pointer"
           onClick={() => setOpen(true)}
@@ -75,6 +81,7 @@ function Departments() {
           departments={departments}
           onDelete={deleted}
           loading={loading}
+          onResetFilters={resetFilters}
         />
         <DepartmentForm
           departments={departments}

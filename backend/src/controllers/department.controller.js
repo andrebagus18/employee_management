@@ -28,7 +28,13 @@ export const createDepartment = async (req, res) => {
 
 export const getDepartments = async (req, res) => {
   try {
+    const { search = "" } = req.query;
     const departments = await prisma.department.findMany({
+      where: {
+        name: {
+          contains: search,
+        },
+      },
       orderBy: {
         name: "asc",
       },
@@ -42,9 +48,6 @@ export const getDepartments = async (req, res) => {
         },
       },
     });
-    if (departments.length === 0) {
-      return res.status(200).json([]);
-    }
     return res.status(200).json({
       departments,
     });

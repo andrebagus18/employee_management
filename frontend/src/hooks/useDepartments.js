@@ -17,12 +17,13 @@ export function useDepartments({ mode, id } = {}) {
   const [form, setForm] = useState({
     name: "",
   });
+  const [search, setSearch] = useState("");
 
-  const fetchDepartments = useCallback(async () => {
+  const fetchDepartments = useCallback(async (params = {}) => {
     try {
       setLoading(true);
-      const data = await getDepartments();
-      // console.log("department3:", data);
+      const data = await getDepartments(params);
+      console.log("data:", data);
       return setDepartments(data.departments);
     } catch (error) {
       setErrors(error);
@@ -37,6 +38,9 @@ export function useDepartments({ mode, id } = {}) {
 
   const resetForm = () => {
     setForm({ name: "" });
+  };
+  const resetFilters = () => {
+    setSearch("");
   };
 
   const create = async (data) => {
@@ -126,5 +130,8 @@ export function useDepartments({ mode, id } = {}) {
     setForm,
     errors,
     deleted,
+    search,
+    setSearch,
+    resetFilters,
   };
 }
