@@ -97,7 +97,6 @@ export const updateDepartment = async (req, res) => {
 
 export const deleteDepartment = async (req, res) => {
   try {
-    console.log("masuk");
     const { id } = req.params;
     const findDepartmentId = await prisma.department.findUnique({
       where: {
@@ -109,7 +108,7 @@ export const deleteDepartment = async (req, res) => {
         msg: "Department not found",
       });
     }
-    const findEmployeeId = await prisma.employee.findUnique({
+    const findEmployeeId = await prisma.employee.findFirst({
       where: {
         departmentId: Number(id),
       },

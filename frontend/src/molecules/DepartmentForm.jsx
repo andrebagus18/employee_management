@@ -1,25 +1,35 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { RotateCcw } from "lucide-react";
 import { useEffect } from "react";
+import { useDepartments } from "@/hooks/useDepartments";
 
 function DepartmentForm({
+  departments,
   handleSubmit,
   handleChange,
   form,
   setForm,
   errors,
   loading,
-  selectDepartment,
-  isEdit,
+  onResetForm,
+  mode,
+  id,
 }) {
+  const selectDepartment = departments.find(
+    (department) => department.id === Number(id),
+  );
   useEffect(() => {
-    if (selectDepartment) {
+    if (mode === "edit" && selectDepartment) {
       setForm({
         name: selectDepartment.name,
       });
     }
-  }, [selectDepartment?.id]);
+    if (mode === "create") {
+      setForm({ name: "" });
+    }
+  }, [mode, selectDepartment, setForm]);
   return (
     <div className="space-y-5 border border-slate-400/30 rounded-xl p-4">
       <div className="flex flex-col gap-4">
@@ -45,21 +55,30 @@ function DepartmentForm({
             )}
           </div>
           <div className="flex justify-end mt-4 ">
-            {isEdit ? (
-              <Button
-                type="submit"
-                className="cursor-pointer"
-                disabled={loading}
-              >
-                {loading ? "Creating..." : "Create Department"}
-              </Button>
+            {mode === "edit" ? (
+              <div className="flex gap-1">
+                <Button
+                  variant="outline"
+                  onClick={onResetForm}
+                  className="cursor-pointer"
+                >
+                  <RotateCcw className="sixe-4" />
+                </Button>
+                <Button
+                  type="submit"
+                  className="cursor-pointer"
+                  disabled={loading}
+                >
+                  {loading ? "Update..." : "Update Department"}
+                </Button>
+              </div>
             ) : (
               <Button
                 type="submit"
                 className="cursor-pointer"
                 disabled={loading}
               >
-                {loading ? "Update..." : "Update Department"}
+                {loading ? "Creating..." : "Create Department"}
               </Button>
             )}
           </div>

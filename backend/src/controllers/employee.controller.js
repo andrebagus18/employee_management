@@ -222,9 +222,7 @@ export const getEmployees = async (req, res) => {
       }),
     ]);
     const totalPage = Math.ceil(total / limitNumber);
-    if (employees.length === 0) {
-      return res.status(200).json([]);
-    }
+
     return res.status(200).json({
       employees,
       pagination: {

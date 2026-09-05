@@ -2,11 +2,15 @@ import {
   getDepartments,
   createDepartment,
   UpdateDepartment,
+  deleteDepartment,
 } from "@/services/department.services";
 import { useCallback, useState, useEffect } from "react";
 import { showError, showSuccess } from "@/lib/alert";
+import { useNavigate } from "react-router-dom";
+import { showConfirm } from "../lib/alert";
 
-export function useDepartments() {
+export function useDepartments({ mode, id } = {}) {
+  const navigate = useNavigate();
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -18,6 +22,7 @@ export function useDepartments() {
     try {
       setLoading(true);
       const data = await getDepartments();
+      // console.log("department3:", data);
       return setDepartments(data.departments);
     } catch (error) {
       setErrors(error);
@@ -26,6 +31,14 @@ export function useDepartments() {
     }
   }, []);
 
+  useEffect(() => {
+    fetchDepartments();
+  }, [fetchDepartments]);
+
+  const resetForm = () => {
+    setForm({ name: "" });
+  };
+
   const create = async (data) => {
     try {
       setLoading(true);
@@ -33,7 +46,7 @@ export function useDepartments() {
       await showSuccess(response.msg);
       setForm({ name: "" });
       setErrors({});
-      getDepartments();
+      await fetchDepartments();
       return response;
     } catch (error) {
       showError(error.response?.data?.msg || "Failed to create department");
@@ -48,7 +61,7 @@ export function useDepartments() {
       const response = await UpdateDepartment(id, data);
       await showSuccess(response.msg);
       setErrors({});
-      getDepartments();
+      await fetchDepartments();
       return response;
     } catch (error) {
       showError(error.response?.data?.msg || "Failed to update department");
@@ -57,13 +70,28 @@ export function useDepartments() {
     }
   };
 
-  const handleUpdate = async (e, id) => {
-    e.preventDefault();
-    if (!form.name) return;
-    const fieldName = {
-      name: form.name.trim(),
-    };
-    await update(id, fieldName);
+  const deleted = async (id) => {
+    const result = await showConfirm({
+      title: "Delete Department?",
+      text: "This department will be permanently deleted.",
+      confirmText: "Delete",
+    });
+    if (!result.isConfirmed) return;
+    try {
+      setLoading(true);
+      const response = await deleteDepartment(id);
+      await showSuccess(response.msg);
+      await fetchDepartments();
+    } catch (error) {
+      showError(error.response?.data?.msg || "Failed to delete department");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    resetForm();
+    navigate("/departments");
   };
 
   const handleChange = async (e) => {
@@ -75,29 +103,28 @@ export function useDepartments() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name) return;
-    if (isEdit) {
-      const fieldName = {
-        name: form.name.trim(),
-      };
-      await create(fieldName);
+    if (!form.name.trim()) return;
+    const data = {
+      name: form.name.trim(),
+    };
+    if (mode === "edit") {
+      await update(id, data);
+      navigate("/departments");
     } else {
-      const fieldName = {
-        name: form.name.trim(),
-      };
-      await update(id, fieldName);
+      await create(data);
     }
   };
 
   return {
     departments,
     fetchDepartments,
+    handleCancel,
     loading,
     handleChange,
     handleSubmit,
-    handleUpdate,
     form,
     setForm,
     errors,
+    deleted,
   };
 }

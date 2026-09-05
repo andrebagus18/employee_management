@@ -2,7 +2,7 @@ import api from "@/services/api";
 
 export const getDepartments = async () => {
   const response = await api.get("/departments");
-  // console.log("department2", response.data);
+  // console.log("department2", response.data.departments);
   return response.data;
 };
 
@@ -13,5 +13,10 @@ export const createDepartment = async (data) => {
 
 export const UpdateDepartment = async (id, data) => {
   const response = await api.put(`/departments/${id}/update`, data);
+  return response.data;
+};
+
+export const deleteDepartment = async (id) => {
+  const response = await api.delete(`/departments/${id}/delete`);
   return response.data;
 };

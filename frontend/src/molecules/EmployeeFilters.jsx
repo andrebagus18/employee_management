@@ -27,6 +27,7 @@ function EmployeeFilters({
 }) {
   const { positions } = usePositions();
   const { departments } = useDepartments();
+  console.log("departmentselect:", departments);
 
   return (
     <div className="flex items-center justify-center gap-3">

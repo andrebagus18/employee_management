@@ -16,7 +16,6 @@ import DailyReports from "@/pages/DailyReports";
 import ActivityLogs from "@/pages/ActivityLogs";
 import EmployeeDetail from "@/pages/EmployeeDetail";
 import EditEmployee from "@/pages/EditEmployee";
-import EditDepartment from "../pages/EditDepartment";
 
 function AppRoutes() {
   return (

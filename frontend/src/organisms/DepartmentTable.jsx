@@ -6,11 +6,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { LoaderCircle, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
-function DepartmentTable({ departments }) {
+function DepartmentTable({ departments, onDelete, loading }) {
   const navigate = useNavigate();
   return (
     <div className="rounded-xl border bg-background">
@@ -43,8 +43,17 @@ function DepartmentTable({ departments }) {
                   >
                     <Pencil />
                   </Button>
-                  <Button variant="destructive" className="cursor-pointer">
-                    <Trash2 />
+                  <Button
+                    variant="destructive"
+                    className="cursor-pointer"
+                    onClick={() => onDelete(department.id)}
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <LoaderCircle className="size-4 animate-spin" />
+                    ) : (
+                      <Trash2 className="size-4" />
+                    )}
                   </Button>
                 </TableCell>
               </TableRow>

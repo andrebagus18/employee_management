@@ -13,7 +13,7 @@ function FormSelect({
   value,
   onChange,
   options = [],
-  placehorder = "Select option",
+  placeholder = "Select option",
   error,
 }) {
   const selectOption = options.find(
@@ -38,7 +38,7 @@ function FormSelect({
           {selectOption ? (
             <span>{selectOption.label}</span>
           ) : (
-            <span className="text-muted-foreground">{placehorder}</span>
+            <span className="text-muted-foreground">{placeholder}</span>
           )}
         </SelectTrigger>
         <SelectContent className="max-h-50">

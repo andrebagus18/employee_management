@@ -8,25 +8,26 @@ import { useParams } from "react-router-dom";
 
 function Departments() {
   const { id } = useParams();
-  const isEdit = Boolean(id);
+  const mode = id ? "edit" : "create";
   const {
     departments,
     fetchDepartments,
+    handleCancel,
     handleChange,
     handleSubmit,
     form,
     setForm,
     errors,
     loading,
-  } = useDepartments();
-  const selectDepartment = departments.filter(
-    (department) => department.id === Number(id),
-  );
+    deleted,
+  } = useDepartments({ mode, id });
 
   useEffect(() => {
     fetchDepartments();
   }, [fetchDepartments]);
 
+  // console.log("mode", mode);
+  // console.log("id", id);
   return (
     <div className="space-y-4">
       {/* Header */}
@@ -70,16 +71,22 @@ function Departments() {
 
       {/* Table */}
       <div className="grid grid-cols-2 gap-3">
-        <DepartmentTable departments={departments} />
+        <DepartmentTable
+          departments={departments}
+          onDelete={deleted}
+          loading={loading}
+        />
         <DepartmentForm
+          departments={departments}
           handleSubmit={handleSubmit}
           handleChange={handleChange}
-          isEdit={isEdit}
-          selectDepartment={selectDepartment}
+          mode={mode}
+          id={id}
           form={form}
           setForm={setForm}
           errors={errors}
           loading={loading}
+          onResetForm={handleCancel}
         />
       </div>
     </div>
