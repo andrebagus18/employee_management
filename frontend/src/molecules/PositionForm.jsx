@@ -3,9 +3,31 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import FormSelect from "./FormSelect";
 import { useDepartments } from "@/hooks/useDepartments";
+import { useEffect } from "react";
 
-function PositionForm({ onCancel, form, errors, handleChange, handleSubmit }) {
+function PositionForm({
+  onCancel,
+  loading,
+  form,
+  setForm,
+  errors,
+  handleChange,
+  handleSubmit,
+  id,
+  positions,
+  fetchPositions,
+}) {
   const { departments } = useDepartments();
+  useEffect(() => {
+    if (!id || positions.length === 0) return;
+    const position = positions.find((position) => position.id === Number(id));
+    if (position) {
+      setForm({
+        name: position.name,
+        departmentId: String(position.department.id),
+      });
+    }
+  }, [id, positions, setForm]);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
@@ -34,7 +56,7 @@ function PositionForm({ onCancel, form, errors, handleChange, handleSubmit }) {
           value={form.departmentId}
           onChange={handleChange}
           options={departments.map((department) => ({
-            value: department.id,
+            value: String(department.id),
             label: department.name,
           }))}
           placehorder="Select Department"
@@ -51,9 +73,15 @@ function PositionForm({ onCancel, form, errors, handleChange, handleSubmit }) {
         >
           Cancel
         </Button>
-        <Button type="submit" className="cursor-pointer">
-          Create Position
-        </Button>
+        {id ? (
+          <Button type="submit" className="cursor-pointer" disabled={loading}>
+            {loading ? "Update..." : "Update Position"}
+          </Button>
+        ) : (
+          <Button type="submit" className="cursor-pointer" disabled={loading}>
+            {loading ? "Creating..." : "Create Position"}
+          </Button>
+        )}
       </div>
     </form>
   );

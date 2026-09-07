@@ -12,6 +12,6 @@ export const createPosition = async (data) => {
 };
 
 export const updatePosition = async (id, data) => {
-  const response = await api.put(`/positons/${id}/update`, data);
+  const response = await api.put(`/positions/${id}/update`, data);
   return response.data;
 };

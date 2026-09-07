@@ -12,8 +12,11 @@ import PositionFilters from "@/molecules/PositionFilters";
 import PositionForm from "@/molecules/PositionForm";
 import PositionTable from "@/organisms/PositionTable";
 import { usePositions } from "@/hooks/usePositions";
+import { useNavigate, useParams } from "react-router-dom";
 
 function Positions() {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [edit, setEdit] = useState(null);
   const {
     positions,
@@ -22,18 +25,19 @@ function Positions() {
     loading,
     fetchPositions,
     form,
+    setForm,
     errors,
     handleChange,
     handleSubmit,
     handleCancel,
-  } = usePositions();
+  } = usePositions({ id });
   useEffect(() => {
     fetchPositions();
   }, [fetchPositions]);
 
   const handleEdit = (id) => {
-    setEdit(id);
     setOpen(true);
+    navigate(`/positions/${id}/update`);
   };
 
   return (
@@ -59,11 +63,15 @@ function Positions() {
           </DialogHeader>
           <PositionForm
             onCancel={handleCancel}
+            loading={loading}
             form={form}
+            setForm={setForm}
             errors={errors}
             handleChange={handleChange}
             handleSubmit={handleSubmit}
-            // id={edit}
+            id={id}
+            fetchPositions={fetchPositions}
+            positions={positions}
           />
         </DialogContent>
       </Dialog>

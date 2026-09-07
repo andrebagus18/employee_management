@@ -57,6 +57,7 @@ export const getPosition = async (req, res) => {
         },
         department: {
           select: {
+            id: true,
             name: true,
           },
         },
@@ -79,6 +80,8 @@ export const getPosition = async (req, res) => {
 export const updatePosition = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log("params:", req.params);
+    console.log("id:", id);
     const { name, departmentId } = req.body;
     const editPosition = await prisma.position.findUnique({
       where: {
@@ -106,7 +109,7 @@ export const updatePosition = async (req, res) => {
       },
       data: {
         name: name,
-        departmentId: departmentId,
+        departmentId: Number(departmentId),
       },
     });
     return res.status(200).json({

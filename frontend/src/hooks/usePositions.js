@@ -6,8 +6,9 @@ import {
 import { useCallback, useState, useEffect } from "react";
 import { showError, showSuccess } from "../lib/alert";
 import { useNavigate } from "react-router-dom";
+import { id } from "date-fns/locale";
 
-export function usePositions() {
+export function usePositions({ id } = {}) {
   const navigate = useNavigate();
   const [positions, setPositions] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -60,6 +61,7 @@ export function usePositions() {
       setForm({ name: "", departmentId: "" });
       setErrors({});
       setOpen(false);
+      await fetchPositions();
       return response;
     } catch (error) {
       showError(error.response?.data?.msg || "Failed to update position");
@@ -80,17 +82,14 @@ export function usePositions() {
     if (!form.name.trim() && !form.departmentId) return;
     const data = {
       name: form.name.trim(),
-      departmentId: form.departmentId,
+      departmentId: Number(form.departmentId),
     };
-    await create(data);
-  };
-
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    const data = {
-      name: form.name.trim(),
-    };
-    await update(data);
+    if (id) {
+      await update(id, data);
+      navigate("/positions");
+    } else {
+      await create(data);
+    }
   };
 
   const handleCancel = () => {
@@ -108,7 +107,6 @@ export function usePositions() {
     setForm,
     handleChange,
     handleSubmit,
-    handleUpdate,
     handleCancel,
   };
 }
