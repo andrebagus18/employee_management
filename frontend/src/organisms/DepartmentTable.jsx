@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 
 function DepartmentTable({ departments, onDelete, loading, onResetFilters }) {
   const navigate = useNavigate();
+  const disabled = true;
   return (
     <div className="rounded-xl border bg-background">
       <div className="w-full max-h-80 scrollbar-hide overflow-y-auto">
@@ -19,7 +20,7 @@ function DepartmentTable({ departments, onDelete, loading, onResetFilters }) {
           <TableHeader className="sticky top-0 z-10 bg-background">
             <TableRow>
               <TableHead>No.</TableHead>
-              <TableHead>Department</TableHead>
+              <TableHead>Departments</TableHead>
               <TableHead>Employees</TableHead>
               <TableHead className="w-[50px]"></TableHead>
             </TableRow>
@@ -45,10 +46,9 @@ function DepartmentTable({ departments, onDelete, loading, onResetFilters }) {
                       <Pencil />
                     </Button>
                     <Button
-                      variant="destructive"
-                      className="cursor-pointer"
+                      className="disabled:cursor-not-allowed disabled:bg-gray-400"
                       onClick={() => onDelete(department.id)}
-                      disabled={loading}
+                      disabled={disabled}
                     >
                       {loading ? (
                         <LoaderCircle className="size-4 animate-spin" />

@@ -23,7 +23,7 @@ export function useDepartments({ mode, id } = {}) {
     try {
       setLoading(true);
       const data = await getDepartments(params);
-      console.log("data:", data);
+      // console.log("data:", data);
       return setDepartments(data.departments);
     } catch (error) {
       setErrors(error);
@@ -43,7 +43,7 @@ export function useDepartments({ mode, id } = {}) {
     setSearch("");
   };
 
-  const create = async (data) => {
+  const create = async () => {
     try {
       setLoading(true);
       const response = await createDepartment(form);
@@ -54,6 +54,7 @@ export function useDepartments({ mode, id } = {}) {
       return response;
     } catch (error) {
       showError(error.response?.data?.msg || "Failed to create department");
+      throw error;
     } finally {
       setLoading(false);
     }

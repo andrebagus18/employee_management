@@ -5,3 +5,13 @@ export const getPositions = async () => {
   // console.log("positions2", response.data);
   return response.data;
 };
+
+export const createPosition = async (data) => {
+  const response = await api.post("/positions/create", data);
+  return response.data;
+};
+
+export const updatePosition = async (id, data) => {
+  const response = await api.put(`/positons/${id}/update`, data);
+  return response.data;
+};

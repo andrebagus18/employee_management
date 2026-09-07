@@ -26,7 +26,7 @@ export const createPosition = async (req, res) => {
     const position = await prisma.position.create({
       data: {
         name: name,
-        departmentId: departmentId,
+        departmentId: Number(departmentId),
       },
     });
     return res.status(201).json({
@@ -46,6 +46,20 @@ export const getPosition = async (req, res) => {
     const positions = await prisma.position.findMany({
       orderBy: {
         name: "asc",
+      },
+      select: {
+        id: true,
+        name: true,
+        _count: {
+          select: {
+            employees: true,
+          },
+        },
+        department: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
     if (positions.length === 0) {

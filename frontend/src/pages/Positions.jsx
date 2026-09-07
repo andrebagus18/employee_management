@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CirclePlus } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,55 +8,36 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
 import PositionFilters from "@/molecules/PositionFilters";
 import PositionForm from "@/molecules/PositionForm";
 import PositionTable from "@/organisms/PositionTable";
-
-const positions = [
-  {
-    id: 1,
-    name: "Frontend Developer",
-    department: "Engineering",
-    jobLevel: "Senior",
-    employees: 8,
-  },
-  {
-    id: 2,
-    name: "Backend Developer",
-    department: "Engineering",
-    jobLevel: "Mid",
-    employees: 6,
-  },
-  {
-    id: 3,
-    name: "HR Specialist",
-    department: "Human Resources",
-    jobLevel: "Mid",
-    employees: 5,
-  },
-  {
-    id: 4,
-    name: "Accountant",
-    department: "Finance",
-    jobLevel: "Junior",
-    employees: 4,
-  },
-];
+import { usePositions } from "@/hooks/usePositions";
 
 function Positions() {
-  const [open, setOpen] = useState(false);
+  const [edit, setEdit] = useState(null);
+  const {
+    positions,
+    open,
+    setOpen,
+    loading,
+    fetchPositions,
+    form,
+    errors,
+    handleChange,
+    handleSubmit,
+    handleCancel,
+  } = usePositions();
+  useEffect(() => {
+    fetchPositions();
+  }, [fetchPositions]);
 
-  const handleCreate = (data) => {
-    console.log("CREATE POSITION:", data);
-    setOpen(false);
-  };
-  const handleCancel = () => {
-    setOpen(false);
+  const handleEdit = (id) => {
+    setEdit(id);
+    setOpen(true);
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <div className="flex items-start gap-4">
         <div>
@@ -69,7 +49,7 @@ function Positions() {
       </div>
 
       {/* Create Position Dialog */}
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={setOpen} edit={edit}>
         <DialogContent className="sm:max-w-xl">
           <DialogHeader>
             <DialogTitle>Create Position</DialogTitle>
@@ -77,7 +57,14 @@ function Positions() {
               Add a new position in organization.
             </DialogDescription>
           </DialogHeader>
-          <PositionForm onSubmit={handleCreate} onCancel={handleCancel} />
+          <PositionForm
+            onCancel={handleCancel}
+            form={form}
+            errors={errors}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+            // id={edit}
+          />
         </DialogContent>
       </Dialog>
 
@@ -93,7 +80,12 @@ function Positions() {
         </Button>
       </div>
       {/* Table */}
-      <PositionTable positions={positions} />
+      <PositionTable
+        positions={positions}
+        loading={loading}
+        setOpen={setOpen}
+        onEdit={handleEdit}
+      />
     </div>
   );
 }

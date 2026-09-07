@@ -77,7 +77,7 @@ function Employees() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <div>
         <h1 className="flex items-center gap-2 text-2xl font-semibold">
