@@ -30,6 +30,7 @@ function Positions() {
     handleChange,
     handleSubmit,
     handleCancel,
+    deleted,
   } = usePositions({ id });
   useEffect(() => {
     fetchPositions();
@@ -93,6 +94,7 @@ function Positions() {
         loading={loading}
         setOpen={setOpen}
         onEdit={handleEdit}
+        onDelete={deleted}
       />
     </div>
   );

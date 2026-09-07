@@ -15,3 +15,8 @@ export const updatePosition = async (id, data) => {
   const response = await api.put(`/positions/${id}/update`, data);
   return response.data;
 };
+
+export const deletePosition = async (id) => {
+  const response = await api.delete(`/positions/${id}/delete`);
+  return response.data;
+};

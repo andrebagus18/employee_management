@@ -2,9 +2,10 @@ import {
   getPositions,
   updatePosition,
   createPosition,
+  deletePosition,
 } from "@/services/position.service";
 import { useCallback, useState, useEffect } from "react";
-import { showError, showSuccess } from "../lib/alert";
+import { showConfirm, showError, showSuccess } from "../lib/alert";
 import { useNavigate } from "react-router-dom";
 import { id } from "date-fns/locale";
 
@@ -77,6 +78,25 @@ export function usePositions({ id } = {}) {
     }));
   };
 
+  const deleted = async (id) => {
+    const result = await showConfirm({
+      title: "Delete Position?",
+      text: "This position will be permanently deleted.",
+      confirmText: "Delete",
+    });
+    if (!result.isConfirmed) return;
+    try {
+      setLoading(true);
+      const response = await deletePosition(id);
+      await showSuccess(response.msg);
+      await fetchPositions();
+    } catch (error) {
+      showError(error.respone?.data?.msg || "Failed to delete position");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.name.trim() && !form.departmentId) return;
@@ -108,5 +128,6 @@ export function usePositions({ id } = {}) {
     handleChange,
     handleSubmit,
     handleCancel,
+    deleted,
   };
 }

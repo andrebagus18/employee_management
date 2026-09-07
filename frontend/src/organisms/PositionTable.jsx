@@ -10,7 +10,7 @@ import { Pencil, Trash2, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
-function PositionTable({ positions, loading, onEdit }) {
+function PositionTable({ positions, loading, onEdit, onDelete }) {
   const navigate = useNavigate();
   // const disabled = true;
   return (
@@ -50,7 +50,7 @@ function PositionTable({ positions, loading, onEdit }) {
                   <Button
                     variant="destructive"
                     // className="disabled:cursor-not-allowed disabled:bg-gray-400"
-                    onClick={() => onDelete(department.id)}
+                    onClick={() => onDelete(position.id)}
                     // disabled={disabled}
                   >
                     {loading ? (
