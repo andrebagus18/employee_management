@@ -43,31 +43,52 @@ export const createPosition = async (req, res) => {
 
 export const getPosition = async (req, res) => {
   try {
-    const positions = await prisma.position.findMany({
-      orderBy: {
-        name: "asc",
-      },
-      select: {
-        id: true,
-        name: true,
-        _count: {
-          select: {
-            employees: true,
-          },
-        },
-        department: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
+    const { search = "", departmentId, page = 1, limit = 10 } = req.query;
+    const filters = searchPositions({
+      search,
+      departmentId,
     });
-    if (positions.length === 0) {
-      return res.status(200).json([]);
-    }
+    const pageNumber = Number(page);
+    const limitNumber = Number(limit);
+    const skip = (pageNumber - 1) * limitNumber;
+    const [positions, total] = await Promise.all([
+      prisma.position.findMany({
+        where: filters,
+        skip,
+        take: limitNumber,
+        orderBy: {
+          name: "asc",
+        },
+        select: {
+          id: true,
+          name: true,
+          _count: {
+            select: {
+              employees: true,
+            },
+          },
+          department: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      }),
+      prisma.position.count({
+        where: filters,
+      }),
+    ]);
+
+    const totalPage = Math.ceil(total / limitNumber);
     return res.status(200).json({
       positions,
+      pagination: {
+        page: pageNumber,
+        limit: limitNumber,
+        total,
+        totalPage,
+      },
     });
   } catch (error) {
     console.error(error);
@@ -75,6 +96,24 @@ export const getPosition = async (req, res) => {
       msg: "Internal server error",
     });
   }
+};
+
+export const searchPositions = ({
+  search = "",
+  departmentId,
+  page = 1,
+  limit = 10,
+}) => {
+  const searchPos = {};
+  if (search) {
+    searchPos.name = {
+      contains: search,
+    };
+  }
+  if (departmentId) {
+    searchPos.departmentId = Number(departmentId);
+  }
+  return searchPos;
 };
 
 export const updatePosition = async (req, res) => {

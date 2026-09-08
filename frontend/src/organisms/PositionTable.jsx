@@ -6,11 +6,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Pencil, Trash2, LoaderCircle } from "lucide-react";
+import { Pencil, Trash2, LoaderCircle, SearchX, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
-function PositionTable({ positions, loading, onEdit, onDelete }) {
+function PositionTable({
+  positions,
+  pagination,
+  loading,
+  onEdit,
+  onDelete,
+  onResetFilters,
+}) {
   const navigate = useNavigate();
   // const disabled = true;
   return (
@@ -28,40 +35,68 @@ function PositionTable({ positions, loading, onEdit, onDelete }) {
           </TableHeader>
 
           <TableBody>
-            {positions.map((position, index) => (
-              <TableRow key={position.id}>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>{position.name}</TableCell>
-                <TableCell>{position.department?.name}</TableCell>
-                <TableCell className="pl-8">
-                  {position._count?.employees}
-                </TableCell>
-                <TableCell>
-                  <Button
-                    variant="outline"
-                    className="cursor-pointer"
-                    onClick={
-                      () => onEdit(position.id)
-                      // navigate(`/positions/${position.id}/update`)
-                    }
-                  >
-                    <Pencil />
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    // className="disabled:cursor-not-allowed disabled:bg-gray-400"
-                    onClick={() => onDelete(position.id)}
-                    // disabled={disabled}
-                  >
-                    {loading ? (
-                      <LoaderCircle className="size-4 animate-spin" />
-                    ) : (
-                      <Trash2 className="size-4" />
-                    )}
-                  </Button>
+            {(positions ?? []).length > 0 ? (
+              positions.map((position, index) => (
+                <TableRow key={position.id}>
+                  <TableCell>
+                    {(pagination.page - 1) * pagination.limit + index + 1}
+                  </TableCell>
+                  <TableCell>{position.name}</TableCell>
+                  <TableCell>{position.department?.name}</TableCell>
+                  <TableCell className="pl-8">
+                    {position._count?.employees}
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      variant="outline"
+                      className="cursor-pointer"
+                      onClick={
+                        () => onEdit(position.id)
+                        // navigate(`/positions/${position.id}/update`)
+                      }
+                    >
+                      <Pencil />
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      // className="disabled:cursor-not-allowed disabled:bg-gray-400"
+                      onClick={() => onDelete(position.id)}
+                      // disabled={disabled}
+                    >
+                      {loading ? (
+                        <LoaderCircle className="size-4 animate-spin" />
+                      ) : (
+                        <Trash2 className="size-4" />
+                      )}
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={8} className="h-48 text-center">
+                  <div className="flex flex-col items-center justify-center gap-3">
+                    <div className="flex size-12 items-center justify-center rounded-full bg-muted">
+                      <SearchX className="size-10 text-muted-foreground animate-[bounce_1.5s_ease-in-out_infinite]" />
+                    </div>
+                    <div>
+                      <p className="font-medium"> No positions found</p>
+                      <p className="text-sm text-muted-foreground">
+                        Try adjusting your search or filters
+                      </p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      onClick={onResetFilters}
+                      className="gap-2 border border-slate-400/50 cursor-pointer bg-slate-200 hover:bg-slate-400/30"
+                    >
+                      <RotateCcw className="sixe-4" />
+                      Reset Filters
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </div>

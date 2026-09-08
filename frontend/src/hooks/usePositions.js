@@ -19,12 +19,21 @@ export function usePositions({ id } = {}) {
     name: "",
     departmentId: "",
   });
+  const [pagination, setPagination] = useState({
+    psge: 1,
+    limit: 10,
+    total: 0,
+    totalPage: 0,
+  });
+  const [search, setSearch] = useState("");
+  const [departmentId, setDepartmentId] = useState("");
 
-  const fetchPositions = useCallback(async () => {
+  const fetchPositions = useCallback(async (params = {}) => {
     try {
       setLoading(true);
-      const data = await getPositions();
-      return setPositions(data.positions);
+      const data = await getPositions(params);
+      setPositions(data.positions);
+      setPagination(data.pagination);
     } catch (error) {
       // console.error(error);
       setErrors(error);
@@ -36,6 +45,11 @@ export function usePositions({ id } = {}) {
   useEffect(() => {
     fetchPositions();
   }, [fetchPositions]);
+
+  const resetFilters = () => {
+    setSearch("");
+    setDepartmentId("");
+  };
 
   const create = async () => {
     try {
@@ -129,5 +143,11 @@ export function usePositions({ id } = {}) {
     handleSubmit,
     handleCancel,
     deleted,
+    search,
+    setSearch,
+    departmentId,
+    setDepartmentId,
+    pagination,
+    resetFilters,
   };
 }

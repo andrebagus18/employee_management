@@ -25,6 +25,7 @@ import TableSkeleton from "../molecules/TableSkeleton";
 
 function EmployeeTable({
   employees,
+  pagination,
   loading,
   actionLoading,
   onResetFilters,
@@ -58,7 +59,9 @@ function EmployeeTable({
                 const isLoading = actionLoading === employee.id;
                 return (
                   <TableRow key={employee.id}>
-                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>
+                      {(pagination.page - 1) * pagination.limit + index + 1}
+                    </TableCell>
                     <TableCell>
                       <div>
                         <p className="font-medium capitalize">

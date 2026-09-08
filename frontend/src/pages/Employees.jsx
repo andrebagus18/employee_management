@@ -112,6 +112,7 @@ function Employees() {
       {/* Table */}
       <EmployeeTable
         employees={employees}
+        pagination={pagination}
         employee={employee}
         loading={loading}
         actionLoading={actionLoading}
