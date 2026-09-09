@@ -27,7 +27,13 @@ export const createJobLevel = async (req, res) => {
 
 export const getJobLevel = async (req, res) => {
   try {
+    const { search } = req.query;
     const jobLevels = await prisma.jobLevel.findMany({
+      where: {
+        name: {
+          contains: search,
+        },
+      },
       orderBy: {
         name: "asc",
       },

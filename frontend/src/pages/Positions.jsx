@@ -71,6 +71,12 @@ function Positions() {
     setOpen(true);
     navigate(`/positions/${id}/update`);
   };
+  useEffect(() => {
+    const navigation = performance.getEntriesByType("navigation")[0];
+    if (navigation?.type === "reload" && id) {
+      navigate("/positions", { replace: true });
+    }
+  }, []);
 
   return (
     <div className="space-y-4">
@@ -85,7 +91,15 @@ function Positions() {
       </div>
 
       {/* Create Position Dialog */}
-      <Dialog open={open} onOpenChange={setOpen} edit={edit}>
+      <Dialog
+        open={open}
+        onOpenChange={(value) => {
+          setOpen(value);
+          if (!value) {
+            handleCancel();
+          }
+        }}
+      >
         <DialogContent className="sm:max-w-xl">
           <DialogHeader>
             <DialogTitle>Create Position</DialogTitle>
@@ -102,7 +116,6 @@ function Positions() {
             handleChange={handleChange}
             handleSubmit={handleSubmit}
             id={id}
-            fetchPositions={fetchPositions}
             positions={positions}
           />
         </DialogContent>

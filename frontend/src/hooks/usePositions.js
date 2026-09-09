@@ -126,7 +126,12 @@ export function usePositions({ id } = {}) {
   };
 
   const handleCancel = () => {
+    setForm({
+      name: "",
+      departmentId: "",
+    });
     setOpen(false);
+    navigate("/positions");
   };
 
   return {

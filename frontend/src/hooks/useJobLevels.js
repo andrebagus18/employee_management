@@ -16,6 +16,7 @@ export function useJobLevels({ id } = {}) {
   const [form, setForm] = useState({
     name: "",
   });
+  const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
   const fetchJobLevels = useCallback(async (params = {}) => {
@@ -92,16 +93,30 @@ export function useJobLevels({ id } = {}) {
     }
   };
 
+  const handleCancel = () => {
+    setForm({ name: "" });
+    setOpen(false);
+    navigate("/job-levels");
+  };
+
+  const resetFilters = () => {
+    setSearch("");
+  };
+
   return {
     jobLevels,
     fetchJobLevels,
     loading,
     form,
+    setForm,
     open,
     setOpen,
     errors,
-    setForm,
+    search,
+    setSearch,
     handleSubmit,
     handleChange,
+    handleCancel,
+    resetFilters,
   };
 }

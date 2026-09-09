@@ -23,10 +23,14 @@ function JobLevels() {
     errors,
     form,
     setForm,
+    search,
+    setSearch,
     open,
     setOpen,
     handleSubmit,
     handleChange,
+    handleCancel,
+    resetFilters,
   } = useJobLevels({ id });
   const navigate = useNavigate();
   const handleEdit = (id) => {
@@ -34,14 +38,14 @@ function JobLevels() {
     navigate(`/job-levels/${id}/update`);
   };
 
-  const handleCancel = () => {
-    setForm({ name: "" });
-    setOpen(false);
-    navigate("/job-levels");
-  };
   useEffect(() => {
-    fetchJobLevels();
-  }, [fetchJobLevels]);
+    const timer = setTimeout(() => {
+      fetchJobLevels({
+        search,
+      });
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [fetchJobLevels, search]);
   //efect reload url
   useEffect(() => {
     const navigation = performance.getEntriesByType("navigation")[0];
@@ -95,7 +99,7 @@ function JobLevels() {
 
       {/* Filters */}
       <div className="flex justify-between items-center">
-        <JobLevelFilters />
+        <JobLevelFilters search={search} setSearch={setSearch} />
         <Button
           onClick={() => setOpen(true)}
           className="max-w-3xs w-full gap-4 py-5 text-md cursor-pointer"
@@ -110,6 +114,7 @@ function JobLevels() {
         jobLevels={jobLevels}
         loading={loading}
         onEdit={handleEdit}
+        onResetFilters={resetFilters}
       />
     </div>
   );

@@ -15,7 +15,6 @@ function PositionForm({
   handleSubmit,
   id,
   positions,
-  fetchPositions,
 }) {
   const { departments } = useDepartments();
   useEffect(() => {
