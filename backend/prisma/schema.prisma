@@ -42,7 +42,7 @@ model JobLevel {
   rank Int?
   createAt DateTime @default(now())
   updatedAt DateTime @default(now())
-  employess Employee[]
+  employees Employee[]
 }
 
 model Department {

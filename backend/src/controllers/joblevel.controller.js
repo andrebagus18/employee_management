@@ -31,6 +31,15 @@ export const getJobLevel = async (req, res) => {
       orderBy: {
         name: "asc",
       },
+      select: {
+        id: true,
+        name: true,
+        _count: {
+          select: {
+            employees: true,
+          },
+        },
+      },
     });
     if (jobLevels.length === 0) {
       return res.status(200).json([]);

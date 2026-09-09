@@ -35,6 +35,7 @@ function AppRoutes() {
             <Route path="/positions" element={<Positions />} />
             <Route path="/positions/:id/update" element={<Positions />} />
             <Route path="/job-levels" element={<JobLevels />} />
+            <Route path="/job-levels/:id/update" element={<JobLevels />} />
             <Route path="/leave-requests" element={<LeaveRequests />} />
             <Route path="/users" element={<Users />} />
             <Route path="/roles" element={<Roles />} />

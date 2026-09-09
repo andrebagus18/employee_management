@@ -6,50 +6,50 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Eye, Pencil, Trash2 } from "lucide-react";
-import ActionMenu from "@/molecules/ActionMenu";
+import { Button } from "@/components/ui/button";
+import { Pencil, Trash2, LoaderCircle } from "lucide-react";
 
-function JobLevelTable({ jobLevels }) {
+function JobLevelTable({ jobLevels, loading, onEdit }) {
+  const disabled = true;
+
   return (
     <div className="rounded-xl border bg-background">
-      <div className="overflow-x-auto">
+      <div className="w-full max-h-80 scrollbar-hide overflow-y-auto">
         <Table>
-          <TableHeader>
+          <TableHeader className="sticky top-0 z-10 bg-background">
             <TableRow>
-              <TableHead>Job Level</TableHead>
-              <TableHead>Description</TableHead>
+              <TableHead>No.</TableHead>
+              <TableHead>Job Levels</TableHead>
               <TableHead>Employees</TableHead>
               <TableHead className="w-[50px]"></TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
-            {jobLevels.map((jobLevel) => (
+            {jobLevels.map((jobLevel, index) => (
               <TableRow key={jobLevel.id}>
+                <TableCell>{index + 1}</TableCell>
                 <TableCell>{jobLevel.name}</TableCell>
-                <TableCell>{jobLevel.description}</TableCell>
-                <TableCell>{jobLevel.employees}</TableCell>
-                <TableCell>
-                  <ActionMenu
-                    actions={[
-                      {
-                        label: "View",
-                        icon: Eye,
-                        onClick: () => console.log("VIEW", jobLevel.id),
-                      },
-                      {
-                        label: "Edit",
-                        icon: Pencil,
-                        onClick: () => console.log("EDIT", jobLevel.id),
-                      },
-                      {
-                        label: "Delete",
-                        icon: Trash2,
-                        variant: "destructive",
-                        onClick: () => console.log("DELETE", jobLevel.id),
-                      },
-                    ]}
-                  />
+                <TableCell>{jobLevel._count?.employees}</TableCell>
+                <TableCell className="flex gap-1">
+                  <Button
+                    variant="outline"
+                    className="cursor-pointer"
+                    onClick={() => onEdit(jobLevel.id)}
+                  >
+                    <Pencil />
+                  </Button>
+                  <Button
+                    className="disabled:pointer-events-auto disabled:cursor-not-allowed disabled:bg-gray-400"
+                    onClick={() => onDelete(department.id)}
+                    disabled={disabled}
+                  >
+                    {loading ? (
+                      <LoaderCircle className="size-4 animate-spin" />
+                    ) : (
+                      <Trash2 className="size-4" />
+                    )}
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}

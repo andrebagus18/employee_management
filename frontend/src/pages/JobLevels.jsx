@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CirclePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,46 +11,44 @@ import {
 import JobLevelFilters from "@/molecules/JobLevelFilters";
 import JobLevelForm from "@/molecules/JobLevelForm";
 import JobLevelTable from "@/organisms/JobLevelTable";
-
-const jobLevels = [
-  {
-    id: 1,
-    name: "Junior",
-    description: "Entry-level position",
-    employees: 24,
-  },
-  {
-    id: 2,
-    name: "Mid",
-    description: "Intermediate-level position",
-    employees: 56,
-  },
-  {
-    id: 3,
-    name: "Senior",
-    description: "Experienced professional",
-    employees: 38,
-  },
-  {
-    id: 4,
-    name: "Lead",
-    description: "Team or technical leadership",
-    employees: 10,
-  },
-];
+import { useJobLevels } from "@/hooks/useJobLevels";
+import { useNavigate, useParams } from "react-router-dom";
 
 function JobLevels() {
-  const [open, setOpen] = useState(false);
-
-  const handleCreate = (data) => {
-    console.log("CREATE JOB LEVEL:", data);
-
-    setOpen(false);
+  const { id } = useParams();
+  const {
+    jobLevels,
+    fetchJobLevels,
+    loading,
+    errors,
+    form,
+    setForm,
+    open,
+    setOpen,
+    handleSubmit,
+    handleChange,
+  } = useJobLevels({ id });
+  const navigate = useNavigate();
+  const handleEdit = (id) => {
+    setOpen(true);
+    navigate(`/job-levels/${id}/update`);
   };
 
   const handleCancel = () => {
+    setForm({ name: "" });
     setOpen(false);
+    navigate("/job-levels");
   };
+  useEffect(() => {
+    fetchJobLevels();
+  }, [fetchJobLevels]);
+  //efect reload url
+  useEffect(() => {
+    const navigation = performance.getEntriesByType("navigation")[0];
+    if (navigation?.type === "reload" && id) {
+      navigate("/job-levels", { replace: true });
+    }
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -58,7 +56,6 @@ function JobLevels() {
       <div className="flex items-start gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Job Levels</h1>
-
           <p className="text-sm text-muted-foreground">
             Manage job levels in organization.
           </p>
@@ -66,17 +63,33 @@ function JobLevels() {
       </div>
 
       {/* Create Job Level */}
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="sm:max-w-xl">
+      <Dialog
+        open={open}
+        onOpenChange={(value) => {
+          setOpen(value);
+          if (!value) {
+            handleCancel();
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Create Job Level</DialogTitle>
-
             <DialogDescription>
               Add a new job level to organization.
             </DialogDescription>
           </DialogHeader>
-
-          <JobLevelForm onSubmit={handleCreate} onCancel={handleCancel} />
+          <JobLevelForm
+            jobLevels={jobLevels}
+            handleSubmit={handleSubmit}
+            handleChange={handleChange}
+            onCancel={handleCancel}
+            errors={errors}
+            form={form}
+            setForm={setForm}
+            loading={loading}
+            id={id}
+          />
         </DialogContent>
       </Dialog>
 
@@ -93,7 +106,11 @@ function JobLevels() {
       </div>
 
       {/* Table */}
-      <JobLevelTable jobLevels={jobLevels} />
+      <JobLevelTable
+        jobLevels={jobLevels}
+        loading={loading}
+        onEdit={handleEdit}
+      />
     </div>
   );
 }

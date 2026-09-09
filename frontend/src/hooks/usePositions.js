@@ -7,7 +7,6 @@ import {
 import { useCallback, useState, useEffect } from "react";
 import { showConfirm, showError, showSuccess } from "../lib/alert";
 import { useNavigate } from "react-router-dom";
-import { id } from "date-fns/locale";
 
 export function usePositions({ id } = {}) {
   const navigate = useNavigate();
