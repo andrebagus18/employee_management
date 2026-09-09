@@ -147,13 +147,20 @@ export const getLeaveRequest = async (req, res) => {
         },
       };
     }
-    const leaveRequest = await prisma.leaveRequest.findMany({
+    const leaveRequests = await prisma.leaveRequest.findMany({
       where: leaveFilter,
+      include: {
+        employee: {
+          include: {
+            users: true,
+          },
+        },
+      },
     });
-    console.log("leave:", leaveRequest);
+    // console.log("leave:", leaveRequest);
 
     return res.status(200).json({
-      data: leaveRequest,
+      leaveRequests,
     });
   } catch (error) {
     console.error(error);

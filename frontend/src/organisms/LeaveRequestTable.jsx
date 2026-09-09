@@ -9,11 +9,13 @@ import {
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import ActionMenu from "@/molecules/ActionMenu";
 import { Badge } from "@/components/ui/badge";
+import { formatDateIndo } from "../lib/utils";
 
-function LeaveRequestTable({ requests }) {
+function LeaveRequestTable({ leaveRequests }) {
+  console.log("leave:", leaveRequests);
   const getStatusVariant = (status) => {
-    if (status === "Approved") return "default";
-    if (status === "Rejected") return "destructive";
+    if (status === "APPROVED") return "default";
+    if (status === "REJECTED") return "destructive";
     return "secondary";
   };
 
@@ -23,34 +25,38 @@ function LeaveRequestTable({ requests }) {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>No.</TableHead>
               <TableHead>Employee</TableHead>
-              <TableHead>Leave Type</TableHead>
+              <TableHead>Reviewed By</TableHead>
               <TableHead>Start Date</TableHead>
               <TableHead>End Date</TableHead>
-              <TableHead>Duration</TableHead>
+              <TableHead>Review Date</TableHead>
+              <TableHead>Type</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="w-[50px]"></TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
-            {requests.map((request) => (
-              <TableRow key={request.id}>
+            {leaveRequests.map((leaveRequest, index) => (
+              <TableRow key={leaveRequest.id}>
+                <TableCell>{index + 1}</TableCell>
                 <TableCell>
                   <div>
-                    <p className="font-medium">{request.employee}</p>
+                    <p className="font-medium">{leaveRequest.employee?.name}</p>
                     <p className="text-xs text-muted-foreground">
-                      {request.email}
+                      {leaveRequest.employee?.users[0].email}
                     </p>
                   </div>
                 </TableCell>
-                <TableCell>{request.leaveType}</TableCell>
-                <TableCell>{request.startDate}</TableCell>
-                <TableCell>{request.endDate}</TableCell>
-                <TableCell>{request.duration}</TableCell>
+                <TableCell>{leaveRequest.reviewedBy}</TableCell>
+                <TableCell>{formatDateIndo(leaveRequest.start_date)}</TableCell>
+                <TableCell>{formatDateIndo(leaveRequest.end_date)}</TableCell>
+                <TableCell>{formatDateIndo(leaveRequest.reviewedAt)}</TableCell>
+                <TableCell>{leaveRequest.type}</TableCell>
                 <TableCell>
-                  <Badge variant={getStatusVariant(request.status)}>
-                    {request.status}
+                  <Badge variant={getStatusVariant(leaveRequest.status)}>
+                    {leaveRequest.status}
                   </Badge>
                 </TableCell>
                 <TableCell>
