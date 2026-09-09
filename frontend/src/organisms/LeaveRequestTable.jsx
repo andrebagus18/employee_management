@@ -12,11 +12,10 @@ import { Badge } from "@/components/ui/badge";
 import { formatDateIndo } from "../lib/utils";
 
 function LeaveRequestTable({ leaveRequests }) {
-  console.log("leave:", leaveRequests);
   const getStatusVariant = (status) => {
     if (status === "APPROVED") return "default";
     if (status === "REJECTED") return "destructive";
-    return "secondary";
+    return "outline";
   };
 
   return (
@@ -45,11 +44,11 @@ function LeaveRequestTable({ leaveRequests }) {
                   <div>
                     <p className="font-medium">{leaveRequest.employee?.name}</p>
                     <p className="text-xs text-muted-foreground">
-                      {leaveRequest.employee?.users[0].email}
+                      {leaveRequest.employee?.user?.email}
                     </p>
                   </div>
                 </TableCell>
-                <TableCell>{leaveRequest.reviewedBy}</TableCell>
+                <TableCell>{leaveRequest.reviewedBy ?? "-"}</TableCell>
                 <TableCell>{formatDateIndo(leaveRequest.start_date)}</TableCell>
                 <TableCell>{formatDateIndo(leaveRequest.end_date)}</TableCell>
                 <TableCell>{formatDateIndo(leaveRequest.reviewedAt)}</TableCell>

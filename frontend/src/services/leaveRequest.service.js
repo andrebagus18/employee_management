@@ -5,3 +5,8 @@ export const getLeaveRequests = async () => {
   //   console.log("response:", response.data);
   return response.data;
 };
+
+export const createLeaveRequest = async (data) => {
+  const response = await api.post("/leave-requests/create", data);
+  return response.data;
+};

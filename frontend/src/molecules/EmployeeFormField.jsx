@@ -48,7 +48,7 @@ function FormField({ form, errors, handleChange, employees }) {
               { value: "MALE", label: "Male" },
               { value: "FEMALE", label: "Female" },
             ]}
-            placehorder="Select gender"
+            placeholder="Select gender"
             error={errors.gender}
           />
           <div className="space-y-2">
@@ -148,7 +148,7 @@ function FormField({ form, errors, handleChange, employees }) {
               { value: "ACTIVE", label: "Active" },
               { value: "INACTIVE", label: "Inactive" },
             ]}
-            placehorder="Select status"
+            placeholder="Select status"
             error={errors.status}
           />
           <FormSelect
@@ -160,7 +160,7 @@ function FormField({ form, errors, handleChange, employees }) {
               value: department.id,
               label: department.name,
             }))}
-            placehorder="Select Department"
+            placeholder="Select Department"
             error={errors.departmentId}
           />
           <FormSelect
@@ -172,7 +172,7 @@ function FormField({ form, errors, handleChange, employees }) {
               value: position.id,
               label: position.name,
             }))}
-            placehorder="Select Position"
+            placeholder="Select Position"
             error={errors.positionId}
           />
           <FormSelect
@@ -184,7 +184,7 @@ function FormField({ form, errors, handleChange, employees }) {
               value: jobLevel.id,
               label: jobLevel.name,
             }))}
-            placehorder="Select Job Level"
+            placeholder="Select Job Level"
             error={errors.jobLevelId}
           />
           <FormSelect
@@ -196,7 +196,7 @@ function FormField({ form, errors, handleChange, employees }) {
               value: employee.id,
               label: employee.name,
             }))}
-            placehorder="Select a top"
+            placeholder="Select a top"
             error={errors.managerId}
           />
         </div>
@@ -249,7 +249,7 @@ function FormField({ form, errors, handleChange, employees }) {
                 value: role.id,
                 label: role.name,
               }))}
-              placehorder="Select Role"
+              placeholder="Select Role"
               error={errors.roleId}
             />
           </div>

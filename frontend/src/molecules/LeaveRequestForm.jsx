@@ -1,84 +1,103 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import FormSelect from "./FormSelect";
+import FormDate from "./FormDate";
+import { useAuth } from "../context/authContext";
 
-function LeaveRequestForm({ onSubmit, onCancel }) {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    const formData = new FormData(event.currentTarget);
-
-    const data = {
-      employee: formData.get("employee"),
-      leaveType: formData.get("leaveType"),
-      startDate: formData.get("startDate"),
-      endDate: formData.get("endDate"),
-      reason: formData.get("reason"),
-    };
-
-    onSubmit?.(data);
-  };
+function LeaveRequestForm({
+  handleChange,
+  handleSubmit,
+  form,
+  errors,
+  onCancel,
+  leaveRequests,
+}) {
+  const { user } = useAuth();
+  const LeaveTypes = [
+    {
+      value: "ANNUAL",
+      label: "Annual Leave",
+    },
+    {
+      value: "SICK",
+      label: "Sick Leave",
+    },
+    {
+      value: "PERSONAL",
+      label: "Personal Leave",
+    },
+  ];
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      {/* Employee */}
-      <div className="space-y-2">
-        <Label htmlFor="employee">Employee</Label>
-        <select
-          id="employee"
-          name="employee"
-          className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
-        >
-          <option value="">Select employee</option>
-          <option value="john-doe">John Doe</option>
-          <option value="sarah-smith">Sarah Smith</option>
-          <option value="michael-lee">Michael Lee</option>
-        </select>
+      <div className="grid grid-cols-2 gap-4">
+        {/* Employee */}
+        <div className="space-y-3">
+          <Label htmlFor="employee">Employee</Label>
+          <p className="w-full font-medium text-lg bg-gray-300/30 py-1 px-2 rounded-md text-gray-500">
+            {user?.employee?.name}
+          </p>
+        </div>
+
+        {/* Leave Type */}
+        <div className="space-y-2">
+          <Label htmlFor="type">Leave Type</Label>
+          <FormSelect
+            name="type"
+            value={form.type}
+            onChange={handleChange}
+            options={LeaveTypes}
+            placeholder="Select Type"
+            error={errors.type}
+          />
+        </div>
+
+        {/* Dates */}
+        <FormDate
+          label="Start Date"
+          name="start_date"
+          value={form.start_date}
+          onChange={handleChange}
+          error={errors.start_date}
+        />
+        <FormDate
+          label="End Date"
+          name="end_date"
+          value={form.end_date}
+          onChange={handleChange}
+          error={errors.end_date}
+        />
       </div>
 
-      {/* Leave Type */}
-      <div className="space-y-2">
-        <Label htmlFor="leaveType">Leave Type</Label>
-        <select
-          id="leaveType"
-          name="leaveType"
-          className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
-        >
-          <option value="">Select leave type</option>
-          <option value="annual">Annual Leave</option>
-          <option value="sick">Sick Leave</option>
-          <option value="personal">Personal Leave</option>
-        </select>
-      </div>
-
-      {/* Dates */}
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="startDate">Start Date</Label>
-          <Input id="startDate" name="startDate" type="date" />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="endDate">End Date</Label>
-          <Input id="endDate" name="endDate" type="date" />
-        </div>
-      </div>
       {/* Reason */}
       <div className="space-y-2">
         <Label htmlFor="reason">Reason</Label>
         <Textarea
           id="reason"
           name="reason"
+          onChange={handleChange}
           placeholder="Explain the reason for this leave..."
           className="min-h-24 resize-none"
         />
+        {errors.description && (
+          <p className="font-sm text-destructive">{errors.description}</p>
+        )}
       </div>
+
       {/* Actions */}
       <div className="flex justify-end gap-3 pt-2">
-        <Button type="button" variant="outline" onClick={onCancel}>
+        <Button
+          className="cursor-pointer"
+          type="button"
+          variant="outline"
+          onClick={onCancel}
+        >
           Cancel
         </Button>
-        <Button type="submit">Create Request</Button>
+        <Button className="cursor-pointer" type="submit">
+          Create Request
+        </Button>
       </div>
     </form>
   );

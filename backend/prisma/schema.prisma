@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,159 +6,185 @@ datasource db {
   provider = "mysql"
 }
 
-enum leaveStatus {
+model activitylog {
+  id          Int      @id @default(autoincrement())
+  userId      Int?
+  action      String
+  entity      String
+  entityId    Int?
+  description String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  user        user?    @relation(fields: [userId], references: [id], map: "ActivityLog_userId_fkey")
+
+  @@index([userId], map: "ActivityLog_userId_fkey")
+}
+
+model dailyreport {
+  id         Int      @id @default(autoincrement())
+  employeeId Int
+  date       DateTime @db.Date
+  time       DateTime @db.Time(0)
+  report     String   @db.Text
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+  employee   employee @relation(fields: [employeeId], references: [id], map: "DailyReport_employeeId_fkey")
+
+  @@index([employeeId], map: "DailyReport_employeeId_fkey")
+}
+
+model department {
+  id        Int        @id @default(autoincrement())
+  name      String
+  createAt  DateTime   @default(now())
+  updatedAt DateTime   @default(now())
+  employee  employee[]
+  position  position[]
+}
+
+model employee {
+  id               Int             @id @default(autoincrement())
+  positionId       Int
+  departmentId     Int
+  jobLevelId       Int
+  managerId        Int?
+  name             String
+  gender           employee_gender @default(MALE)
+  nik              String          @unique(map: "Employee_nik_key")
+  phone            String
+  address          String          @db.Text
+  hire_date        DateTime        @db.Date
+  termination_date DateTime?       @db.Date
+  status           employee_status @default(ACTIVE)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @default(now())
+  date_birth       DateTime?       @db.Date
+  place_birth      String?
+  dailyreport      dailyreport[]
+  department       department      @relation(fields: [departmentId], references: [id], map: "Employee_departmentId_fkey")
+  joblevel         joblevel        @relation(fields: [jobLevelId], references: [id], map: "Employee_jobLevelId_fkey")
+  employee         employee?       @relation("employeeToemployee", fields: [managerId], references: [id], map: "Employee_managerId_fkey")
+  other_employee   employee[]      @relation("employeeToemployee")
+  position         position        @relation(fields: [positionId], references: [id], map: "Employee_positionId_fkey")
+  leaverequest     leaverequest[]
+  user             user?
+
+  @@index([departmentId], map: "Employee_departmentId_fkey")
+  @@index([jobLevelId], map: "Employee_jobLevelId_fkey")
+  @@index([managerId], map: "Employee_managerId_fkey")
+  @@index([positionId], map: "Employee_positionId_fkey")
+}
+
+model joblevel {
+  id        Int        @id @default(autoincrement())
+  name      String
+  createAt  DateTime   @default(now())
+  updatedAt DateTime   @default(now())
+  rank      Int?
+  employee  employee[]
+}
+
+model leaverequest {
+  id                                 Int                 @id @default(autoincrement())
+  employeeId                         Int
+  approverId                         Int?
+  reviewedBy                         Int?
+  type                               leaveRequest_type
+  start_date                         DateTime            @db.Date
+  end_date                           DateTime            @db.Date
+  status                             leaverequest_status @default(PENDING)
+  createdAt                          DateTime            @default(now())
+  reviewedAt                         DateTime?
+  updatedAt                          DateTime            @default(now())
+  description                        String              @db.Text
+  user_leaverequest_approverIdTouser user?               @relation("leaverequest_approverIdTouser", fields: [approverId], references: [id], map: "LeaveRequest_approverId_fkey")
+  employee                           employee            @relation(fields: [employeeId], references: [id], map: "LeaveRequest_employeeId_fkey")
+  user_leaverequest_reviewedByTouser user?               @relation("leaverequest_reviewedByTouser", fields: [reviewedBy], references: [id], map: "LeaveRequest_reviewedBy_fkey")
+
+  @@index([approverId], map: "LeaveRequest_approverId_fkey")
+  @@index([employeeId], map: "LeaveRequest_employeeId_fkey")
+  @@index([reviewedBy], map: "LeaveRequest_reviewedBy_fkey")
+}
+
+model permission {
+  id             Int              @id @default(autoincrement())
+  name           String           @unique(map: "Permission_name_key")
+  description    String           @db.Text
+  createAt       DateTime         @default(now())
+  updatedAt      DateTime         @default(now())
+  rolepermission rolepermission[]
+}
+
+model position {
+  id           Int        @id @default(autoincrement())
+  departmentId Int
+  name         String
+  createAt     DateTime   @default(now())
+  updatedAt    DateTime   @default(now())
+  employee     employee[]
+  department   department @relation(fields: [departmentId], references: [id], map: "Position_departmentId_fkey")
+
+  @@index([departmentId], map: "Position_departmentId_fkey")
+}
+
+model role {
+  id             Int              @id @default(autoincrement())
+  name           String
+  createAt       DateTime         @default(now())
+  updatedAt      DateTime         @default(now())
+  rolepermission rolepermission[]
+  user           user[]
+}
+
+model rolepermission {
+  id           Int        @id @default(autoincrement())
+  roleId       Int
+  permissionId Int
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @default(now())
+  permission   permission @relation(fields: [permissionId], references: [id], map: "RolePermission_permissionId_fkey")
+  role         role       @relation(fields: [roleId], references: [id], map: "RolePermission_roleId_fkey")
+
+  @@index([permissionId], map: "RolePermission_permissionId_fkey")
+  @@index([roleId], map: "RolePermission_roleId_fkey")
+}
+
+model user {
+  id                                         Int            @id @default(autoincrement())
+  roleId                                     Int
+  employeeId                                 Int            @unique(map: "User_employeeId_key")
+  email                                      String         @unique(map: "User_email_key")
+  password                                   String
+  last_login                                 DateTime       @default(now())
+  createdAt                                  DateTime       @default(now())
+  updatedAt                                  DateTime       @default(now())
+  activitylog                                activitylog[]
+  leaverequest_leaverequest_approverIdTouser leaverequest[] @relation("leaverequest_approverIdTouser")
+  leaverequest_leaverequest_reviewedByTouser leaverequest[] @relation("leaverequest_reviewedByTouser")
+  employee                                   employee       @relation(fields: [employeeId], references: [id], map: "User_employeeId_fkey")
+  role                                       role           @relation(fields: [roleId], references: [id], map: "User_roleId_fkey")
+
+  @@index([roleId], map: "User_roleId_fkey")
+}
+
+enum employee_gender {
+  MALE
+  FEMALE
+}
+
+enum leaverequest_status {
   PENDING
   APPROVED
   REJECTED
 }
 
-enum employeeStatus {
+enum leaveRequest_type {
+  ANNUAL
+  SICK
+  PERSONAL
+}
+
+enum employee_status {
   ACTIVE
   INACTIVE
-}
-
-enum employeeGender {
-  MALE
-  FEMALE
-}
-
-model Role {
-  id Int @id @default(autoincrement())
-  name String
-  createAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  users User[]
-  rolepermission RolePermission[]
-}
-
-model JobLevel {
-  id Int @id @default(autoincrement())
-  name String
-  rank Int?
-  createAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  employees Employee[]
-}
-
-model Department {
-  id Int @id @default(autoincrement())
-  name String
-  createAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  positions Position[]
-  employees Employee[]
-}
-
-model Permission {
-  id Int @id @default(autoincrement())
-  name String @unique
-  description String @db.Text
-  createAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  rolepermission RolePermission[]
-}
-
-model Position {
-  id Int @id @default(autoincrement())
-  departmentId Int
-  department Department @relation(fields: [departmentId], references: [id])
-  name String
-  createAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  employees Employee[]
-}
-
-model Employee {
-  id Int @id @default(autoincrement())
-  positionId Int
-  position Position @relation(fields: [positionId], references: [id])
-  departmentId Int
-  department Department @relation(fields: [departmentId], references: [id])
-  jobLevelId Int
-  jobLevel JobLevel @relation(fields: [jobLevelId], references: [id])
-  managerId Int?
-  manager Employee? @relation("EmployeeManager", fields: [managerId], references: [id])
-  subordinates Employee[] @relation("EmployeeManager")
-  name String
-  gender employeeGender @default(MALE)
-  nik String @unique
-  phone String
-  place_birth String?
-  date_birth DateTime? @db.Date
-  address String @db.Text
-  hire_date DateTime @db.Date
-  termination_date DateTime? @db.Date
-  status employeeStatus @default(ACTIVE)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  users User[]
-  leaverequestEmployee LeaveRequest[] @relation("LeaveRequester")
-  dailyReport DailyReport[]
-}
-
-model User {
-  id Int @id @default(autoincrement())
-  roleId Int
-  role Role @relation(fields: [roleId], references: [id])
-  employeeId Int @unique
-  employee Employee @relation(fields: [employeeId], references: [id])
-  email String @unique
-  password String
-  last_login DateTime @default(now())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  activityLog ActivityLog[]
-  leaveApprovals LeaveRequest[] @relation("LeaveApprover")
-leaveReviews   LeaveRequest[] @relation("LeaveReviewer")
-}
-
-model RolePermission {
-  id Int @id @default(autoincrement())
-  roleId Int
-  role Role @relation(fields: [roleId], references: [id])
-  permissionId Int
-  permission Permission @relation(fields: [permissionId], references: [id]) 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-}
-
-model LeaveRequest {
-  id Int @id @default(autoincrement())
-  employeeId Int
-  employee Employee @relation("LeaveRequester", fields: [employeeId], references: [id]) 
-  approverId Int?
-approver User? @relation("LeaveApprover", fields: [approverId], references: [id])
-reviewedBy Int?
-reviewed User? @relation("LeaveReviewer", fields: [reviewedBy], references: [id])
-  type String
-  description String @db.Text
-  start_date DateTime @db.Date
-  end_date DateTime @db.Date
-  status leaveStatus @default(PENDING)
-  reviewedAt DateTime?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-}
-
-model DailyReport {
-  id Int @id @default(autoincrement())
-  employeeId Int
-  employee Employee @relation(fields: [employeeId], references: [id])
-  date DateTime @db.Date
-  time DateTime @db.Time
-  report String @db.Text
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-}
-
-model ActivityLog {
-  id Int @id @default(autoincrement())
-  userId Int?
-  user User? @relation(fields: [userId], references: [id])
-  action String
-  entity String
-  entityId Int?
-  description String? @db.Text
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
 }

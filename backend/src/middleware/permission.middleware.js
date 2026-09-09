@@ -32,7 +32,7 @@ import { prisma } from "../lib/prisma.js";
 export const permissionMiddleware = (permissionName) => {
   return async (req, res, next) => {
     const { roleId } = req.user;
-    const rolePermission = await prisma.rolePermission.findFirst({
+    const rolePermission = await prisma.rolepermission.findFirst({
       where: {
         roleId: Number(roleId),
         permission: {

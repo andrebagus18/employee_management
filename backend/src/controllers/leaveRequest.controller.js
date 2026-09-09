@@ -1,6 +1,5 @@
 import { prisma } from "../lib/prisma.js";
 import { getEmployeeScope } from "../helper/employeeScope.js";
-import { leaveStatus } from "@prisma/client";
 
 const EMPLOYEE_ID = 5;
 const SPV_ID = 4;
@@ -85,7 +84,7 @@ export const createLeaveRequest = async (req, res) => {
         msg: "Approver does not have a user account",
       });
     }
-    const leaveRequest = await prisma.leaveRequest.create({
+    const leaveRequest = await prisma.leaverequest.create({
       data: {
         employee: {
           connect: {
@@ -104,7 +103,7 @@ export const createLeaveRequest = async (req, res) => {
         status: "PENDING",
       },
     });
-    await prisma.activityLog.create({
+    await prisma.activitylog.create({
       data: {
         userId: req.user.userId,
         action: "CREATE",
@@ -147,12 +146,12 @@ export const getLeaveRequest = async (req, res) => {
         },
       };
     }
-    const leaveRequests = await prisma.leaveRequest.findMany({
+    const leaveRequests = await prisma.leaverequest.findMany({
       where: leaveFilter,
       include: {
         employee: {
           include: {
-            users: true,
+            user: true,
           },
         },
       },
@@ -174,7 +173,7 @@ export const getLeaveRequestById = async (req, res) => {
   try {
     const { id } = req.params;
     const { employeeId, userId, roleId } = req.user;
-    const getById = await prisma.leaveRequest.findUnique({
+    const getById = await prisma.leaverequest.findUnique({
       where: {
         id: Number(id),
       },
@@ -225,7 +224,7 @@ export const leaveRerquestStatus = async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
     const { userId, employeeId, roleId } = req.user;
-    const leaveRequest = await prisma.leaveRequest.findUnique({
+    const leaveRequest = await prisma.leaverequest.findUnique({
       where: {
         id: Number(id),
       },
@@ -266,7 +265,7 @@ export const leaveRerquestStatus = async (req, res) => {
         });
       }
     }
-    const updateLeaveRequest = await prisma.leaveRequest.update({
+    const updateLeaveRequest = await prisma.leaverequest.update({
       where: {
         id: leaveRequest.id,
       },
@@ -276,7 +275,7 @@ export const leaveRerquestStatus = async (req, res) => {
         reviewedAt: new Date(),
       },
     });
-    await prisma.activityLog.create({
+    await prisma.activitylog.create({
       data: {
         userId: userId,
         action: "UPDATE",

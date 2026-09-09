@@ -7,9 +7,9 @@ export const getEmployeeScope = async (employeeId) => {
       managerId: employeeId,
     },
     include: {
-      subordinates: {
+      other_employee: {
         include: {
-          subordinates: true,
+          other_employee: true,
         },
       },
     },
@@ -19,13 +19,13 @@ export const getEmployeeScope = async (employeeId) => {
   // ambil pisahkan manager dengan spv
   const AllSubManagers = [];
   scope.forEach((mng) => {
-    AllSubManagers.push(...mng.subordinates);
+    AllSubManagers.push(...mng.other_employee);
   });
   // console.log("manager:", AllSubManagers);
   // ambil spv dan pisahkan dengan bawahannya
   const allSubEmployee = [];
   AllSubManagers.forEach((spv) => {
-    allSubEmployee.push(...spv.subordinates);
+    allSubEmployee.push(...spv.other_employee);
   });
   // console.log("spv", allSubEmployee);
 
