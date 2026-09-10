@@ -10,8 +10,10 @@ import { Eye, Pencil, Trash2 } from "lucide-react";
 import ActionMenu from "@/molecules/ActionMenu";
 import { Badge } from "@/components/ui/badge";
 import { formatDateIndo } from "../lib/utils";
+import { useNavigate } from "react-router-dom";
 
-function LeaveRequestTable({ leaveRequests }) {
+function LeaveRequestTable({ leaveRequests, onEdit }) {
+  const navigate = useNavigate();
   const getStatusVariant = (status) => {
     if (status === "APPROVED") return "default";
     if (status === "REJECTED") return "destructive";
@@ -64,12 +66,14 @@ function LeaveRequestTable({ leaveRequests }) {
                       {
                         label: "View",
                         icon: Eye,
-                        onClick: () => console.log("VIEW", request.id),
+                        onClick: () =>
+                          navigate(`/leave-requests/${leaveRequest.id}`),
                       },
                       {
                         label: "Edit",
                         icon: Pencil,
-                        onClick: () => console.log("EDIT", request.id),
+                        onClick: () =>
+                          navigate(`/leave-requests/${leaveRequest.id}/update`),
                       },
                       {
                         label: "Delete",

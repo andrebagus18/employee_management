@@ -2,12 +2,13 @@ import LeaveRequestForm from "@/molecules/LeaveRequestForm";
 import { useLeaveRequests } from "@/hooks/useLeaveRequests";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Handshake } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function CreateLeaveRequest() {
+  const { id } = useParams();
   const navigate = useNavigate();
   const { leaveRequests, handleSubmit, handleChange, form, setForm, errors } =
-    useLeaveRequests();
+    useLeaveRequests({ id });
   const handleCancel = () => {
     setForm({
       type: "",
@@ -46,8 +47,10 @@ function CreateLeaveRequest() {
         handleChange={handleChange}
         handleSubmit={handleSubmit}
         form={form}
+        setForm={setForm}
         errors={errors}
         onCancel={handleCancel}
+        id={id}
       />
     </div>
   );

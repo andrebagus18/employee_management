@@ -25,7 +25,6 @@ import { useNavigate, useParams } from "react-router-dom";
 function Positions() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [edit, setEdit] = useState(null);
   const {
     positions,
     open,

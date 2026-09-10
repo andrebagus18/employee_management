@@ -1,22 +1,13 @@
 import { CirclePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import LeaveRequestFilters from "@/molecules/LeaveRequestFilters";
-import LeaveRequestForm from "@/molecules/LeaveRequestForm";
 import LeaveRequestTable from "@/organisms/LeaveRequestTable";
 import { useLeaveRequests } from "@/hooks/useLeaveRequests";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function LeaveRequests() {
-  const { leaveRequests, fetchLeaveRequests, loading, errors, open, setOpen } =
-    useLeaveRequests();
+  const { leaveRequests, fetchLeaveRequests, loading } = useLeaveRequests();
   const navigate = useNavigate();
   useEffect(() => {
     fetchLeaveRequests();
@@ -65,7 +56,7 @@ function LeaveRequests() {
       </div>
 
       {/* Table */}
-      <LeaveRequestTable leaveRequests={leaveRequests} />
+      <LeaveRequestTable leaveRequests={leaveRequests} loading={loading} />
     </div>
   );
 }

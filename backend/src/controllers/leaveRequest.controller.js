@@ -209,7 +209,7 @@ export const getLeaveRequestById = async (req, res) => {
     // console.log("userId:", userId);
     // console.log("approverId:", getById.approverId);
     return res.status(200).json({
-      data: getById,
+      getById,
     });
   } catch (error) {
     console.error(error);

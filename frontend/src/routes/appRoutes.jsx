@@ -17,6 +17,7 @@ import ActivityLogs from "@/pages/ActivityLogs";
 import EmployeeDetail from "@/pages/EmployeeDetail";
 import EditEmployee from "@/pages/EditEmployee";
 import CreateLeaveRequest from "../pages/CreateLeaveRequest";
+import LeaveRequestDetail from "../pages/LeaveRequestDetail";
 
 function AppRoutes() {
   return (
@@ -39,7 +40,15 @@ function AppRoutes() {
             <Route path="/job-levels/:id/update" element={<JobLevels />} />
             <Route path="/leave-requests" element={<LeaveRequests />} />
             <Route
+              path="/leave-requests/:id"
+              element={<LeaveRequestDetail />}
+            />
+            <Route
               path="/leave-requests/create"
+              element={<CreateLeaveRequest />}
+            />
+            <Route
+              path="/leave-requests/:id/update"
               element={<CreateLeaveRequest />}
             />
             <Route path="/users" element={<Users />} />

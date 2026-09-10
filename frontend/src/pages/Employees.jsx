@@ -113,7 +113,6 @@ function Employees() {
       <EmployeeTable
         employees={employees}
         pagination={pagination}
-        employee={employee}
         loading={loading}
         actionLoading={actionLoading}
         onResetFilters={resetFilters}

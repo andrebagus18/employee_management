@@ -4,14 +4,17 @@ import { Textarea } from "@/components/ui/textarea";
 import FormSelect from "./FormSelect";
 import FormDate from "./FormDate";
 import { useAuth } from "../context/authContext";
+import { useEffect } from "react";
 
 function LeaveRequestForm({
   handleChange,
   handleSubmit,
   form,
+  setForm,
   errors,
   onCancel,
   leaveRequests,
+  id,
 }) {
   const { user } = useAuth();
   const LeaveTypes = [
@@ -28,6 +31,18 @@ function LeaveRequestForm({
       label: "Personal Leave",
     },
   ];
+  useEffect(() => {
+    if (!id || leaveRequests.length === 0) return;
+    const leaveRequest = leaveRequests.find((leave) => leave.id === Number(id));
+    if (leaveRequest) {
+      setForm({
+        type: leaveRequest.type,
+        description: leaveRequest.description,
+        start_date: leaveRequest.start_date,
+        end_date: leaveRequest.end_date,
+      });
+    }
+  }, [id, leaveRequests, setForm]);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
@@ -76,6 +91,7 @@ function LeaveRequestForm({
         <Textarea
           id="reason"
           name="reason"
+          value={form.description}
           onChange={handleChange}
           placeholder="Explain the reason for this leave..."
           className="min-h-24 resize-none"
