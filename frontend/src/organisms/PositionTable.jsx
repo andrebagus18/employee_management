@@ -44,7 +44,7 @@ function PositionTable({
                   <TableCell>{position.name}</TableCell>
                   <TableCell>{position.department?.name}</TableCell>
                   <TableCell className="pl-8">
-                    {position._count?.employees}
+                    {position._count?.employee}
                   </TableCell>
                   <TableCell>
                     <Button

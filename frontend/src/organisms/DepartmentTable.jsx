@@ -33,7 +33,7 @@ function DepartmentTable({ departments, onDelete, loading, onResetFilters }) {
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{department.name}</TableCell>
                   <TableCell className="pl-8">
-                    {department._count?.employees}
+                    {department._count?.employee}
                   </TableCell>
                   <TableCell className="flex gap-1">
                     <Button

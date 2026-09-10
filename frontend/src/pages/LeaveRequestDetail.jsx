@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { formatDateIndo } from "@/lib/utils";
+import { formatDateIndo, getStatusVariant } from "@/lib/utils";
 import { useLeaveRequests } from "../hooks/useLeaveRequests";
 import { useAuth } from "../context/authContext";
 
@@ -27,7 +27,10 @@ function LeaveRequestDetail() {
     return (
       <div className="space-y-2">
         <p className="text-md text-destructive">Not found</p>
-        <Button onClick={() => navigate("/leave-requests")}>
+        <Button
+          onClick={() => navigate("/leave-requests")}
+          className="cursor-pointer px-2 py-1"
+        >
           Back to Leave Requests
         </Button>
       </div>
@@ -55,29 +58,58 @@ function LeaveRequestDetail() {
       </div>
 
       <Card>
-        <CardContent className="flex items-center justify-between p-6">
-          <div>
-            <h2 className="text-xl font-semibold capitalize">
-              {user?.employee?.name}
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              {formatDateIndo(leaveRequest.reviewedBy)}
-            </p>
-            <p className="text-sm text-muted-foreground">{leaveRequest.type}</p>
-            <p className="text-sm text-muted-foreground">
-              {leaveRequest.description}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              {formatDateIndo(leaveRequest.start_date)}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              {formatDateIndo(leaveRequest.end_date)}
-            </p>
+        <CardContent className="flex items-center justify-between p-6 px-10">
+          <div className="flex flex-col gap-4">
+            <div className="w-full text-xl">
+              <h2 className="text-xl font-semibold capitalize">
+                {user?.employee?.name}
+              </h2>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-md text-muted-foreground">Leave Type</span>
+              <p className="text-lg text-black font-medium">
+                {leaveRequest.type}
+              </p>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-md text-muted-foreground">Reason</span>
+              <p className="text-lg text-black font-medium">
+                {leaveRequest.description}
+              </p>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-md text-muted-foreground">Start Date</span>
+              <p className="text-lg text-black font-medium">
+                {formatDateIndo(leaveRequest.start_date)}
+              </p>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-md text-muted-foreground">End Date</span>
+              <p className="text-lg text-black font-medium">
+                {formatDateIndo(leaveRequest.end_date)}
+              </p>
+            </div>
           </div>
-          <Badge>{leaveRequest.status}</Badge>
-          <p className="text-sm text-muted-foreground">
-            {formatDateIndo(leaveRequest.reviewedAt)}
-          </p>
+          <div className="flex flex-col gap-4 mr-10">
+            <Badge
+              className="px-10 py-4 text-md"
+              variant={getStatusVariant(leaveRequest.status)}
+            >
+              {leaveRequest.status}
+            </Badge>
+            <div className="flex flex-col gap-1">
+              <span className="text-md text-muted-foreground">Reviewed By</span>
+              <p className="text-lg text-black font-medium uppercase">
+                {leaveRequest.user_leaverequest_approverIdTouser?.employee.name}
+              </p>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-md text-muted-foreground">Reviewed At</span>
+              <p className="text-lg text-black font-medium">
+                {formatDateIndo(leaveRequest.reviewedAt)}
+              </p>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>

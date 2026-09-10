@@ -43,11 +43,12 @@ export const getDepartments = async (req, res) => {
         name: true,
         _count: {
           select: {
-            employees: true,
+            employee: true,
           },
         },
       },
     });
+    console.log("departments:", departments);
     return res.status(200).json({
       departments,
     });

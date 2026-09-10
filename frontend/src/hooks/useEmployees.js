@@ -31,7 +31,7 @@ const initialForm = {
   roleId: "",
 };
 
-export function useEmployees() {
+export function useEmployees({ options = false } = {}) {
   const [employees, setEmployees] = useState([]);
   const [pagination, setPagination] = useState({
     page: 1,
@@ -57,13 +57,20 @@ export function useEmployees() {
     try {
       setLoading(true);
       setError(null);
-      const data = await getEmployees(params);
+      let data;
+      if (options) {
+        data = await getEmployees({
+          ...params,
+          limit: 100,
+        });
+      } else {
+        data = await getEmployees(params);
+      }
       // console.log("params", params);
-      // console.log("data:", data);
+      console.log("data:", data);
       setEmployees(data.employees);
       setPagination(data.pagination);
     } catch (error) {
-      console.error(error);
       setError(error);
     } finally {
       setLoading(false);
@@ -83,6 +90,7 @@ export function useEmployees() {
       const response = await getEmployeeById(id);
       const employee = response.employee;
       setEmployee(employee);
+      console.log("Employee edit:", employee);
       setForm({
         name: employee.name || "",
         gender: employee.gender || "",
@@ -96,17 +104,21 @@ export function useEmployees() {
           ? employee.termination_date.slice(0, 10)
           : "",
         status: employee.status || "ACTIVE",
-        departmentId: employee.departmentId
-          ? String(employee.departmentId)
+        departmentId: employee.department?.id
+          ? String(employee.department.id)
           : "",
-        positionId: employee.positionId ? String(employee.positionId) : "",
-        jobLevelId: employee.jobLevelId ? String(employee.jobLevelId) : "",
+        positionId: employee.position?.id ? String(employee.position?.id) : "",
+        jobLevelId: employee.joblevel?.id ? String(employee.joblevel?.id) : "",
         managerId: employee.managerId ? String(employee.managerId) : "",
-        email: employee.users?.[0]?.email || "",
+        email: employee.user?.email || "",
         password: "",
-        roleId: employee.users?.[0]?.roleId
-          ? String(employee.users[0].roleId)
-          : "",
+        roleId: employee.user?.role?.id ? String(employee.user?.role?.id) : "",
+      });
+      console.log("Form:", {
+        departmentId: employee.department?.id,
+        positionId: employee.position?.id,
+        jobLevelId: employee.joblevel?.id,
+        managerId: employee.managerId,
       });
       return response;
     } catch (error) {

@@ -76,16 +76,28 @@ function EmployeeDetail({ label, value }) {
           <CardTitle>Personal Information</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2 capitalize">
-          <ItemDetail label="Name" value={employee.name} />
+          <ItemDetail
+            className="capitalize"
+            label="Name"
+            value={employee.name}
+          />
           <ItemDetail label="Gender" value={employee.gender} />
           <ItemDetail label="NIK" value={employee.nik} />
           <ItemDetail label="Phone" value={employee.phone} />
-          <ItemDetail label="Place of Birth" value={employee.place_birth} />
+          <ItemDetail
+            className="capitalize"
+            label="Place of Birth"
+            value={employee.place_birth}
+          />
           <ItemDetail
             label="Date of Birth"
             value={formatDateIndo(employee.birth_date)}
           />
-          <ItemDetail label="Address" value={employee.address} />
+          <ItemDetail
+            className="capitalize"
+            label="Address"
+            value={employee.address}
+          />
         </CardContent>
       </Card>
 
@@ -97,10 +109,11 @@ function EmployeeDetail({ label, value }) {
         <CardContent className="grid gap-4 md:grid-cols-2">
           <ItemDetail label="Department" value={employee.department?.name} />
           <ItemDetail label="Position" value={employee.position?.name} />
-          <ItemDetail label="Job Level" value={employee.jobLevel?.name} />
+          <ItemDetail label="Job Level" value={employee.joblevel?.name} />
           <ItemDetail
+            className="uppercase"
             label="Direct Manager"
-            value={employee.manager?.name || "-"}
+            value={employee.employee?.name || "-"}
           />
           <ItemDetail
             label="Hire Date"
@@ -119,8 +132,8 @@ function EmployeeDetail({ label, value }) {
           <CardTitle>Account Information</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
-          <ItemDetail label="Email" value={employee.users?.[0]?.email} />
-          <ItemDetail label="Role" value={employee.users?.[0]?.role?.name} />
+          <ItemDetail label="Email" value={employee.user?.email} />
+          <ItemDetail label="Role" value={employee.user?.role?.name} />
         </CardContent>
       </Card>
     </div>

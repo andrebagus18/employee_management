@@ -16,3 +16,9 @@ export const formatDateIndo = (dateString) => {
 
   return new Date(dateString).toLocaleDateString("id-ID", opsi);
 };
+
+export const getStatusVariant = (status) => {
+  if (status === "APPROVED") return "default";
+  if (status === "REJECTED") return "destructive";
+  return "outline";
+};

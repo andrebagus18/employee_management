@@ -177,6 +177,13 @@ export const getLeaveRequestById = async (req, res) => {
       where: {
         id: Number(id),
       },
+      include: {
+        user_leaverequest_approverIdTouser: {
+          include: {
+            employee: true,
+          },
+        },
+      },
     });
     if (!getById) {
       return res.status(404).json({

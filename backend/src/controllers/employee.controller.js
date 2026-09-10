@@ -208,9 +208,9 @@ export const getEmployees = async (req, res) => {
         include: {
           department: true,
           position: true,
-          jobLevel: true,
-          manager: true,
-          users: {
+          joblevel: true,
+          employee: true,
+          user: {
             select: {
               email: true,
             },
@@ -233,6 +233,7 @@ export const getEmployees = async (req, res) => {
       },
     });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({
       msg: "Internal server error",
     });
@@ -275,16 +276,16 @@ export const getEmployeeById = async (req, res) => {
       include: {
         department: true,
         position: true,
-        jobLevel: true,
-        manager: true,
-        users: {
+        joblevel: true,
+        employee: true,
+        user: {
           include: {
             role: true,
           },
         },
       },
     });
-    // console.log("employeeId", employee);
+    console.log("employeeId", employee);
     if (!employee) {
       return res.status(404).json({
         msg: "Employee not found",
@@ -305,6 +306,8 @@ export const updateEmployeeUser = async (req, res) => {
   try {
     const { id } = req.params;
     const { employee, user } = req.body;
+    console.log("employee:", employee);
+    console.log("user:", user);
     const findEmployee = await prisma.employee.findUnique({
       where: {
         id: Number(id),
@@ -328,7 +331,7 @@ export const updateEmployeeUser = async (req, res) => {
           id: Number(managerId),
         },
         include: {
-          jobLevel: true,
+          joblevel: true,
         },
       });
       if (!manager) {
@@ -342,7 +345,7 @@ export const updateEmployeeUser = async (req, res) => {
         });
       }
       // cari job level employee yang sedang di update
-      const employeeJobLevel = await prisma.jobLevel.findUnique({
+      const employeeJobLevel = await prisma.joblevel.findUnique({
         where: {
           id: Number(employee.jobLevelId),
         },
@@ -368,7 +371,7 @@ export const updateEmployeeUser = async (req, res) => {
       const expectedRank = hierarchy[employeeJobLevel.rank];
       if (
         expectedRank !== undefined &&
-        manager.jobLevel.rank !== expectedRank
+        manager.joblevel.rank !== expectedRank
       ) {
         return res.status(400).json({
           msg: "Manager must be the direct higher-level manager",

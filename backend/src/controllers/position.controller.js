@@ -64,7 +64,7 @@ export const getPosition = async (req, res) => {
           name: true,
           _count: {
             select: {
-              employees: true,
+              employee: true,
             },
           },
           department: {

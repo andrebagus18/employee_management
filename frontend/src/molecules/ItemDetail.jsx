@@ -1,9 +1,9 @@
-function ItemDetail({ label, value }) {
+function ItemDetail({ label, value, className }) {
   return (
     <div className="space-y-1">
       <p className="text-sm text-muted-foreground">{label}</p>
 
-      <p className="font-medium">{value || "-"}</p>
+      <p className={`font-medium ${className}`}>{value || "-"}</p>
     </div>
   );
 }

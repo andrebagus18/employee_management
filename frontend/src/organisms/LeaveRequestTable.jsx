@@ -9,16 +9,11 @@ import {
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import ActionMenu from "@/molecules/ActionMenu";
 import { Badge } from "@/components/ui/badge";
-import { formatDateIndo } from "../lib/utils";
+import { formatDateIndo, getStatusVariant } from "../lib/utils";
 import { useNavigate } from "react-router-dom";
 
-function LeaveRequestTable({ leaveRequests, onEdit }) {
+function LeaveRequestTable({ leaveRequests }) {
   const navigate = useNavigate();
-  const getStatusVariant = (status) => {
-    if (status === "APPROVED") return "default";
-    if (status === "REJECTED") return "destructive";
-    return "outline";
-  };
 
   return (
     <div className="rounded-xl border bg-background">

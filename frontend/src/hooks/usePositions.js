@@ -8,7 +8,7 @@ import { useCallback, useState, useEffect } from "react";
 import { showConfirm, showError, showSuccess } from "../lib/alert";
 import { useNavigate } from "react-router-dom";
 
-export function usePositions({ id } = {}) {
+export function usePositions({ id, options = false } = {}) {
   const navigate = useNavigate();
   const [positions, setPositions] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -27,19 +27,30 @@ export function usePositions({ id } = {}) {
   const [search, setSearch] = useState("");
   const [departmentId, setDepartmentId] = useState("");
 
-  const fetchPositions = useCallback(async (params = {}) => {
-    try {
-      setLoading(true);
-      const data = await getPositions(params);
-      setPositions(data.positions);
-      setPagination(data.pagination);
-    } catch (error) {
-      // console.error(error);
-      setErrors(error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const fetchPositions = useCallback(
+    async (params = {}) => {
+      try {
+        setLoading(true);
+        let data;
+        if (options) {
+          data = await getPositions({
+            ...params,
+            limit: 100,
+          });
+        } else {
+          data = await getPositions(params);
+        }
+        setPositions(data.positions);
+        setPagination(data.pagination);
+      } catch (error) {
+        // console.error(error);
+        setErrors(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [options],
+  );
 
   useEffect(() => {
     fetchPositions();

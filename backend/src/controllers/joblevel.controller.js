@@ -8,7 +8,7 @@ export const createJobLevel = async (req, res) => {
         msg: "Bad request",
       });
     }
-    const jobLevel = await prisma.jobLevel.create({
+    const jobLevel = await prisma.joblevel.create({
       data: {
         name: name,
       },
@@ -28,7 +28,7 @@ export const createJobLevel = async (req, res) => {
 export const getJobLevel = async (req, res) => {
   try {
     const { search } = req.query;
-    const jobLevels = await prisma.jobLevel.findMany({
+    const jobLevels = await prisma.joblevel.findMany({
       where: {
         name: {
           contains: search,
@@ -42,7 +42,7 @@ export const getJobLevel = async (req, res) => {
         name: true,
         _count: {
           select: {
-            employees: true,
+            employee: true,
           },
         },
       },
@@ -65,7 +65,7 @@ export const updateJobLevel = async (req, res) => {
   try {
     const { id } = req.params;
     const { name } = req.body;
-    const findJobLevel = await prisma.jobLevel.findUnique({
+    const findJobLevel = await prisma.joblevel.findUnique({
       where: {
         id: Number(id),
       },
@@ -80,7 +80,7 @@ export const updateJobLevel = async (req, res) => {
         msg: "field is required",
       });
     }
-    const updateJob = await prisma.jobLevel.update({
+    const updateJob = await prisma.joblevel.update({
       where: {
         id: Number(id),
       },
@@ -103,7 +103,7 @@ export const updateJobLevel = async (req, res) => {
 export const deleteJobLevel = async (req, res) => {
   try {
     const { id } = req.params;
-    const findjobLevelId = await prisma.jobLevel.findUnique({
+    const findjobLevelId = await prisma.joblevel.findUnique({
       where: {
         id: Number(id),
       },
@@ -123,7 +123,7 @@ export const deleteJobLevel = async (req, res) => {
         msg: "Job Level is still used by employees",
       });
     }
-    const deleteJob = await prisma.jobLevel.delete({
+    const deleteJob = await prisma.joblevel.delete({
       where: {
         id: findjobLevelId.id,
       },

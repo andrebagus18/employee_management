@@ -7,12 +7,15 @@ import { useJobLevels } from "@/hooks/useJobLevels";
 import { useRoles } from "@/hooks/useRoles";
 import FormDate from "./FormDate";
 import FormSelect from "./FormSelect";
+import { useEmployees } from "@/hooks/useEmployees";
 
-function FormField({ form, errors, handleChange, employees }) {
-  const { positions } = usePositions();
+function FormField({ form, errors, handleChange }) {
+  const { employees } = useEmployees({ options: true });
+  const { positions } = usePositions({ options: true });
   const { departments } = useDepartments();
   const { jobLevels } = useJobLevels();
   const { roles } = useRoles();
+  console.log("employee field:", employees);
   return (
     <>
       {/* Personal Information */}

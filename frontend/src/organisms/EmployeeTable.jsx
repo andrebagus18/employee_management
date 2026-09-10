@@ -98,6 +98,7 @@ function EmployeeTable({
                             {
                               label: "Edit",
                               icon: Pencil,
+                              // onClick: () => console.log(employee.id, employee),
                               onClick: () =>
                                 navigate(`/employees/${employee.id}/update`),
                             },
