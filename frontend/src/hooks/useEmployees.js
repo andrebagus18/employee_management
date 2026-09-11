@@ -67,7 +67,7 @@ export function useEmployees({ options = false } = {}) {
         data = await getEmployees(params);
       }
       // console.log("params", params);
-      console.log("data:", data);
+      console.log("data:", data.employees);
       setEmployees(data.employees);
       setPagination(data.pagination);
     } catch (error) {

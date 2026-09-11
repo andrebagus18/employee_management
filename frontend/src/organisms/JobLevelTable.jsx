@@ -31,7 +31,7 @@ function JobLevelTable({ jobLevels, loading, onEdit, onResetFilters }) {
                 <TableRow key={jobLevel.id}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{jobLevel.name}</TableCell>
-                  <TableCell>{jobLevel._count?.employees}</TableCell>
+                  <TableCell>{jobLevel._count?.employee}</TableCell>
                   <TableCell className="flex gap-1">
                     <Button
                       variant="outline"

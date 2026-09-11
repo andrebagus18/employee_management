@@ -17,7 +17,12 @@ export const createLeaveRequest = async (data) => {
   return response.data;
 };
 
-export const updateLeaveRequest = async (id, data) => {
-  const response = await api.put(`/leave-requests/${id}/update`, data);
-  return response;
+export const approveLeave = async (id) => {
+  const response = await api.patch(`/leave-requests/${id}/status`);
+  return response.data;
+};
+
+export const rejectLeave = async (id) => {
+  const response = await api.patch(`/leave-requests/${id}/status`);
+  return response.data;
 };

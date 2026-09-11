@@ -7,7 +7,7 @@ import { useEmployees } from "@/hooks/useEmployees";
 function CreateEmployee() {
   const navigate = useNavigate();
   const { form, errors, loading, handleChange, handleSubmit, employees } =
-    useEmployees();
+    useEmployees({ options: true });
 
   return (
     <div className="mx-auto w-full space-y-6">

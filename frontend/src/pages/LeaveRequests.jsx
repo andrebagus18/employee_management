@@ -7,7 +7,14 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function LeaveRequests() {
-  const { leaveRequests, fetchLeaveRequests, loading } = useLeaveRequests();
+  const {
+    leaveRequests,
+    fetchLeaveRequests,
+    loading,
+    actionLoading,
+    handleApprove,
+    handleReject,
+  } = useLeaveRequests();
   const navigate = useNavigate();
   useEffect(() => {
     fetchLeaveRequests();
@@ -56,7 +63,13 @@ function LeaveRequests() {
       </div>
 
       {/* Table */}
-      <LeaveRequestTable leaveRequests={leaveRequests} loading={loading} />
+      <LeaveRequestTable
+        leaveRequests={leaveRequests}
+        loading={loading}
+        actionLoading={actionLoading}
+        handleApprove={handleApprove}
+        handleReject={handleReject}
+      />
     </div>
   );
 }

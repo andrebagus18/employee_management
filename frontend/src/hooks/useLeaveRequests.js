@@ -2,7 +2,8 @@ import {
   getLeaveRequests,
   getLeaveById,
   createLeaveRequest,
-  updateLeaveRequest,
+  approveLeave,
+  rejectLeave,
 } from "@/services/leaveRequest.service";
 import { showError, showSuccess } from "../lib/alert";
 import { useCallback, useState, useEffect } from "react";
@@ -12,6 +13,7 @@ export function useLeaveRequests({ id } = {}) {
   const [leaveRequests, setLeaveRequests] = useState([]);
   const [leaveRequest, setLeaveRequest] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState(null);
   const [errors, setErrors] = useState({});
   const [form, setForm] = useState({
     type: "",
@@ -128,6 +130,32 @@ export function useLeaveRequests({ id } = {}) {
     await create(data);
   };
 
+  const handleApprove = async (id) => {
+    try {
+      setActionLoading(id);
+      const response = await approveLeave(id);
+      await showSuccess(response.msg);
+      await fetchLeaveRequests();
+    } catch (error) {
+      showError(error.response?.data?.msg || "Failed to approve leave");
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleReject = async (id) => {
+    try {
+      setActionLoading(id);
+      const respone = await rejectLeave(id);
+      await showSuccess(respone.msg);
+      await fetchLeaveRequests(id);
+    } catch (error) {
+      showError(error.respone?.data?.msg || "Failed to reject leave");
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   return {
     fetchLeaveRequests,
     getLeaveId,
@@ -139,7 +167,10 @@ export function useLeaveRequests({ id } = {}) {
     setForm,
     open,
     setOpen,
+    actionLoading,
     handleSubmit,
     handleChange,
+    handleApprove,
+    handleReject,
   };
 }

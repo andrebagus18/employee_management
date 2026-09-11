@@ -506,7 +506,7 @@ export const deactivateEmployeeUser = async (req, res) => {
         status: "INACTIVE",
       },
     });
-    await prisma.activityLog.create({
+    await prisma.activitylog.create({
       data: {
         userId: req.user.userId,
         action: "DEACTIVATE",
@@ -554,7 +554,7 @@ export const activateEmployeeUser = async (req, res) => {
         status: "ACTIVE",
       },
     });
-    await prisma.activityLog.create({
+    await prisma.activitylog.create({
       data: {
         userId: req.user.userId,
         action: "ACTIVATE",
