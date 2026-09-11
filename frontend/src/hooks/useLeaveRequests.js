@@ -133,7 +133,7 @@ export function useLeaveRequests({ id } = {}) {
   const handleApprove = async (id) => {
     try {
       setActionLoading(id);
-      const response = await approveLeave(id);
+      const response = await approveLeave(id, "APPROVED");
       await showSuccess(response.msg);
       await fetchLeaveRequests();
     } catch (error) {
@@ -146,9 +146,9 @@ export function useLeaveRequests({ id } = {}) {
   const handleReject = async (id) => {
     try {
       setActionLoading(id);
-      const respone = await rejectLeave(id);
+      const respone = await rejectLeave(id, "REJECTED");
       await showSuccess(respone.msg);
-      await fetchLeaveRequests(id);
+      await fetchLeaveRequests();
     } catch (error) {
       showError(error.respone?.data?.msg || "Failed to reject leave");
     } finally {

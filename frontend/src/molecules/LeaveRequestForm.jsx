@@ -87,10 +87,10 @@ function LeaveRequestForm({
 
       {/* Reason */}
       <div className="space-y-2">
-        <Label htmlFor="reason">Reason</Label>
+        <Label htmlFor="description">Reason</Label>
         <Textarea
-          id="reason"
-          name="reason"
+          id="description"
+          name="description"
           value={form.description}
           onChange={handleChange}
           placeholder="Explain the reason for this leave..."

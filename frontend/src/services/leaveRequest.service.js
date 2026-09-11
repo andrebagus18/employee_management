@@ -2,7 +2,7 @@ import api from "@/services/api";
 
 export const getLeaveRequests = async (params = {}) => {
   const response = await api.get("/leave-requests", { params });
-  //   console.log("response:", response.data);
+  console.log("response:", response.data);
   return response.data;
 };
 
@@ -17,12 +17,12 @@ export const createLeaveRequest = async (data) => {
   return response.data;
 };
 
-export const approveLeave = async (id) => {
-  const response = await api.patch(`/leave-requests/${id}/status`);
+export const approveLeave = async (id, status) => {
+  const response = await api.patch(`/leave-requests/${id}/status`, { status });
   return response.data;
 };
 
-export const rejectLeave = async (id) => {
-  const response = await api.patch(`/leave-requests/${id}/status`);
+export const rejectLeave = async (id, status) => {
+  const response = await api.patch(`/leave-requests/${id}/status`, { status });
   return response.data;
 };

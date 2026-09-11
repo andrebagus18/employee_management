@@ -20,7 +20,7 @@ function LeaveRequestTable({
 }) {
   const navigate = useNavigate();
   const isLoading = actionLoading;
-
+  console.log("leave", leaveRequests);
   return (
     <div className="rounded-xl border bg-background">
       <div className="overflow-x-auto">

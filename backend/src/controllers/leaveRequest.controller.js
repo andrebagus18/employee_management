@@ -79,6 +79,7 @@ export const createLeaveRequest = async (req, res) => {
         employeeId: approver.id,
       },
     });
+    // console.log("approver id:", approverUser);
     if (!approverUser) {
       return res.status(404).json({
         msg: "Approver does not have a user account",
@@ -91,7 +92,7 @@ export const createLeaveRequest = async (req, res) => {
             id: user.employeeId,
           },
         },
-        approver: {
+        user_leaverequest_approverIdTouser: {
           connect: {
             id: approverUser.id,
           },
@@ -291,6 +292,7 @@ export const leaveRerquestStatus = async (req, res) => {
         description: `Leave request status changged to ${status}`,
       },
     });
+    console.log("update:", updateLeaveRequest);
     return res.status(200).json({
       msg: "Leave reqest status updated successfully",
       data: updateLeaveRequest,
