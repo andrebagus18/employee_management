@@ -1,62 +1,18 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { CirclePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import DailyReportFilters from "@/molecules/DailyReportFilters";
-import DailyReportForm from "@/molecules/DailyReportForm";
 import DailyReportTable from "@/organisms/DailyReportTable";
-
-const reports = [
-  {
-    id: 1,
-    employee: "John Doe",
-    email: "john@company.com",
-    date: "Aug 31, 2026",
-    summary: "Completed employee dashboard and fixed authentication flow.",
-    hours: 8,
-    status: "Submitted",
-  },
-  {
-    id: 2,
-    employee: "Sarah Smith",
-    email: "sarah@company.com",
-    date: "Aug 31, 2026",
-    summary: "Reviewed employee leave requests and updated HR records.",
-    hours: 7.5,
-    status: "Reviewed",
-  },
-  {
-    id: 3,
-    employee: "Michael Lee",
-    email: "michael@company.com",
-    date: "Aug 30, 2026",
-    summary: "Worked on API integration and database optimization.",
-    hours: 8,
-    status: "Submitted",
-  },
-  {
-    id: 4,
-    employee: "Emily Johnson",
-    email: "emily@company.com",
-    date: "Aug 30, 2026",
-    summary: "Prepared monthly financial reports.",
-    hours: 6,
-    status: "Draft",
-  },
-];
+import { useDailyReports } from "@/hooks/useDailyReports";
+import { useNavigate } from "react-router-dom";
 
 function DailyReports() {
-  const [open, setOpen] = useState(false);
-  const handleCreate = (data) => {
-    console.log("CREATE DAILY REPORT:", data);
-    setOpen(false);
-  };
+  const { fetchDailyReports, reports, loading } = useDailyReports();
+  const navigate = useNavigate();
+  useEffect(() => {
+    fetchDailyReports();
+  }, [fetchDailyReports]);
+
   const handleCancel = () => {
     setOpen(false);
   };
@@ -76,7 +32,7 @@ function DailyReports() {
       </div>
 
       {/* Create Report */}
-      <Dialog open={open} onOpenChange={setOpen}>
+      {/* <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-xl">
           <DialogHeader>
             <DialogTitle>Create Daily Report</DialogTitle>
@@ -86,15 +42,15 @@ function DailyReports() {
             </DialogDescription>
           </DialogHeader>
 
-          <DailyReportForm onSubmit={handleCreate} onCancel={handleCancel} />
+          <DailyReportForm />
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
 
       {/* Filters */}
       <div className="flex justify-between items-center">
         <DailyReportFilters />
         <Button
-          onClick={() => setOpen(true)}
+          onClick={() => navigate("/daily-reports/create")}
           className="max-w-3xs w-full gap-4 py-5 text-md cursor-pointer"
         >
           <CirclePlus className="size-5" />

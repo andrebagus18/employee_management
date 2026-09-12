@@ -18,6 +18,7 @@ import EmployeeDetail from "@/pages/EmployeeDetail";
 import EditEmployee from "@/pages/EditEmployee";
 import CreateLeaveRequest from "../pages/CreateLeaveRequest";
 import LeaveRequestDetail from "../pages/LeaveRequestDetail";
+import CreateDailyReport from "../pages/CreateDailyReport";
 
 function AppRoutes() {
   return (
@@ -55,6 +56,10 @@ function AppRoutes() {
             <Route path="/roles" element={<Roles />} />
             <Route path="/permissions" element={<Permissions />} />
             <Route path="/daily-reports" element={<DailyReports />} />
+            <Route
+              path="/daily-reports/create"
+              element={<CreateDailyReport />}
+            />
             <Route path="/activity-logs" element={<ActivityLogs />} />
             <Route path="/setting" element={<div>setting</div>} />
           </Route>
