@@ -48,7 +48,7 @@ export const getDepartments = async (req, res) => {
         },
       },
     });
-    console.log("departments:", departments);
+    // console.log("departments:", departments);
     return res.status(200).json({
       departments,
     });

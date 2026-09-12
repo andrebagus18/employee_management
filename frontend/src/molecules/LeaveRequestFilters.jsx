@@ -46,7 +46,6 @@ function LeaveRequestFilters({
   setType,
   status,
   setStatus,
-  leaveRequests,
 }) {
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">

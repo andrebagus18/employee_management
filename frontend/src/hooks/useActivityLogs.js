@@ -11,14 +11,18 @@ export function useActivityLogs() {
     total: 0,
     totalPage: 0,
   });
+  const [search, setSearch] = useState("");
+  const [action, setAction] = useState("");
+  const [entity, setEntity] = useState("");
 
-  const getActivities = useCallback(async () => {
+  const getActivities = useCallback(async (params = {}) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await getActivityLogs();
-      setActivities(response.activity);
+      const response = await getActivityLogs(params);
+      setActivities(response.activities);
       setPagination(response.pagination);
+      // console.log("pagination", response.pagination);
     } catch (error) {
       setError(error);
     } finally {
@@ -26,5 +30,24 @@ export function useActivityLogs() {
     }
   }, []);
 
-  return { getActivities, activities, loading, pagination, error };
+  const resetFilters = () => {
+    setSearch("");
+    setAction("");
+    setEntity("");
+  };
+
+  return {
+    getActivities,
+    activities,
+    loading,
+    pagination,
+    error,
+    search,
+    setSearch,
+    action,
+    setAction,
+    entity,
+    setEntity,
+    resetFilters,
+  };
 }

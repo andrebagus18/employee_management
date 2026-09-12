@@ -88,7 +88,6 @@ function LeaveRequests() {
       {/* Filters */}
       <div className="flex justify-between items-center">
         <LeaveRequestFilters
-          leaveRequests={leaveRequests}
           search={search}
           setSearch={setSearch}
           type={type}
@@ -122,7 +121,7 @@ function LeaveRequests() {
             ? 0
             : (pagination.page - 1) * pagination.limit + 1}{" "}
           - {Math.min(pagination.page * pagination.limit, pagination.total)} of{" "}
-          {pagination.total} position
+          {pagination.total} leave requests
         </div>
         <div className="flex items-center gap-6">
           <Pagination>

@@ -18,7 +18,7 @@ export const createDailyReport = async (req, res) => {
         msg: "date, time, and report are required",
       });
     }
-    const createReport = await prisma.dailyReport.create({
+    const createReport = await prisma.dailyreport.create({
       data: {
         employeeId: employeeId,
         date: new Date(date),
@@ -33,7 +33,7 @@ export const createDailyReport = async (req, res) => {
         },
       },
     });
-    await prisma.activityLog.create({
+    await prisma.activitylog.create({
       data: {
         userId: req.user.userId,
         action: "CREATED",
@@ -58,7 +58,7 @@ export const getDailyReports = async (req, res) => {
   try {
     const { employeeId } = req.user;
     const { allIds } = await getEmployeeScope(employeeId);
-    const getReport = await prisma.dailyReport.findMany({
+    const getReport = await prisma.dailyreport.findMany({
       where: {
         employeeId: {
           in: allIds,
@@ -80,7 +80,7 @@ export const getDetailReport = async (req, res) => {
   try {
     const { id } = req.params;
     const { employeeId } = req.user;
-    const report = await prisma.dailyReport.findUnique({
+    const report = await prisma.dailyreport.findUnique({
       where: {
         id: Number(id),
       },
@@ -112,7 +112,7 @@ export const updateReport = async (req, res) => {
     const { id } = req.params;
     const { employeeId } = req.user;
     const { date, time, report } = req.body;
-    const updateDailyReport = await prisma.dailyReport.findUnique({
+    const updateDailyReport = await prisma.dailyreport.findUnique({
       where: {
         id: Number(id),
       },
@@ -143,7 +143,7 @@ export const updateReport = async (req, res) => {
     if (report) {
       data.report = report;
     }
-    const updateReport = await prisma.dailyReport.update({
+    const updateReport = await prisma.dailyreport.update({
       where: {
         id: updateDailyReport.id,
       },
@@ -159,7 +159,7 @@ export const updateReport = async (req, res) => {
         },
       },
     });
-    await prisma.activityLog.create({
+    await prisma.activitylog.create({
       data: {
         userId: employeeId,
         action: "UPDATE",
