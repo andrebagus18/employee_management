@@ -128,6 +128,15 @@ export const createLeaveRequest = async (req, res) => {
 export const getLeaveRequest = async (req, res) => {
   try {
     const { userId, roleId, employeeId } = req.user;
+    const { search = "", type, status, page = 1, limit = 10 } = req.query;
+    const filters = searchLeave({
+      search,
+      type,
+      status,
+    });
+    const pageNumber = Number(page);
+    const limitNumber = Number(limit);
+    const skip = (pageNumber - 1) * limitNumber;
     let leaveFilter = {};
     if (roleId === EMPLOYEE_ID) {
       leaveFilter = {
@@ -147,20 +156,34 @@ export const getLeaveRequest = async (req, res) => {
         },
       };
     }
-    const leaveRequests = await prisma.leaverequest.findMany({
-      where: leaveFilter,
-      include: {
-        employee: {
-          include: {
-            user: true,
+    const [leaveRequests, total] = await Promise.all([
+      prisma.leaverequest.findMany({
+        where: { ...leaveFilter, ...filters },
+        skip,
+        take: limitNumber,
+        include: {
+          employee: {
+            include: {
+              user: true,
+            },
           },
         },
-      },
-    });
-    // console.log("leave:", leaveRequest);
-
+      }),
+      prisma.leaverequest.count({
+        where: filters,
+      }),
+    ]);
+    // console.log("leave:", leaveRequests);
+    // console.log("total", total);
+    const totalPage = Math.ceil(total / limitNumber);
     return res.status(200).json({
       leaveRequests,
+      pagination: {
+        page: pageNumber,
+        limit: limitNumber,
+        total,
+        totalPage,
+      },
     });
   } catch (error) {
     console.error(error);
@@ -168,6 +191,30 @@ export const getLeaveRequest = async (req, res) => {
       msg: "Internal server error",
     });
   }
+};
+
+export const searchLeave = ({
+  search = "",
+  type,
+  status,
+  page = 1,
+  limit = 10,
+}) => {
+  const result = {};
+  if (search) {
+    result.employee = {
+      name: {
+        contains: search,
+      },
+    };
+  }
+  if (type && type !== "all") {
+    result.type = type;
+  }
+  if (status && status !== "all") {
+    result.status = status;
+  }
+  return result;
 };
 
 export const getLeaveRequestById = async (req, res) => {

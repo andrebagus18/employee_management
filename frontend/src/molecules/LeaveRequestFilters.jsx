@@ -1,7 +1,53 @@
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import FormSelect from "./FormSelect";
 
-function LeaveRequestFilters() {
+const optionType = [
+  {
+    label: "All Type",
+    value: "all",
+  },
+  {
+    label: "ANNUAL",
+    value: "ANNUAL",
+  },
+  {
+    label: "SICK",
+    value: "SICK",
+  },
+  {
+    label: "PERSONAL",
+    value: "PERSONAL",
+  },
+];
+const optionStatus = [
+  {
+    label: "All Status",
+    value: "all",
+  },
+  {
+    label: "PENDING",
+    value: "PENDING",
+  },
+  {
+    label: "APPROVE",
+    value: "APPROVE",
+  },
+  {
+    label: "REJECT",
+    value: "REJECT",
+  },
+];
+
+function LeaveRequestFilters({
+  search,
+  setSearch,
+  type,
+  setType,
+  status,
+  setStatus,
+  leaveRequests,
+}) {
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
       <div className="relative w-full sm:max-w-sm">
@@ -9,24 +55,26 @@ function LeaveRequestFilters() {
 
         <Input
           type="search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
           placeholder="Search employees..."
           className="pl-9"
         />
       </div>
-
-      <select className="h-9 rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30">
-        <option value="">All Leave Types</option>
-        <option value="annual">Annual Leave</option>
-        <option value="sick">Sick Leave</option>
-        <option value="personal">Personal Leave</option>
-      </select>
-
-      <select className="h-9 rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30">
-        <option value="">All Status</option>
-        <option value="pending">Pending</option>
-        <option value="approved">Approved</option>
-        <option value="rejected">Rejected</option>
-      </select>
+      <FormSelect
+        name="type"
+        value={type}
+        onChange={(e) => setType(e.target.value)}
+        options={optionType}
+        placehorder="All Type"
+      />
+      <FormSelect
+        name="status"
+        value={status}
+        onChange={(e) => setStatus(e.target.value)}
+        options={optionStatus}
+        placehorder="All Status"
+      />
     </div>
   );
 }

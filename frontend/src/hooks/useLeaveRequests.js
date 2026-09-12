@@ -21,6 +21,15 @@ export function useLeaveRequests({ id } = {}) {
     start_date: "",
     end_date: "",
   });
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPage: 0,
+  });
+  const [search, setSearch] = useState("");
+  const [type, setType] = useState("");
+  const [status, setStatus] = useState("");
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -29,7 +38,8 @@ export function useLeaveRequests({ id } = {}) {
       setLoading(true);
       const data = await getLeaveRequests(params);
       // console.log("response:", data);
-      return setLeaveRequests(data.leaveRequests);
+      setLeaveRequests(data.leaveRequests);
+      setPagination(data.pagination);
     } catch (error) {
       showError(error);
     } finally {
@@ -156,6 +166,12 @@ export function useLeaveRequests({ id } = {}) {
     }
   };
 
+  const resetFilters = () => {
+    setSearch("");
+    setType("");
+    setStatus("");
+  };
+
   return {
     fetchLeaveRequests,
     getLeaveId,
@@ -167,10 +183,18 @@ export function useLeaveRequests({ id } = {}) {
     setForm,
     open,
     setOpen,
+    pagination,
+    search,
+    setSearch,
+    type,
+    setType,
+    status,
+    setStatus,
     actionLoading,
     handleSubmit,
     handleChange,
     handleApprove,
     handleReject,
+    resetFilters,
   };
 }
