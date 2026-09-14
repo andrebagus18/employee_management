@@ -65,14 +65,14 @@ function LeaveRequestFilters({
         value={type}
         onChange={(e) => setType(e.target.value)}
         options={optionType}
-        placehorder="All Type"
+        placeholder="All Type"
       />
       <FormSelect
         name="status"
         value={status}
         onChange={(e) => setStatus(e.target.value)}
         options={optionStatus}
-        placehorder="All Status"
+        placeholder="All Status"
       />
     </div>
   );

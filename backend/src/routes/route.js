@@ -21,6 +21,7 @@ import {
   activateEmployeeUser,
   deactivateEmployeeUser,
 } from "../controllers/employee.controller.js";
+import { getUsers } from "../controllers/user.controller.js";
 import {
   createDepartment,
   getDepartments,
@@ -101,6 +102,14 @@ router.patch(
   authMiddleware,
   permissionMiddleware("employee.update"),
   activateEmployeeUser,
+);
+
+// route user
+router.get(
+  "/users",
+  authMiddleware,
+  permissionMiddleware("user.view"),
+  getUsers,
 );
 
 // route department

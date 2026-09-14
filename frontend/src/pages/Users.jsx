@@ -1,50 +1,47 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import UserFilters from "@/molecules/UserFilters";
 import UserTable from "@/organisms/UserTable";
-
-const users = [
-  {
-    id: 1,
-    name: "Andre Bagus",
-    email: "andre@company.com",
-    role: "Admin",
-    status: "Active",
-    lastLogin: "Today, 08:42",
-  },
-  {
-    id: 2,
-    name: "John Doe",
-    email: "john@company.com",
-    role: "Employee",
-    status: "Active",
-    lastLogin: "Today, 08:15",
-  },
-  {
-    id: 3,
-    name: "Sarah Smith",
-    email: "sarah@company.com",
-    role: "HR",
-    status: "Active",
-    lastLogin: "Yesterday, 16:20",
-  },
-  {
-    id: 4,
-    name: "Michael Lee",
-    email: "michael@company.com",
-    role: "Manager",
-    status: "Inactive",
-    lastLogin: "Aug 28, 2026",
-  },
-];
+import { useUsers } from "@/hooks/useUsers";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 function Users() {
-  const [open, setOpen] = useState(false);
-  const handleCreate = (data) => {
-    console.log("CREATE USER:", data);
-    setOpen(false);
-  };
-  const handleCancel = () => {
-    setOpen(false);
+  const {
+    users,
+    fetchUsers,
+    search,
+    setSearch,
+    roleId,
+    setRoleId,
+    pagination,
+    resetFilters,
+  } = useUsers();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchUsers({
+        search,
+        roleId,
+        page: 1,
+        limit: 10,
+      });
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [fetchUsers, search, roleId]);
+
+  const handlePage = (page) => {
+    fetchUsers({
+      page,
+      limit: pagination.limit,
+      search,
+      roleId,
+    });
   };
 
   return (
@@ -61,10 +58,70 @@ function Users() {
       </div>
 
       {/* Filters */}
-      <UserFilters />
+      <UserFilters
+        search={search}
+        setSearch={setSearch}
+        roleId={roleId}
+        setRoleId={setRoleId}
+        onResetFilters={resetFilters}
+      />
 
       {/* Table */}
-      <UserTable users={users} />
+      <UserTable
+        users={users}
+        pagination={pagination}
+        onResetFilters={resetFilters}
+      />
+      <div className="flex items-center justify-between border-t pt-4">
+        <div className="text-sm text-muted-foreground">
+          Showing{" "}
+          {pagination.total === 0
+            ? 0
+            : (pagination.page - 1) * pagination.limit + 1}{" "}
+          - {Math.min(pagination.page * pagination.limit, pagination.total)} of{" "}
+          {pagination.total} users
+        </div>
+        <div className="flex items-center gap-6">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => handlePage(pagination.page - 1)}
+                  className={
+                    pagination.page === 1
+                      ? "pointer-events-none opacity-50"
+                      : "cursor-pointer"
+                  }
+                />
+              </PaginationItem>
+              {Array.from(
+                { length: pagination.totalPage },
+                (_, index) => index + 1,
+              ).map((page) => (
+                <PaginationItem key={page}>
+                  <PaginationLink
+                    isActive={pagination.page === page}
+                    onClick={() => handlePage(page)}
+                    className="cursor-pointer"
+                  >
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => handlePage(pagination.page + 1)}
+                  className={
+                    pagination.page === pagination.totalPage
+                      ? "pointer-events-none opacity-50"
+                      : "cursor-pointer"
+                  }
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      </div>
     </div>
   );
 }
