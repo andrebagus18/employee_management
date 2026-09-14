@@ -59,18 +59,41 @@ export const createDailyReport = async (req, res) => {
 
 export const getDailyReports = async (req, res) => {
   try {
-    const getReports = await prisma.dailyreport.findMany({
-      include: {
-        employee: {
-          select: {
-            name: true,
+    const { search = "", report_date, page = 1, limit = 15 } = req.query;
+    const filters = filterReport({
+      search,
+      report_date,
+    });
+    const pageNumber = Number(page);
+    const limitNumber = Number(limit);
+    const skip = (pageNumber - 1) * limitNumber;
+    const [getReports, total] = await Promise.all([
+      prisma.dailyreport.findMany({
+        where: filters,
+        skip,
+        take: limitNumber,
+        include: {
+          employee: {
+            select: {
+              name: true,
+            },
           },
         },
-      },
-    });
+      }),
+      prisma.dailyreport.count({
+        where: filters,
+      }),
+    ]);
     // console.log("get:", getReports);
+    const totalPage = Math.ceil(total / limitNumber);
     return res.status(200).json({
       getReports,
+      pagination: {
+        page: pageNumber,
+        limit: limitNumber,
+        total,
+        totalPage,
+      },
     });
   } catch (error) {
     console.error(error);
@@ -160,10 +183,34 @@ export const updateReport = async (req, res) => {
         description: `Updated daily report by ${updateReport.employee.name}`,
       },
     });
+    return res.status(200).json({
+      msg: "Daily report updated successfully",
+      updateReport,
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
       msg: "Internal server error",
     });
   }
+};
+
+export const filterReport = ({
+  search = "",
+  report_date,
+  page = 1,
+  limit = 15,
+}) => {
+  const result = {};
+  if (search) {
+    result.employee = {
+      name: {
+        contains: search,
+      },
+    };
+  }
+  if (report_date && report_date !== "all") {
+    result.report_date = new Date(report_date);
+  }
+  return result;
 };

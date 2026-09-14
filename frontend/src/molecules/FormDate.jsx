@@ -16,6 +16,7 @@ function FormDate({
   error,
   onChange,
   placeholder = "Select Date",
+  className,
 }) {
   const [open, setOpen] = useState(false);
 
@@ -28,7 +29,9 @@ function FormDate({
     <div className="space-y-2">
       <Label htmlFor={name}>{label}</Label>
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger className="w-full flex items-center border border-slate-400/50 p-1 rounded-lg justify-start text-sm text-left font-normal cursor-text">
+        <PopoverTrigger
+          className={`w-full flex items-center border border-slate-400/50 p-1 px-3 rounded-lg justify-start text-sm text-left font-normal cursor-text ${className}`}
+        >
           <CalendarIcon className="mr-2 size-4" />
           {selectDate && isValid(selectDate)
             ? format(selectDate, "dd MMMM yyyy")

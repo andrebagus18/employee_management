@@ -11,7 +11,7 @@ import { SearchX, RotateCcw } from "lucide-react";
 import { CalculateTime, formatDateIndo } from "../lib/utils";
 import { useNavigate } from "react-router-dom";
 
-function DailyReportTable({ reports }) {
+function DailyReportTable({ reports, onResetFilters, pagination }) {
   const navigate = useNavigate();
   return (
     <div className="rounded-xl border bg-background">
@@ -38,7 +38,9 @@ function DailyReportTable({ reports }) {
                     navigate(`/daily-reports/${report.id}/update`)
                   }
                 >
-                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>
+                    {(pagination.page - 1) * pagination.limit + index + 1}
+                  </TableCell>
                   <TableCell className="font-medium capitalize">
                     {report.employee?.name}
                   </TableCell>
@@ -48,7 +50,7 @@ function DailyReportTable({ reports }) {
                   <TableCell>
                     {CalculateTime(report.start_time, report.end_time)}
                   </TableCell>
-                  <TableCell className="whitespace-normal wrap-break-words">
+                  <TableCell className="w-75 max-w-75 whitespace-normal wrap-break-word">
                     {report.report}
                   </TableCell>
                 </TableRow>
@@ -61,14 +63,14 @@ function DailyReportTable({ reports }) {
                       <SearchX className="size-10 text-muted-foreground animate-[bounce_1.5s_ease-in-out_infinite]" />
                     </div>
                     <div>
-                      <p className="font-medium"> No Departments found</p>
+                      <p className="font-medium"> No Daily report found</p>
                       <p className="text-sm text-muted-foreground">
                         Try adjusting your search
                       </p>
                     </div>
                     <Button
                       variant="outline"
-                      // onClick={onResetFilters}
+                      onClick={onResetFilters}
                       className="gap-2 border border-slate-400/50 cursor-pointer bg-slate-200 hover:bg-slate-400/30"
                     >
                       <RotateCcw className="sixe-4" />

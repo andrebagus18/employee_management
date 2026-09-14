@@ -18,13 +18,22 @@ export function useDailyReports({ id } = {}) {
   });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+  const [date, setDate] = useState("");
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 15,
+    total: 0,
+    totalPage: 0,
+  });
 
-  const fetchDailyReports = useCallback(async () => {
+  const fetchDailyReports = useCallback(async (params = {}) => {
     try {
       setLoading(true);
-      const response = await getDailyReports();
+      const response = await getDailyReports(params);
       // console.log("response report", response.getReports);
       setReports(response.getReports);
+      setPagination(response.pagination);
     } catch (error) {
       showError(error.response?.data?.msg || "Failed to load reports");
     } finally {
@@ -73,10 +82,16 @@ export function useDailyReports({ id } = {}) {
       await fetchDailyReports();
       return response;
     } catch (error) {
+      console.error(error);
       showError(error.response?.data?.msg || "Failed to update daily report");
     } finally {
       setLoading(false);
     }
+  };
+
+  const resetFilters = () => {
+    setSearch("");
+    setDate("");
   };
 
   const handleCancel = () => {
@@ -107,6 +122,8 @@ export function useDailyReports({ id } = {}) {
     if (!data) return;
     if (id) {
       await update(id, data);
+      navigate("/daily-reports");
+      console.log("sukse");
     } else {
       await create(data);
     }
@@ -119,8 +136,14 @@ export function useDailyReports({ id } = {}) {
     errors,
     form,
     setForm,
+    search,
+    setSearch,
+    date,
+    setDate,
+    pagination,
     handleChange,
     handleSubmit,
     handleCancel,
+    resetFilters,
   };
 }

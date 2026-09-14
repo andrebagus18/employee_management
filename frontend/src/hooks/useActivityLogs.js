@@ -22,7 +22,7 @@ export function useActivityLogs() {
       const response = await getActivityLogs(params);
       setActivities(response.activities);
       setPagination(response.pagination);
-      // console.log("pagination", response.pagination);
+      // console.log("activity", response.activities);
     } catch (error) {
       setError(error);
     } finally {

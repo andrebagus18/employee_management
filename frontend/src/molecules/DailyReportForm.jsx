@@ -25,10 +25,10 @@ function DailyReportForm({
     const report = reports.find((report) => report.id === Number(id));
     if (report) {
       setForm({
-        report_date: form.report_date,
-        start_time: form.start_time,
-        end_time: form.end_time,
-        report: form.report,
+        report_date: report.report_date,
+        start_time: report.start_time,
+        end_time: report.end_time,
+        report: report.report,
       });
     }
   }, [id, reports, setForm]);
@@ -109,7 +109,7 @@ function DailyReportForm({
               Cancel
             </Button>
             <Button type="submit" className="cursor-pointer">
-              Create Report
+              {id ? "Update report" : "Create Report"}
             </Button>
           </div>
         </div>
