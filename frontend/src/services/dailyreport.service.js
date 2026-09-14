@@ -10,3 +10,9 @@ export const createDailyReport = async (data) => {
   const response = await api.post("/daily-reports/create", data);
   return response.data;
 };
+
+export const updateDailyReport = async (id, data) => {
+  const response = await api.patch(`/daily-reports/${id}/update`, data);
+  console.log("response.data:", response.data);
+  return response.data;
+};

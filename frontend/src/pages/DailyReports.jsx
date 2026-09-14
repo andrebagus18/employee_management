@@ -7,15 +7,12 @@ import { useDailyReports } from "@/hooks/useDailyReports";
 import { useNavigate } from "react-router-dom";
 
 function DailyReports() {
-  const { fetchDailyReports, reports, loading } = useDailyReports();
+  const { fetchDailyReports, reports, loading, handleCancel } =
+    useDailyReports();
   const navigate = useNavigate();
   useEffect(() => {
     fetchDailyReports();
   }, [fetchDailyReports]);
-
-  const handleCancel = () => {
-    setOpen(false);
-  };
 
   return (
     <div className="space-y-6">
@@ -59,7 +56,7 @@ function DailyReports() {
       </div>
 
       {/* Table */}
-      <DailyReportTable reports={reports} />
+      <DailyReportTable reports={reports} handleCancel={handleCancel} />
     </div>
   );
 }

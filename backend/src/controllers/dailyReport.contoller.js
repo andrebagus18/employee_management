@@ -115,45 +115,33 @@ export const updateReport = async (req, res) => {
   try {
     const { id } = req.params;
     const { employeeId } = req.user;
-    const { date, time, report } = req.body;
+    const { report_date, start_time, end_time, report } = req.body;
     const updateDailyReport = await prisma.dailyreport.findUnique({
       where: {
         id: Number(id),
       },
     });
+    // console.log("report:", updateDailyReport);
     if (!updateDailyReport) {
       return res.status(404).json({
         msg: "Daily report not found",
       });
     }
-    const { allIds } = await getEmployeeScope(employeeId);
-    if (!allIds.includes(updateDailyReport.employeeId)) {
-      return res.status(403).json({
-        msg: "You do not have permission to view this daily report",
-      });
-    }
-    if (!date && !time && !report) {
+    if (!report_date && !start_time && !end_time && !report) {
       return res.status(400).json({
         msg: "All fields required",
       });
-    }
-    const data = {};
-    if (date) {
-      data.date = date;
-    }
-    if (time) {
-      data.time = time;
-    }
-    if (report) {
-      data.report = report;
     }
     const updateReport = await prisma.dailyreport.update({
       where: {
         id: updateDailyReport.id,
       },
       data: {
-        ...data,
-        time: new Date(`1970-01-01T${time}:00`),
+        employeeId,
+        report_date: new Date(report_date),
+        start_time,
+        end_time,
+        report,
       },
       include: {
         employee: {

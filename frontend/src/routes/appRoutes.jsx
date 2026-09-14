@@ -60,6 +60,10 @@ function AppRoutes() {
               path="/daily-reports/create"
               element={<CreateDailyReport />}
             />
+            <Route
+              path="/daily-reports/:id/update"
+              element={<CreateDailyReport />}
+            />
             <Route path="/activity-logs" element={<ActivityLogs />} />
             <Route path="/setting" element={<div>setting</div>} />
           </Route>

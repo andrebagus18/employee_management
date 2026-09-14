@@ -1,10 +1,13 @@
-import { getDailyReports } from "@/services/dailyreport.service";
+import {
+  getDailyReports,
+  createDailyReport,
+  updateDailyReport,
+} from "@/services/dailyreport.service";
 import { useState, useCallback, useEffect } from "react";
 import { showError, showSuccess } from "@/lib/alert";
-import { createDailyReport } from "../services/dailyreport.service";
 import { useNavigate } from "react-router-dom";
 
-export function useDailyReports() {
+export function useDailyReports({ id } = {}) {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
@@ -55,6 +58,37 @@ export function useDailyReports() {
     }
   };
 
+  const update = async (id, data) => {
+    try {
+      setLoading(true);
+      const response = await updateDailyReport(id, data);
+      showSuccess(response.msg);
+      setForm({
+        report_date: "",
+        start_time: "",
+        end_time: "",
+        report: "",
+      });
+      setErrors({});
+      await fetchDailyReports();
+      return response;
+    } catch (error) {
+      showError(error.response?.data?.msg || "Failed to update daily report");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setForm({
+      report_date: "",
+      start_time: "",
+      end_time: "",
+      report: "",
+    });
+    navigate("/daily-reports");
+  };
+
   const handleChange = (e) => {
     setForm((prev) => ({
       ...form,
@@ -71,7 +105,11 @@ export function useDailyReports() {
       report: form.report,
     };
     if (!data) return;
-    await create(data);
+    if (id) {
+      await update(id, data);
+    } else {
+      await create(data);
+    }
   };
 
   return {
@@ -80,7 +118,9 @@ export function useDailyReports() {
     reports,
     errors,
     form,
+    setForm,
     handleChange,
     handleSubmit,
+    handleCancel,
   };
 }

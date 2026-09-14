@@ -282,14 +282,8 @@ router.get(
   permissionMiddleware("report.view"),
   getDailyReports,
 );
-router.get(
-  "/daily-reports/:id",
-  authMiddleware,
-  permissionMiddleware("report.view"),
-  getDetailReport,
-);
 router.patch(
-  "/daily-reports/update",
+  "/daily-reports/:id/update",
   authMiddleware,
   permissionMiddleware("report.update"),
   updateReport,

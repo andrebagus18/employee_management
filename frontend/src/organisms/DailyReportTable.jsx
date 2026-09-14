@@ -7,11 +7,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Eye, Pencil, Trash2, SearchX, RotateCcw } from "lucide-react";
-import ActionMenu from "@/molecules/ActionMenu";
+import { SearchX, RotateCcw } from "lucide-react";
 import { CalculateTime, formatDateIndo } from "../lib/utils";
+import { useNavigate } from "react-router-dom";
 
 function DailyReportTable({ reports }) {
+  const navigate = useNavigate();
   return (
     <div className="rounded-xl border bg-background">
       <div className="w-full max-h-80 scrollbar-hide overflow-y-auto">
@@ -21,18 +22,22 @@ function DailyReportTable({ reports }) {
               <TableHead>No.</TableHead>
               <TableHead>Employee</TableHead>
               <TableHead>Date</TableHead>
-              <TableHead>Start Time Hours</TableHead>
+              <TableHead>Start Time</TableHead>
               <TableHead>End Time</TableHead>
               <TableHead>Total Hours</TableHead>
               <TableHead>Description</TableHead>
-              <TableHead className="w-[50px]"></TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
             {(reports ?? []).length > 0 ? (
               reports.map((report, index) => (
-                <TableRow key={report.id}>
+                <TableRow
+                  key={report.id}
+                  onClick={(e) =>
+                    navigate(`/daily-reports/${report.id}/update`)
+                  }
+                >
                   <TableCell>{index + 1}</TableCell>
                   <TableCell className="font-medium capitalize">
                     {report.employee?.name}
@@ -43,28 +48,8 @@ function DailyReportTable({ reports }) {
                   <TableCell>
                     {CalculateTime(report.start_time, report.end_time)}
                   </TableCell>
-                  <TableCell>{report.report}</TableCell>
-                  <TableCell>
-                    <ActionMenu
-                      actions={[
-                        {
-                          label: "View",
-                          icon: Eye,
-                          onClick: () => console.log("VIEW", report.id),
-                        },
-                        {
-                          label: "Edit",
-                          icon: Pencil,
-                          onClick: () => console.log("EDIT", report.id),
-                        },
-                        {
-                          label: "Delete",
-                          icon: Trash2,
-                          variant: "destructive",
-                          onClick: () => console.log("DELETE", report.id),
-                        },
-                      ]}
-                    />
+                  <TableCell className="whitespace-normal wrap-break-words">
+                    {report.report}
                   </TableCell>
                 </TableRow>
               ))

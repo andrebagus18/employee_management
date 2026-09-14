@@ -15,11 +15,9 @@ function PositionTable({
   pagination,
   loading,
   onEdit,
-  onDelete,
   onResetFilters,
 }) {
-  const navigate = useNavigate();
-  // const disabled = true;
+  const disabled = true;
   return (
     <div className="rounded-xl border bg-background">
       <div className="w-full max-h-80 scrollbar-hide overflow-y-auto">
@@ -59,9 +57,9 @@ function PositionTable({
                     </Button>
                     <Button
                       variant="destructive"
-                      // className="disabled:cursor-not-allowed disabled:bg-gray-400"
-                      onClick={() => onDelete(position.id)}
-                      // disabled={disabled}
+                      className="disabled:cursor-not-allowed disabled:bg-gray-400"
+                      disabled={disabled}
+                      // onClick={() => onDelete(position.id)}
                     >
                       {loading ? (
                         <LoaderCircle className="size-4 animate-spin" />

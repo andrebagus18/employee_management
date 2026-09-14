@@ -1,12 +1,15 @@
 import DailyReportForm from "@/molecules/DailyReportForm";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDailyReports } from "@/hooks/useDailyReports";
 
 function CreateDailyReport() {
-  const { handleChange, handleSubmit, form, errors } = useDailyReports();
+  const { id } = useParams();
+  const { handleChange, reports, handleSubmit, form, setForm, errors } =
+    useDailyReports({ id });
   const navigate = useNavigate();
+
   return (
     <div className="mx-auto w-full space-y-6">
       {/* Page Header */}
@@ -16,7 +19,7 @@ function CreateDailyReport() {
             type="button"
             variant="ghost"
             className="mb-2 -ml-3 cursor-pointer"
-            onClick={() => navigate("/leave-requests")}
+            onClick={() => navigate("/daily-reports")}
           >
             <ArrowLeft />
             Back to Daily Reports
@@ -31,9 +34,12 @@ function CreateDailyReport() {
       </div>
       <DailyReportForm
         form={form}
+        setForm={setForm}
         errors={errors}
+        reports={reports}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
+        id={id}
       />
     </div>
   );

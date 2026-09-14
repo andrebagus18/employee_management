@@ -7,10 +7,31 @@ import TimePicker from "./TimePicker";
 import { Input } from "@/components/ui/input";
 import { CalculateTime } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
-function DailyReportForm({ handleChange, handleSubmit, errors, form }) {
+function DailyReportForm({
+  handleChange,
+  handleSubmit,
+  errors,
+  form,
+  setForm,
+  id,
+  reports,
+}) {
   const { user } = useAuth();
   const navigate = useNavigate();
+  useEffect(() => {
+    if (!id || reports.length === 0) return;
+    const report = reports.find((report) => report.id === Number(id));
+    if (report) {
+      setForm({
+        report_date: form.report_date,
+        start_time: form.start_time,
+        end_time: form.end_time,
+        report: form.report,
+      });
+    }
+  }, [id, reports, setForm]);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
@@ -81,7 +102,7 @@ function DailyReportForm({ handleChange, handleSubmit, errors, form }) {
           <div className="flex justify-end gap-3 pt-3">
             <Button
               type="button"
-              onClick={(e) => navigate("/daily-reports")}
+              onClick={() => navigate("/daily-reports")}
               variant="outline"
               className="cursor-pointer"
             >
