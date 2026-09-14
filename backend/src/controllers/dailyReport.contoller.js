@@ -4,13 +4,15 @@ import { prisma } from "../lib/prisma.js";
 export const createDailyReport = async (req, res) => {
   try {
     const { employeeId } = req.user;
-    const { date, time, report } = req.body;
+    const { report_date, start_time, end_time, report } = req.body;
 
     if (
-      date === undefined ||
-      date === null ||
-      time === undefined ||
-      time === null ||
+      report_date === undefined ||
+      report_date === null ||
+      start_time === undefined ||
+      start_time === null ||
+      end_time === undefined ||
+      end_time === null ||
       report === undefined ||
       report === null
     ) {
@@ -21,8 +23,9 @@ export const createDailyReport = async (req, res) => {
     const createReport = await prisma.dailyreport.create({
       data: {
         employeeId: employeeId,
-        date: new Date(date),
-        time: new Date(`1970-01-01T${time}:00`),
+        report_date: new Date(report_date),
+        start_time: start_time,
+        end_time: end_time,
         report: report,
       },
       include: {
@@ -56,17 +59,18 @@ export const createDailyReport = async (req, res) => {
 
 export const getDailyReports = async (req, res) => {
   try {
-    const { employeeId } = req.user;
-    const { allIds } = await getEmployeeScope(employeeId);
-    const getReport = await prisma.dailyreport.findMany({
-      where: {
-        employeeId: {
-          in: allIds,
+    const getReports = await prisma.dailyreport.findMany({
+      include: {
+        employee: {
+          select: {
+            name: true,
+          },
         },
       },
     });
+    // console.log("get:", getReports);
     return res.status(200).json({
-      data: getReport,
+      getReports,
     });
   } catch (error) {
     console.error(error);

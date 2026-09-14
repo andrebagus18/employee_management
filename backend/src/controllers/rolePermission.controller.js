@@ -4,7 +4,7 @@ export const getRolePermissions = async (req, res) => {
   try {
     const { roleId } = req.params;
 
-    const rolePermission = await prisma.rolePermission.findMany({
+    const rolePermission = await prisma.rolepermission.findMany({
       where: {
         roleId: Number(roleId),
       },
@@ -28,7 +28,7 @@ export const assignPermission = async (req, res) => {
     const { roleId } = req.params;
     const { permissionId } = req.body;
 
-    const existingPermission = await prisma.rolePermission.findFirst({
+    const existingPermission = await prisma.rolepermission.findFirst({
       where: {
         roleId: Number(roleId),
         permissionId: permissionId,
@@ -62,7 +62,7 @@ export const assignPermission = async (req, res) => {
       });
     }
     // create
-    const createPermission = await prisma.rolePermission.create({
+    const createPermission = await prisma.rolepermission.create({
       data: {
         roleId: Number(roleId),
         permissionId: permissionId,
@@ -83,7 +83,7 @@ export const assignPermission = async (req, res) => {
 export const revokePermission = async (req, res) => {
   try {
     const { roleId, permissionId } = req.params;
-    const rolePermission = await prisma.rolePermission.findFirst({
+    const rolePermission = await prisma.rolepermission.findFirst({
       where: {
         roleId: Number(roleId),
         permissionId: Number(permissionId),

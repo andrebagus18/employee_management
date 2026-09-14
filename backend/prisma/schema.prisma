@@ -23,8 +23,9 @@ model activitylog {
 model dailyreport {
   id         Int      @id @default(autoincrement())
   employeeId Int
-  date       DateTime @db.Date
-  time       DateTime @db.Time(0)
+  report_date       DateTime @db.Date
+  start_time       String
+  end_time       String
   report     String   @db.Text
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now())

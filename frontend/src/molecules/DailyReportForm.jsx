@@ -1,59 +1,97 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useAuth } from "../context/authContext";
+import { useAuth } from "@/context/authContext";
+import FormDate from "./FormDate";
+import TimePicker from "./TimePicker";
+import { Input } from "@/components/ui/input";
+import { CalculateTime } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
-function DailyReportForm() {
+function DailyReportForm({ handleChange, handleSubmit, errors, form }) {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   return (
-    <form className="space-y-5">
+    <form onSubmit={handleSubmit} className="space-y-5">
       {/* Employee */}
-      <div className="space-y-2">
-        <Label htmlFor="employee">Employee</Label>
-        <p className="w-full font-medium text-lg bg-gray-300/30 py-1 px-2 rounded-md text-gray-500">
-          {user?.employee?.name}
-        </p>
-      </div>
-
-      {/* Date & Hours */}
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid sm:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="date">Report Date</Label>
-          <Input id="date" name="date" type="date" />
+          <div className="space-y-2">
+            <Label htmlFor="employee">Employee</Label>
+            <p className="w-full font-medium text-lg bg-gray-300/20 py-1 px-2 rounded-md text-gray-500">
+              {user?.employee?.name}
+            </p>
+          </div>
+          {/* Date*/}
+          <div className="space-y-2">
+            <FormDate
+              label="Date"
+              name="report_date"
+              value={form.report_date}
+              onChange={handleChange}
+              error={errors.report_date}
+            />
+          </div>
+          {/* Hours */}
+          <div className="space-y-2">
+            <TimePicker
+              label="Start Time"
+              name="start_time"
+              type="time"
+              value={form.start_time}
+              onChange={handleChange}
+              error={errors.start_time}
+            />
+          </div>
+          <div className="space-y-2">
+            <TimePicker
+              label="End Time"
+              name="end_time"
+              type="time"
+              value={form.end_time}
+              onChange={handleChange}
+              error={errors.end_time}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>Total Hours</Label>
+            <Input
+              value={CalculateTime(form.start_time, form.end_time)}
+              readOnly
+            />
+          </div>
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="hours">Working Hours</Label>
-          <Input
-            id="hours"
-            name="hours"
-            type="number"
-            min="0"
-            max="24"
-            step="0.5"
-            placeholder="8"
-          />
+
+        <div>
+          {/* Summary */}
+          <div className="space-y-2">
+            <Label htmlFor="report">Description</Label>
+            <Textarea
+              id="report"
+              name="report"
+              value={form.report}
+              onChange={handleChange}
+              error={errors.report}
+              placeholder="Describe the work completed today..."
+              className="min-h-60 resize-none"
+            />
+          </div>
+          {/* Actions */}
+          <div className="flex justify-end gap-3 pt-3">
+            <Button
+              type="button"
+              onClick={(e) => navigate("/daily-reports")}
+              variant="outline"
+              className="cursor-pointer"
+            >
+              Cancel
+            </Button>
+            <Button type="submit" className="cursor-pointer">
+              Create Report
+            </Button>
+          </div>
         </div>
-      </div>
-
-      {/* Summary */}
-      <div className="space-y-2">
-        <Label htmlFor="summary">Description</Label>
-        <Textarea
-          id="summary"
-          name="summary"
-          placeholder="Describe the work completed today..."
-          className="min-h-24 resize-none"
-        />
-      </div>
-
-      {/* Actions */}
-      <div className="flex justify-end gap-3 pt-2">
-        <Button type="button" variant="outline">
-          Cancel
-        </Button>
-        <Button type="submit">Create Report</Button>
       </div>
     </form>
   );

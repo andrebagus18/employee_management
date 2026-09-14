@@ -1,7 +1,6 @@
 import { CalendarIcon } from "lucide-react";
 import { format, isValid } from "date-fns";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -29,7 +28,7 @@ function FormDate({
     <div className="space-y-2">
       <Label htmlFor={name}>{label}</Label>
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger className="w-full flex items-center border border-slate-400/50 p-1 rounded-lg justify-start text-left font-normal cursor-text">
+        <PopoverTrigger className="w-full flex items-center border border-slate-400/50 p-1 rounded-lg justify-start text-sm text-left font-normal cursor-text">
           <CalendarIcon className="mr-2 size-4" />
           {selectDate && isValid(selectDate)
             ? format(selectDate, "dd MMMM yyyy")

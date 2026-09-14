@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Eye, Pencil, Trash2, SearchX, RotateCcw } from "lucide-react";
 import ActionMenu from "@/molecules/ActionMenu";
+import { CalculateTime, formatDateIndo } from "../lib/utils";
 
 function DailyReportTable({ reports }) {
   return (
@@ -20,6 +21,8 @@ function DailyReportTable({ reports }) {
               <TableHead>No.</TableHead>
               <TableHead>Employee</TableHead>
               <TableHead>Date</TableHead>
+              <TableHead>Start Time Hours</TableHead>
+              <TableHead>End Time</TableHead>
               <TableHead>Total Hours</TableHead>
               <TableHead>Description</TableHead>
               <TableHead className="w-[50px]"></TableHead>
@@ -31,16 +34,15 @@ function DailyReportTable({ reports }) {
               reports.map((report, index) => (
                 <TableRow key={report.id}>
                   <TableCell>{index + 1}</TableCell>
-                  <TableCell>
-                    <div>
-                      <p className="font-medium">{report.employee}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {report.email}
-                      </p>
-                    </div>
+                  <TableCell className="font-medium capitalize">
+                    {report.employee?.name}
                   </TableCell>
-                  <TableCell>{report.date}</TableCell>
-                  <TableCell>{report.time}</TableCell>
+                  <TableCell>{formatDateIndo(report.report_date)}</TableCell>
+                  <TableCell>{report.start_time}</TableCell>
+                  <TableCell>{report.end_time}</TableCell>
+                  <TableCell>
+                    {CalculateTime(report.start_time, report.end_time)}
+                  </TableCell>
                   <TableCell>{report.report}</TableCell>
                   <TableCell>
                     <ActionMenu
