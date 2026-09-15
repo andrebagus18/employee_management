@@ -33,12 +33,35 @@ export const createPermission = async (req, res) => {
 
 export const getPermissions = async (req, res) => {
   try {
-    const permission = await prisma.permission.findMany();
-    if (permission.length === 0) {
-      return res.status(200).json([]);
-    }
+    const { search = "", page = 1, limit = 10 } = req.query;
+    const filters = searchPer({
+      search,
+    });
+    const pageNumber = Number(page);
+    const limitNumber = Number(limit);
+    const skip = (pageNumber - 1) * limitNumber;
+    const [permissions, total] = await Promise.all([
+      prisma.permission.findMany({
+        where: filters,
+        skip,
+        take: limitNumber,
+        orderBy: {
+          name: "asc",
+        },
+      }),
+      prisma.permission.count({
+        where: filters,
+      }),
+    ]);
+    const totalPage = Math.ceil(total / limitNumber);
     return res.status(200).json({
-      data: permission,
+      permissions,
+      pagination: {
+        page: pageNumber,
+        limit: limitNumber,
+        total,
+        totalPage,
+      },
     });
   } catch (error) {
     console.error(error);
@@ -129,5 +152,15 @@ export const deletePermission = async (req, res) => {
     return res.status(500).json({
       msg: "Internal server error",
     });
+  }
+};
+
+export const searchPer = ({ search = "", page = 1, limit = 10 }) => {
+  const result = {};
+  if (search) {
+    result.name = {
+      contains: search,
+    };
+    return result;
   }
 };

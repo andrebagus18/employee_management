@@ -6,7 +6,17 @@ export const getRoles = async (req, res) => {
       orderBy: {
         name: "asc",
       },
+      select: {
+        id: true,
+        name: true,
+        _count: {
+          select: {
+            user: true,
+          },
+        },
+      },
     });
+    // console.log(roles);
     return res.status(200).json({
       roles,
     });

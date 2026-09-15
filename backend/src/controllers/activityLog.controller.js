@@ -13,6 +13,9 @@ export const activityLog = async (req, res) => {
     const skip = (pageNumber - 1) * limitNumber;
     const [activities, total] = await Promise.all([
       prisma.activitylog.findMany({
+        orderBy: {
+          updatedAt: "desc",
+        },
         where: filters,
         skip,
         take: limitNumber,

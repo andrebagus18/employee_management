@@ -1,0 +1,128 @@
+import {
+  getPermissions,
+  createPermission,
+  updatePermission,
+} from "@/services/permission.service";
+import { useState, useCallback, useEffect } from "react";
+import { showError, showSuccess } from "@/lib/alert";
+import { useNavigate } from "react-router-dom";
+
+export function usePermissions({ id }) {
+  const navigate = useNavigate();
+  const [permissions, setPermissions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [form, setForm] = useState({
+    name: "",
+    description: "",
+  });
+  const [search, setSearch] = useState("");
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPage: 0,
+  });
+
+  const fetchPermissions = useCallback(async (params = {}) => {
+    try {
+      setLoading(true);
+      const response = await getPermissions(params);
+      setPermissions(response.permissions);
+      setPagination(response.pagination);
+    } catch (error) {
+      showError(error.response?.data?.msg || "Failed to load permissions");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchPermissions();
+  }, [fetchPermissions]);
+
+  const create = async (data) => {
+    try {
+      setLoading(true);
+      const response = await createPermission(data);
+      showSuccess(response.msg);
+      setOpen(false);
+      return response;
+    } catch (error) {
+      showError(error.response?.data?.msg || "Failed to create permission");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const update = async (id, data) => {
+    try {
+      setLoading(true);
+      const response = await updatePermission(id, data);
+      showSuccess(response.msg);
+      setForm({
+        name: "",
+        description: "",
+      });
+      setOpen(false);
+      await fetchPermissions();
+      return response;
+    } catch (error) {
+      showError(error.response?.data?.msg || "Failed to update permission");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resetFilters = () => {
+    setSearch("");
+  };
+
+  const handleCancel = () => {
+    setForm({
+      name: "",
+      description: "",
+    });
+    setOpen(false);
+  };
+
+  const handleChange = (e) => {
+    setForm((prev) => ({
+      ...form,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const data = {
+      name: form.name.trim(),
+      description: form.description.trim(),
+    };
+    if (!data) return;
+    if (id) {
+      await update(id, data);
+      navigate("/permissions");
+    } else {
+      await create(data);
+    }
+  };
+
+  return {
+    permissions,
+    fetchPermissions,
+    loading,
+    form,
+    setForm,
+    open,
+    setOpen,
+    search,
+    setSearch,
+    pagination,
+    resetFilters,
+    handleCancel,
+    handleChange,
+    handleSubmit,
+  };
+}

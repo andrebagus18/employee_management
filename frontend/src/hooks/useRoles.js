@@ -4,7 +4,6 @@ import { useCallback, useState, useEffect } from "react";
 export function useRoles() {
   const [roles, setRoles] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
 
   const fetchRoles = useCallback(async () => {
     try {

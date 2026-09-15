@@ -8,77 +8,62 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
 import { CirclePlus } from "lucide-react";
-import { useState } from "react";
-
-const permissions = [
-  {
-    id: 1,
-    name: "View Employees",
-    key: "employees.view",
-    module: "Employees",
-    action: "View",
-    status: "Active",
-  },
-  {
-    id: 2,
-    name: "Create Employees",
-    key: "employees.create",
-    module: "Employees",
-    action: "Create",
-    status: "Active",
-  },
-  {
-    id: 3,
-    name: "Update Employees",
-    key: "employees.update",
-    module: "Employees",
-    action: "Update",
-    status: "Active",
-  },
-  {
-    id: 4,
-    name: "Delete Employees",
-    key: "employees.delete",
-    module: "Employees",
-    action: "Delete",
-    status: "Active",
-  },
-  {
-    id: 5,
-    name: "View Departments",
-    key: "departments.view",
-    module: "Departments",
-    action: "View",
-    status: "Active",
-  },
-  {
-    id: 6,
-    name: "Manage Leave Requests",
-    key: "leave-requests.update",
-    module: "Leave Requests",
-    action: "Update",
-    status: "Active",
-  },
-  {
-    id: 7,
-    name: "View Users",
-    key: "users.view",
-    module: "Users",
-    action: "View",
-    status: "Active",
-  },
-];
+import { usePermissions } from "../hooks/usePermissions";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 function Permissions() {
-  const [open, setOpen] = useState(false);
-  const handleCreate = (data) => {
-    console.log("CREATE ROLE:", data);
-    setOpen(false);
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const {
+    permissions,
+    fetchPermissions,
+    loading,
+    form,
+    setForm,
+    open,
+    setOpen,
+    search,
+    setSearch,
+    pagination,
+    resetFilters,
+    handleCancel,
+    handleChange,
+    handleSubmit,
+  } = usePermissions({ id });
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchPermissions({
+        page: 1,
+        limit: 10,
+        search,
+      });
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [fetchPermissions, search]);
+
+  const handleEdit = (id) => {
+    setOpen(true);
+    navigate(`/permissions/${id}/update`);
   };
-  const handleCancel = () => {
-    setOpen(false);
+
+  const handlePage = (page) => {
+    fetchPermissions({
+      page,
+      limit: pagination.limit,
+      search,
+    });
   };
 
   return (
@@ -86,7 +71,6 @@ function Permissions() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Permissions</h1>
-
         <p className="text-sm text-muted-foreground">
           Manage system permissions and access capabilities.
         </p>
@@ -103,13 +87,22 @@ function Permissions() {
             </DialogDescription>
           </DialogHeader>
 
-          <PermissionForm onSubmit={handleCreate} onCancel={handleCancel} />
+          <PermissionForm
+            permissions={permissions}
+            handleSubmit={handleSubmit}
+            handleChange={handleChange}
+            onCancel={handleCancel}
+            form={form}
+            setForm={setForm}
+            id={id}
+            loading={loading}
+          />
         </DialogContent>
       </Dialog>
 
       {/* Filters */}
       <div className="flex justify-between items-center">
-        <PermissionFilters />
+        <PermissionFilters search={search} setSearch={setSearch} />
         <Button
           onClick={() => setOpen(true)}
           className="max-w-3xs w-full gap-4 py-5 text-md cursor-pointer"
@@ -120,7 +113,63 @@ function Permissions() {
       </div>
 
       {/* Table */}
-      <PermissionTable permissions={permissions} />
+      <PermissionTable
+        permissions={permissions}
+        loading={loading}
+        onEdit={handleEdit}
+        pagination={pagination}
+        onResetFilters={resetFilters}
+      />
+      <div className="flex items-center justify-between border-t pt-4">
+        <div className="text-sm text-muted-foreground">
+          Showing{" "}
+          {pagination.total === 0
+            ? 0
+            : (pagination.page - 1) * pagination.limit + 1}{" "}
+          - {Math.min(pagination.page * pagination.limit, pagination.total)} of{" "}
+          {pagination.total} positions
+        </div>
+        <div className="flex items-center gap-6">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => handlePage(pagination.page - 1)}
+                  className={
+                    pagination.page === 1
+                      ? "pointer-events-none opacity-50"
+                      : "cursor-pointer"
+                  }
+                />
+              </PaginationItem>
+              {Array.from(
+                { length: pagination.totalPage },
+                (_, index) => index + 1,
+              ).map((page) => (
+                <PaginationItem key={page}>
+                  <PaginationLink
+                    isActive={pagination.page === page}
+                    onClick={() => handlePage(page)}
+                    className="cursor-pointer"
+                  >
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => handlePage(pagination.page + 1)}
+                  className={
+                    pagination.page === pagination.totalPage
+                      ? "pointer-events-none opacity-50"
+                      : "cursor-pointer"
+                  }
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      </div>
     </div>
   );
 }

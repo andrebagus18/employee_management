@@ -55,6 +55,7 @@ function AppRoutes() {
             <Route path="/users" element={<Users />} />
             <Route path="/roles" element={<Roles />} />
             <Route path="/permissions" element={<Permissions />} />
+            <Route path="/permissions/:id/update" element={<Permissions />} />
             <Route path="/daily-reports" element={<DailyReports />} />
             <Route
               path="/daily-reports/create"

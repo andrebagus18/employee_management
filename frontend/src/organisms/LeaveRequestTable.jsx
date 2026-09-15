@@ -33,9 +33,9 @@ function LeaveRequestTable({
   // console.log("leave", leaveRequests);
   return (
     <div className="rounded-xl border bg-background">
-      <div className="overflow-x-auto">
+      <div className="w-full max-h-80 scrollbar-hide overflow-y-auto">
         <Table>
-          <TableHeader>
+          <TableHeader className="sticky top-0 z-10 bg-background">
             <TableRow>
               <TableHead>No.</TableHead>
               <TableHead>Employee</TableHead>

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { CirclePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,47 +10,10 @@ import {
 import RoleFilters from "@/molecules/RoleFilters";
 import RoleForm from "@/molecules/RoleForm";
 import RoleTable from "@/organisms/RoleTable";
-
-const roles = [
-  {
-    id: 1,
-    name: "Admin",
-    description: "Full system access",
-    users: 2,
-    status: "Active",
-  },
-  {
-    id: 2,
-    name: "HR",
-    description: "Manage employees and HR operations",
-    users: 4,
-    status: "Active",
-  },
-  {
-    id: 3,
-    name: "Manager",
-    description: "Manage team members and approvals",
-    users: 8,
-    status: "Active",
-  },
-  {
-    id: 4,
-    name: "Employee",
-    description: "Standard employee access",
-    users: 114,
-    status: "Active",
-  },
-];
+import { useRoles } from "../hooks/useRoles";
 
 function Roles() {
-  const [open, setOpen] = useState(false);
-  const handleCreate = (data) => {
-    console.log("CREATE ROLE:", data);
-    setOpen(false);
-  };
-  const handleCancel = () => {
-    setOpen(false);
-  };
+  const { roles } = useRoles();
 
   return (
     <div className="space-y-6">
@@ -67,7 +29,7 @@ function Roles() {
       </div>
 
       {/* Create Role */}
-      <Dialog open={open} onOpenChange={setOpen}>
+      {/* <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-xl">
           <DialogHeader>
             <DialogTitle>Create Role</DialogTitle>
@@ -79,10 +41,10 @@ function Roles() {
 
           <RoleForm onSubmit={handleCreate} onCancel={handleCancel} />
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
 
       {/* Filters */}
-      <div className="flex justify-between items-center">
+      {/* <div className="flex justify-between items-center">
         <RoleFilters />
         <Button
           onClick={() => setOpen(true)}
@@ -91,7 +53,7 @@ function Roles() {
           <CirclePlus className="size-5" />
           Add Role
         </Button>
-      </div>
+      </div> */}
 
       {/* Table */}
       <RoleTable roles={roles} />

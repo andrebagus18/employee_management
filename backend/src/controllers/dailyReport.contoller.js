@@ -69,6 +69,9 @@ export const getDailyReports = async (req, res) => {
     const skip = (pageNumber - 1) * limitNumber;
     const [getReports, total] = await Promise.all([
       prisma.dailyreport.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
         where: filters,
         skip,
         take: limitNumber,

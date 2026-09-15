@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/table";
 import { Pencil, Trash2, LoaderCircle, SearchX, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
 
 function PositionTable({
   positions,

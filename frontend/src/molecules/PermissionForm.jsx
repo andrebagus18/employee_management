@@ -2,72 +2,47 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useEffect } from "react";
 
-function PermissionForm({ onSubmit, onCancel }) {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const data = {
-      name: formData.get("name"),
-      key: formData.get("key"),
-      description: formData.get("description"),
-      module: formData.get("module"),
-      action: formData.get("action"),
-      status: formData.get("status"),
-    };
-    onSubmit?.(data);
-  };
+function PermissionForm({
+  permissions,
+  handleSubmit,
+  onCancel,
+  form,
+  setForm,
+  handleChange,
+  id,
+  loading,
+}) {
+  console.log("permissions:", permissions);
+  useEffect(() => {
+    if (!id || permissions.length === 0) return;
+    const permission = permissions.find(
+      (permission) => permission.id === Number(id),
+    );
+    if (permission) {
+      setForm({
+        name: permission.name,
+        description: permission.description,
+      });
+    }
+  }, [id, permissions, setForm]);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      {/* Permission Name */}
-      <div className="space-y-2">
-        <Label htmlFor="name">Permission Name</Label>
-        <Input id="name" name="name" placeholder="e.g. View Employees" />
-      </div>
-
       {/* Permission Key */}
       <div className="space-y-2">
-        <Label htmlFor="key">Permission Key</Label>
-        <Input id="key" name="key" placeholder="e.g. employees.view" />
+        <Label htmlFor="name">Permission Module</Label>
+        <Input
+          id="name"
+          name="name"
+          value={form.name}
+          onChange={handleChange}
+          placeholder="e.g. employees.view"
+        />
         <p className="text-xs text-muted-foreground">
           Use a unique key to identify this permission.
         </p>
-      </div>
-
-      {/* Module & Action */}
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="module">Module</Label>
-          <select
-            id="module"
-            name="module"
-            className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-          >
-            <option value="">Select module</option>
-            <option value="employees">Employees</option>
-            <option value="departments">Departments</option>
-            <option value="positions">Positions</option>
-            <option value="job-levels">Job Levels</option>
-            <option value="leave-requests">Leave Requests</option>
-            <option value="users">Users</option>
-          </select>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="action">Action</Label>
-          <select
-            id="action"
-            name="action"
-            className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-          >
-            <option value="">Select action</option>
-            <option value="view">View</option>
-            <option value="create">Create</option>
-            <option value="update">Update</option>
-            <option value="delete">Delete</option>
-          </select>
-        </div>
       </div>
 
       {/* Description */}
@@ -76,24 +51,11 @@ function PermissionForm({ onSubmit, onCancel }) {
         <Textarea
           id="description"
           name="description"
+          value={form.description}
+          onChange={handleChange}
           placeholder="Describe what this permission allows..."
           className="min-h-24 resize-none"
         />
-      </div>
-
-      {/* Status */}
-      <div className="space-y-2">
-        <Label htmlFor="status">Status</Label>
-
-        <select
-          id="status"
-          name="status"
-          defaultValue="active"
-          className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-        >
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-        </select>
       </div>
 
       {/* Actions */}
@@ -102,7 +64,15 @@ function PermissionForm({ onSubmit, onCancel }) {
           Cancel
         </Button>
 
-        <Button type="submit">Create Permission</Button>
+        {id ? (
+          <Button type="submit" className="cursor-pointer" disabled={loading}>
+            {loading ? "Updated..." : "Update permission"}
+          </Button>
+        ) : (
+          <Button type="submit" className="cursor-pointer" disabled={loading}>
+            {loading ? "Created..." : "Created permission"}
+          </Button>
+        )}
       </div>
     </form>
   );
