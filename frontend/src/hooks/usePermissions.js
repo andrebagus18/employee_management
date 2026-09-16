@@ -2,16 +2,18 @@ import {
   getPermissions,
   createPermission,
   updatePermission,
+  deletePermission,
 } from "@/services/permission.service";
 import { useState, useCallback, useEffect } from "react";
 import { showError, showSuccess } from "@/lib/alert";
 import { useNavigate } from "react-router-dom";
+import { showConfirm } from "../lib/alert";
 
 export function usePermissions({ id }) {
   const navigate = useNavigate();
   const [permissions, setPermissions] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [errors, setErrors] = useState({});
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
     name: "",
@@ -75,6 +77,25 @@ export function usePermissions({ id }) {
     }
   };
 
+  const deleted = async (id) => {
+    const result = await showConfirm({
+      title: "Delete permission",
+      text: "This permission will be permanently.",
+      confirmText: "Delete",
+    });
+    if (!result.isConfirmed) return;
+    try {
+      setLoading(true);
+      const response = await deletePermission(id);
+      showSuccess(response.msg);
+      await fetchPermissions();
+    } catch (error) {
+      showError(error.response?.data?.msg || "Failed to delete permission");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const resetFilters = () => {
     setSearch("");
   };
@@ -96,16 +117,28 @@ export function usePermissions({ id }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = {
-      name: form.name.trim(),
-      description: form.description.trim(),
-    };
-    if (!data) return;
-    if (id) {
-      await update(id, data);
-      navigate("/permissions");
-    } else {
-      await create(data);
+    const errorField = {};
+    const requiredField = [
+      ["name", "Name"],
+      ["description", "Description"],
+    ];
+    requiredField.forEach(([field, label]) => {
+      if (!String(form[field]).trim()) {
+        errorField[field] = `${label} is required`;
+      }
+    });
+    setErrors(errorField);
+    if (Object.keys(errorField).length === 0) {
+      const data = {
+        name: form.name.trim(),
+        description: form.description.trim(),
+      };
+      if (id) {
+        await update(id, data);
+        navigate("/permissions");
+      } else {
+        await create(data);
+      }
     }
   };
 
@@ -115,6 +148,7 @@ export function usePermissions({ id }) {
     loading,
     form,
     setForm,
+    errors,
     open,
     setOpen,
     search,
@@ -124,5 +158,6 @@ export function usePermissions({ id }) {
     handleCancel,
     handleChange,
     handleSubmit,
+    deleted,
   };
 }

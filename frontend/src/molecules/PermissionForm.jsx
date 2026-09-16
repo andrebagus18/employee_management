@@ -9,6 +9,7 @@ function PermissionForm({
   handleSubmit,
   onCancel,
   form,
+  errors,
   setForm,
   handleChange,
   id,
@@ -43,6 +44,9 @@ function PermissionForm({
         <p className="text-xs text-muted-foreground">
           Use a unique key to identify this permission.
         </p>
+        {errors.name && (
+          <p className="font-sm text-destructive">{errors.name}</p>
+        )}
       </div>
 
       {/* Description */}
@@ -56,6 +60,9 @@ function PermissionForm({
           placeholder="Describe what this permission allows..."
           className="min-h-24 resize-none"
         />
+        {errors.description && (
+          <p className="font-sm text-destructive">{errors.description}</p>
+        )}
       </div>
 
       {/* Actions */}

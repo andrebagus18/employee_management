@@ -129,7 +129,7 @@ export const deletePermission = async (req, res) => {
         msg: "Permission not found",
       });
     }
-    const idRolePermission = await prisma.rolePermission.findFirst({
+    const idRolePermission = await prisma.rolepermission.findFirst({
       where: {
         permissionId: findPermissionId.id,
       },

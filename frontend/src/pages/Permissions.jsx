@@ -31,6 +31,7 @@ function Permissions() {
     loading,
     form,
     setForm,
+    errors,
     open,
     setOpen,
     search,
@@ -40,6 +41,7 @@ function Permissions() {
     handleCancel,
     handleChange,
     handleSubmit,
+    deleted,
   } = usePermissions({ id });
 
   useEffect(() => {
@@ -96,6 +98,7 @@ function Permissions() {
             setForm={setForm}
             id={id}
             loading={loading}
+            errors={errors}
           />
         </DialogContent>
       </Dialog>
@@ -119,6 +122,7 @@ function Permissions() {
         onEdit={handleEdit}
         pagination={pagination}
         onResetFilters={resetFilters}
+        onDelete={deleted}
       />
       <div className="flex items-center justify-between border-t pt-4">
         <div className="text-sm text-muted-foreground">

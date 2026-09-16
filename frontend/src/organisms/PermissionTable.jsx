@@ -10,7 +10,13 @@ import { Button } from "@/components/ui/button";
 import { Pencil, Trash2, SearchX, RotateCcw } from "lucide-react";
 import ActionMenu from "@/molecules/ActionMenu";
 
-function PermissionTable({ permissions, onEdit, pagination, onResetFilters }) {
+function PermissionTable({
+  permissions,
+  onEdit,
+  pagination,
+  onResetFilters,
+  onDelete,
+}) {
   return (
     <div className="rounded-xl border bg-background">
       <div className="w-full max-h-80 scrollbar-hide overflow-y-auto">
@@ -45,7 +51,7 @@ function PermissionTable({ permissions, onEdit, pagination, onResetFilters }) {
                           label: "Delete",
                           icon: Trash2,
                           variant: "destructive",
-                          onClick: () => console.log("DELETE", permission.id),
+                          onClick: () => onDelete(permission.id),
                         },
                       ]}
                     />

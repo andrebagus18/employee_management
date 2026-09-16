@@ -14,3 +14,8 @@ export const updatePermission = async (id, data) => {
   const response = await api.put(`/permissions/${id}/update`, data);
   return response.data;
 };
+
+export const deletePermission = async (id) => {
+  const response = await api.delete(`/permissions/${id}/delete`);
+  return response.data;
+};

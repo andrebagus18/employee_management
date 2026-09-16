@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   createEmployee,
   getEmployeeById,
@@ -191,7 +191,7 @@ export function useEmployees({ options = false } = {}) {
   const validate = () => {
     const newErrors = {};
     const requiredField = [
-      // property, label
+      // property/keys, label
       ["name", "Name"],
       ["gender", "Gender"],
       ["nik", "NIK"],
