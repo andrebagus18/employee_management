@@ -93,9 +93,9 @@ function DailyReportForm({
               name="report"
               value={form.report}
               onChange={handleChange}
-              error={errors.report}
               placeholder="Describe the work completed today..."
               className="min-h-60 resize-none"
+              error={errors.report}
             />
           </div>
           {/* Actions */}

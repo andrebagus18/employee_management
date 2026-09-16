@@ -56,7 +56,7 @@ function PositionTable({
                     </Button>
                     <Button
                       variant="destructive"
-                      className="disabled:cursor-not-allowed disabled:bg-gray-400"
+                      className="disabled:pointer-events-auto disabled:cursor-not-allowed disabled:bg-gray-400"
                       disabled={disabled}
                       // onClick={() => onDelete(position.id)}
                     >

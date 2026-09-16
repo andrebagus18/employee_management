@@ -15,7 +15,6 @@ function PermissionForm({
   id,
   loading,
 }) {
-  console.log("permissions:", permissions);
   useEffect(() => {
     if (!id || permissions.length === 0) return;
     const permission = permissions.find(

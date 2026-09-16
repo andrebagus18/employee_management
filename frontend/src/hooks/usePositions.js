@@ -96,9 +96,14 @@ export function usePositions({ id, options = false } = {}) {
   };
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: value,
+    }));
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
     }));
   };
 
@@ -123,16 +128,28 @@ export function usePositions({ id, options = false } = {}) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name.trim() && !form.departmentId) return;
-    const data = {
-      name: form.name.trim(),
-      departmentId: Number(form.departmentId),
-    };
-    if (id) {
-      await update(id, data);
-      navigate("/positions");
-    } else {
-      await create(data);
+    const errorField = {};
+    const requiredField = [
+      ["name", "Name"],
+      ["departmentId", "Department"],
+    ];
+    requiredField.forEach(([field, label]) => {
+      if (!String(form[field]).trim()) {
+        errorField[field] = `${label} is required`;
+      }
+    });
+    setErrors(errorField);
+    if (Object.keys(errorField).length === 0) {
+      const data = {
+        name: form.name.trim(),
+        departmentId: Number(form.departmentId),
+      };
+      if (id) {
+        await update(id, data);
+        navigate("/positions");
+      } else {
+        await create(data);
+      }
     }
   };
 

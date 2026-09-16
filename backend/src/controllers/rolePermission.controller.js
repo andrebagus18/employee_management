@@ -3,15 +3,16 @@ import { prisma } from "../lib/prisma.js";
 export const getRolePermissions = async (req, res) => {
   try {
     const { roleId } = req.params;
-
     const rolePermission = await prisma.rolepermission.findMany({
       where: {
         roleId: Number(roleId),
       },
       include: {
+        role: true,
         permission: true,
       },
     });
+    // console.log("roleper", rolePermission);
     return res.status(200).json({
       rolePermission,
     });

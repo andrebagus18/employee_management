@@ -105,21 +105,45 @@ export function useDailyReports({ id } = {}) {
   };
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setForm((prev) => ({
-      ...form,
-      [e.target.name]: e.target.value,
+      ...prev,
+      [name]: value,
     }));
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
+  };
+
+  const validate = () => {
+    const errorField = {};
+    const requiredField = [
+      ["report_date", "Report Date"],
+      ["start_time", "Start Time"],
+      ["end_time", "End time"],
+      ["report", "Report"],
+    ];
+    requiredField.forEach(([field, label]) => {
+      if (!String(form[field]).trim()) {
+        errorField[field] = `${label} is required`;
+      }
+    });
+    setErrors(errorField);
+    return Object.keys(errorField).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validate()) {
+      return;
+    }
     const data = {
       report_date: form.report_date,
       start_time: form.start_time,
       end_time: form.end_time,
       report: form.report,
     };
-    if (!data) return;
     if (id) {
       await update(id, data);
       navigate("/daily-reports");

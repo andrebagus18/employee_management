@@ -12,6 +12,7 @@ export const getRoles = async (req, res) => {
         _count: {
           select: {
             user: true,
+            rolepermission: true,
           },
         },
       },

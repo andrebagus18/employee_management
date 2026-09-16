@@ -67,7 +67,7 @@ export function useEmployees({ options = false } = {}) {
         data = await getEmployees(params);
       }
       // console.log("params", params);
-      console.log("data:", data.employees);
+      // console.log("data:", data.employees);
       setEmployees(data.employees);
       setPagination(data.pagination);
     } catch (error) {
@@ -90,7 +90,7 @@ export function useEmployees({ options = false } = {}) {
       const response = await getEmployeeById(id);
       const employee = response.employee;
       setEmployee(employee);
-      console.log("Employee edit:", employee);
+      // console.log("Employee edit:", employee);
       setForm({
         name: employee.name || "",
         gender: employee.gender || "",
@@ -114,12 +114,12 @@ export function useEmployees({ options = false } = {}) {
         password: "",
         roleId: employee.user?.role?.id ? String(employee.user?.role?.id) : "",
       });
-      console.log("Form:", {
-        departmentId: employee.department?.id,
-        positionId: employee.position?.id,
-        jobLevelId: employee.joblevel?.id,
-        managerId: employee.managerId,
-      });
+      // console.log("Form:", {
+      //   departmentId: employee.department?.id,
+      //   positionId: employee.position?.id,
+      //   jobLevelId: employee.joblevel?.id,
+      //   managerId: employee.managerId,
+      // });
       return response;
     } catch (error) {
       showError(error.response?.data?.msg || "Failed to load employee");

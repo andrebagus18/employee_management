@@ -109,9 +109,14 @@ export function usePermissions({ id }) {
   };
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setForm((prev) => ({
       ...form,
-      [e.target.name]: e.target.value,
+      [name]: value,
+    }));
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
     }));
   };
 

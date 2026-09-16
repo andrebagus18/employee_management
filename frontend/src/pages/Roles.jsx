@@ -1,19 +1,12 @@
-import { CirclePlus } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import RoleFilters from "@/molecules/RoleFilters";
-import RoleForm from "@/molecules/RoleForm";
 import RoleTable from "@/organisms/RoleTable";
 import { useRoles } from "../hooks/useRoles";
+import { useEffect } from "react";
 
 function Roles() {
-  const { roles } = useRoles();
+  const { roles, fetchRoles } = useRoles();
+  useEffect(() => {
+    fetchRoles();
+  }, [fetchRoles]);
 
   return (
     <div className="space-y-6">

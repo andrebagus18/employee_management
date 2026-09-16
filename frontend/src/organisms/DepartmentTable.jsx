@@ -46,8 +46,9 @@ function DepartmentTable({ departments, onDelete, loading, onResetFilters }) {
                       <Pencil />
                     </Button>
                     <Button
+                      variant="destructive"
                       className="disabled:pointer-events-auto disabled:cursor-not-allowed disabled:bg-gray-400"
-                      onClick={() => onDelete(department.id)}
+                      // onClick={() => onDelete(department.id)}
                       disabled={disabled}
                     >
                       {loading ? (

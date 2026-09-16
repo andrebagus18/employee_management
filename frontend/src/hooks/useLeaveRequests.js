@@ -97,43 +97,67 @@ export function useLeaveRequests({ id } = {}) {
     }
   };
 
-  const update = async (id, data) => {
-    try {
-      setLoading(true);
-      const response = await updateLeaveRequest(id, data);
-      await showSuccess(response.msg);
-      setForm({
-        type: "",
-        description: "",
-        start_date: "",
-        end_date: "",
-      });
-      navigate("/leave-requests");
-      await fetchLeaveRequests();
-      return response;
-    } catch (error) {
-      showError(error.response?.data?.msg || "Failed to update leave request");
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const update = async (id, data) => {
+  //   try {
+  //     setLoading(true);
+  //     const response = await updateLeaveRequest(id, data);
+  //     await showSuccess(response.msg);
+  //     setForm({
+  //       type: "",
+  //       description: "",
+  //       start_date: "",
+  //       end_date: "",
+  //     });
+  //     navigate("/leave-requests");
+  //     await fetchLeaveRequests();
+  //     return response;
+  //   } catch (error) {
+  //     showError(error.response?.data?.msg || "Failed to update leave request");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setForm((prev) => ({
       ...form,
-      [e.target.name]: e.target.value,
+      [name]: value,
     }));
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
+  };
+
+  const validate = () => {
+    const errorField = {};
+    const requiredField = [
+      ["type", "Type"],
+      ["description", "Description"],
+      ["start_date", "Start Date"],
+      ["end_date", "End Date"],
+    ];
+    requiredField.forEach(([field, label]) => {
+      if (!String(form[field]).trim()) {
+        errorField[field] = `${label} is required`;
+      }
+    });
+    setErrors(errorField);
+    return Object.keys(errorField).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validate()) {
+      return;
+    }
     const data = {
       type: form.type.trim(),
       description: form.description.trim(),
       start_date: form.start_date,
       end_date: form.end_date,
     };
-    if (!data) return;
     if (id) {
       await update(id, data);
     }

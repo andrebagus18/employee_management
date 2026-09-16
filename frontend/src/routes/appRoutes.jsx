@@ -11,14 +11,15 @@ import JobLevels from "@/pages/JobLevels";
 import LeaveRequests from "@/pages/LeaveRequests";
 import Users from "@/pages/Users";
 import Roles from "@/pages/Roles";
+import RolePermissionForm from "@/molecules/RolePermissionForm";
 import Permissions from "@/pages/Permissions";
 import DailyReports from "@/pages/DailyReports";
 import ActivityLogs from "@/pages/ActivityLogs";
 import EmployeeDetail from "@/pages/EmployeeDetail";
 import EditEmployee from "@/pages/EditEmployee";
-import CreateLeaveRequest from "../pages/CreateLeaveRequest";
-import LeaveRequestDetail from "../pages/LeaveRequestDetail";
-import CreateDailyReport from "../pages/CreateDailyReport";
+import CreateLeaveRequest from "@/pages/CreateLeaveRequest";
+import LeaveRequestDetail from "@/pages/LeaveRequestDetail";
+import CreateDailyReport from "@/pages/CreateDailyReport";
 
 function AppRoutes() {
   return (
@@ -54,6 +55,7 @@ function AppRoutes() {
             />
             <Route path="/users" element={<Users />} />
             <Route path="/roles" element={<Roles />} />
+            <Route path="/roles/:id/update" element={<RolePermissionForm />} />
             <Route path="/permissions" element={<Permissions />} />
             <Route path="/permissions/:id/update" element={<Permissions />} />
             <Route path="/daily-reports" element={<DailyReports />} />

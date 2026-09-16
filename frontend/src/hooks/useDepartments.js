@@ -104,11 +104,20 @@ export function useDepartments({ mode, id } = {}) {
       ...prev,
       [e.target.name]: e.target.value,
     }));
+    setErrors((prev) => ({
+      ...prev,
+      name: "",
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name.trim()) return;
+    const errorField = {};
+    if (!String(form.name).trim()) {
+      errorField.name = "Name is required";
+      setErrors(errorField);
+      return;
+    }
     const data = {
       name: form.name.trim(),
     };
