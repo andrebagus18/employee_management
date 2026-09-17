@@ -4,7 +4,7 @@ import { showError } from "../lib/alert";
 
 export function useRoles() {
   const [roles, setRoles] = useState([]);
-  const [role, setRole] = useState(null);
+  const [rolePermission, setRolePermission] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const fetchRoles = useCallback(async () => {
@@ -29,7 +29,7 @@ export function useRoles() {
       setLoading(true);
       const response = await getRolePermissionId(id);
       const role = response.rolePermission;
-      setRole(role);
+      setRolePermission(role);
       return response;
     } catch (error) {
       showError(error.response?.data?.msg || "Failed to load permissions");
@@ -43,6 +43,6 @@ export function useRoles() {
     fetchRoles,
     loading,
     getPermissionId,
-    role,
+    rolePermission,
   };
 }

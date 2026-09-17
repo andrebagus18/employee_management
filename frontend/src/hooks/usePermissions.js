@@ -9,7 +9,7 @@ import { showError, showSuccess } from "@/lib/alert";
 import { useNavigate } from "react-router-dom";
 import { showConfirm } from "../lib/alert";
 
-export function usePermissions({ id }) {
+export function usePermissions({ id } = {}) {
   const navigate = useNavigate();
   const [permissions, setPermissions] = useState([]);
   const [loading, setLoading] = useState(false);
