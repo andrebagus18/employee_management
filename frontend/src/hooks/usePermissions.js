@@ -9,7 +9,7 @@ import { showError, showSuccess } from "@/lib/alert";
 import { useNavigate } from "react-router-dom";
 import { showConfirm } from "../lib/alert";
 
-export function usePermissions({ id } = {}) {
+export function usePermissions({ id, all = true } = {}) {
   const navigate = useNavigate();
   const [permissions, setPermissions] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -30,9 +30,17 @@ export function usePermissions({ id } = {}) {
   const fetchPermissions = useCallback(async (params = {}) => {
     try {
       setLoading(true);
-      const response = await getPermissions(params);
-      setPermissions(response.permissions);
-      setPagination(response.pagination);
+      let data;
+      if (all) {
+        data = await getPermissions({
+          ...params,
+          limit: 100,
+        });
+      } else {
+        data = await getPermissions(params);
+      }
+      setPermissions(data.permissions);
+      setPagination(data.pagination);
     } catch (error) {
       showError(error.response?.data?.msg || "Failed to load permissions");
     } finally {

@@ -21,15 +21,15 @@ model activitylog {
 }
 
 model dailyreport {
-  id         Int      @id @default(autoincrement())
-  employeeId Int
-  report_date       DateTime @db.Date
-  start_time       String
-  end_time       String
-  report     String   @db.Text
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now())
-  employee   employee @relation(fields: [employeeId], references: [id], map: "DailyReport_employeeId_fkey")
+  id          Int      @id @default(autoincrement())
+  employeeId  Int
+  report      String   @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  end_time    String
+  report_date DateTime @db.Date
+  start_time  String
+  employee    employee @relation(fields: [employeeId], references: [id], map: "DailyReport_employeeId_fkey")
 
   @@index([employeeId], map: "DailyReport_employeeId_fkey")
 }

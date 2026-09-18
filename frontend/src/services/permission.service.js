@@ -2,6 +2,7 @@ import api from "./api";
 
 export const getPermissions = async (params = {}) => {
   const response = await api.get("/permissions", { params });
+  // console.log("resPer:", response.data);
   return response.data;
 };
 

@@ -54,6 +54,7 @@ export const getPermissions = async (req, res) => {
       }),
     ]);
     const totalPage = Math.ceil(total / limitNumber);
+    // console.log("permis:", total, permissions);
     return res.status(200).json({
       permissions,
       pagination: {

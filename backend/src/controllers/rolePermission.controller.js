@@ -95,9 +95,9 @@ export const revokePermission = async (req, res) => {
         msg: "Permission is not assigned to this role",
       });
     }
-    await prisma.rolePermission.delete({
+    await prisma.rolepermission.delete({
       where: {
-        id: rolePermission.roleId,
+        id: rolePermission.id,
       },
     });
     return res.status(200).json({

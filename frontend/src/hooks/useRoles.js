@@ -1,6 +1,11 @@
-import { getRoles, getRolePermissionId } from "@/services/role.services";
+import {
+  getRoles,
+  getRolePermissionId,
+  assignPermission,
+  revokePermission,
+} from "@/services/role.services";
 import { useCallback, useState, useEffect } from "react";
-import { showError } from "../lib/alert";
+import { showError, showSuccess, showConfirm } from "../lib/alert";
 
 export function useRoles() {
   const [roles, setRoles] = useState([]);
@@ -38,11 +43,53 @@ export function useRoles() {
     }
   };
 
+  const assigned = async (roleId, permissionId) => {
+    const result = await showConfirm({
+      title: "Assign Permission?",
+      text: "This permission will be assigned.",
+      confirmText: "Assign",
+    });
+    if (!result.isConfirmed) return;
+    try {
+      setLoading(true);
+      const response = await assignPermission(roleId, permissionId);
+      // console.log("assres", response);
+      showSuccess(response.msg);
+      return response;
+    } catch (error) {
+      showError(error.response?.data?.msg || "Failed to assign permission");
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const revoked = async (roleId, permissionId) => {
+    const result = await showConfirm({
+      title: "Revoke Permission?",
+      text: "This permission will be permanently revoked.",
+      confirmText: "Delete",
+    });
+    if (!result.isConfirmed) return;
+    try {
+      setLoading(true);
+      const response = await revokePermission(roleId, permissionId);
+      showSuccess(response.msg);
+      return response;
+    } catch (error) {
+      showError(error.response?.data?.msg || "Failed to revoke permission");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     roles,
     fetchRoles,
     loading,
     getPermissionId,
     rolePermission,
+    assigned,
+    revoked,
   };
 }
