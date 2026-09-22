@@ -1,0 +1,27 @@
+name: Backend Tests
+on: 
+  push:
+    branches:
+      - master
+    pull_request:
+      branches:
+      - master
+    
+  job:
+    test:
+      runs-on: ubuntu-latest
+      default:
+        run:
+         working-directory: backend
+
+    step:
+     - name: Checkout repository
+       uses: action/checkout@v4
+       with:
+        node-version: 22
+        cache: npm
+        chace-dependency-path: backend/package-lock.json
+        - name: Install dependencies
+          run: npm ci
+        - name: Run Tests
+          run: npm test
